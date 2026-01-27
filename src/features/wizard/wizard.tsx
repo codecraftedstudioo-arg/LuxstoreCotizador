@@ -1,4 +1,4 @@
-import { ProgressBar, Button } from '@/components/ui'
+import { ProgressBar, Button, VideoBackground, Header } from '@/components/ui'
 import { useWizard, WizardProvider } from './hooks/use-wizard'
 import {
   StepModel,
@@ -48,38 +48,64 @@ function WizardContent() {
   const showProgress = currentStep <= TOTAL_STEPS
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
-      <div className="max-w-md mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Cotizá tu iPhone
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Obtené un precio en menos de 1 minuto
-          </p>
-        </div>
+    <>
+      {/* Video background */}
+      <VideoBackground />
 
-        {/* Progress bar */}
-        {showProgress && (
-          <div className="mb-6">
-            <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+      {/* Main content */}
+      <div className="relative min-h-screen flex flex-col">
+        {/* Logo header */}
+        <Header />
+
+        {/* Wizard content */}
+        <main className="flex-1 py-4 px-4">
+          <div className="max-w-md mx-auto">
+            {/* Title */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-white drop-shadow-lg">
+                Cotizá tu iPhone
+              </h1>
+              <p className="text-white/80 mt-2">
+                Obtené un precio en menos de 1 minuto
+              </p>
+            </div>
+
+            {/* Progress bar */}
+            {showProgress && (
+              <div className="mb-6">
+                <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+              </div>
+            )}
+
+            {/* Current step */}
+            <div className="mb-6">
+              {renderStep()}
+            </div>
+
+            {/* Back button */}
+            {showBackButton && (
+              <Button variant="outline" onClick={prevStep} fullWidth>
+                ← Volver al paso anterior
+              </Button>
+            )}
           </div>
-        )}
+        </main>
 
-        {/* Current step */}
-        <div className="mb-6">
-          {renderStep()}
-        </div>
-
-        {/* Back button */}
-        {showBackButton && (
-          <Button variant="outline" onClick={prevStep} fullWidth>
-            ← Volver al paso anterior
-          </Button>
-        )}
+        {/* Footer */}
+        <footer className="py-4 text-center text-white/50 text-sm">
+          <a
+            href="https://electronicpoint.com.ar/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-cyan-400 transition-colors"
+          >
+            Electronic Point
+          </a>
+          {' · '}
+          Todos los derechos reservados
+        </footer>
       </div>
-    </div>
+    </>
   )
 }
 
