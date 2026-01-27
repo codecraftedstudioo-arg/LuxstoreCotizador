@@ -1,36 +1,47 @@
 /**
- * Video Background Component
- * Shows a looping iPhone video behind content with gradient overlay
- *
- * IMPORTANTE: Colocá tu video en /public/background.mp4
- * Descargá uno gratis de:
- * - https://coverr.co/stock-video-footage/iphone-15
- * - https://www.pexels.com/search/videos/iphone/
+ * Image Background Component with Ken Burns Effect
+ * Multiple images that crossfade with slow zoom animation
+ * More performant than video, always works
  */
 export function VideoBackground() {
+  // Imágenes de iPhones de Unsplash (free, no attribution required)
+  // Variedad: colores, ángulos, estilos
+  const images = [
+    'https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=1920&q=80', // iPhone colorido
+    'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=1920&q=80', // iPhone Pro silver
+    'https://images.unsplash.com/photo-1512054502232-10a0a035d672?w=1920&q=80', // iPhones múltiples
+    'https://images.unsplash.com/photo-1580910051074-3eb694886f3b?w=1920&q=80', // iPhone gold elegante
+  ]
+
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden bg-black">
-      {/* Animated gradient fallback (se ve si no hay video o mientras carga) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800">
-        {/* Subtle animated glow */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-900/20 via-transparent to-purple-900/20 animate-pulse" />
+      {/* Base dark gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-950" />
+
+      {/* Images with Ken Burns effect (crossfade + zoom) */}
+      <div className="absolute inset-0">
+        {images.map((src, index) => (
+          <div
+            key={index}
+            className="absolute inset-0 opacity-0 animate-kenburns"
+            style={{
+              backgroundImage: `url(${src})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              animationDelay: `${index * 8}s`,
+              animationDuration: '24s',
+            }}
+          />
+        ))}
       </div>
 
-      {/* Video local - poné background.mp4 en /public/ */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute w-full h-full object-cover opacity-50"
-      >
-        <source src="/background.mp4" type="video/mp4" />
-      </video>
-
       {/* Gradient overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
 
-      {/* Subtle cyan glow at bottom */}
+      {/* Animated light reflection */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/5 to-transparent animate-shimmer" />
+
+      {/* Bottom cyan glow */}
       <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 via-transparent to-transparent" />
     </div>
   )
