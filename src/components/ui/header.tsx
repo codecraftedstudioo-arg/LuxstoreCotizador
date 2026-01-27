@@ -4,7 +4,7 @@
  */
 export function Header() {
   const mainSiteUrl = 'https://electronicpoint.com.ar/'
-  const logoUrl = 'https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp'
+  const logoUrl = '/logo.png'
 
   return (
     <header className="w-full py-4 px-4">
