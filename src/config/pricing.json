@@ -1,0 +1,37 @@
+{
+  "models": [
+    { "id": "iphone-15-pro-max", "name": "iPhone 15 Pro Max", "basePrice": 1200000 },
+    { "id": "iphone-15-pro", "name": "iPhone 15 Pro", "basePrice": 1050000 },
+    { "id": "iphone-15-plus", "name": "iPhone 15 Plus", "basePrice": 900000 },
+    { "id": "iphone-15", "name": "iPhone 15", "basePrice": 800000 },
+    { "id": "iphone-14-pro-max", "name": "iPhone 14 Pro Max", "basePrice": 950000 },
+    { "id": "iphone-14-pro", "name": "iPhone 14 Pro", "basePrice": 850000 },
+    { "id": "iphone-14-plus", "name": "iPhone 14 Plus", "basePrice": 700000 },
+    { "id": "iphone-14", "name": "iPhone 14", "basePrice": 600000 },
+    { "id": "iphone-13-pro-max", "name": "iPhone 13 Pro Max", "basePrice": 750000 },
+    { "id": "iphone-13-pro", "name": "iPhone 13 Pro", "basePrice": 650000 },
+    { "id": "iphone-13", "name": "iPhone 13", "basePrice": 500000 },
+    { "id": "iphone-12-pro-max", "name": "iPhone 12 Pro Max", "basePrice": 550000 },
+    { "id": "iphone-12-pro", "name": "iPhone 12 Pro", "basePrice": 480000 },
+    { "id": "iphone-12", "name": "iPhone 12", "basePrice": 400000 }
+  ],
+  "storageMultipliers": {
+    "128": 1.0,
+    "256": 1.10,
+    "512": 1.20,
+    "1024": 1.30
+  },
+  "deductions": {
+    "batteryBelow80": 0.10,
+    "screenMinorScratches": 0.05,
+    "screenCracked": 0.25,
+    "faceIdNotWorking": 0.15,
+    "cameraIssues": 0.12,
+    "audioIssues": 0.08,
+    "nonOriginalParts": 0.10,
+    "aestheticMinorDetails": 0.05,
+    "aestheticVisibleDamage": 0.15
+  },
+  "currency": "ARS",
+  "lastUpdated": "2026-01-27"
+}

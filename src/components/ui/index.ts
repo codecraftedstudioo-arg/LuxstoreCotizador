@@ -1,0 +1,9 @@
+// Barrel export - permite importar así:
+// import { Button, Card } from '@/components/ui'
+// En vez de importar cada archivo por separado
+
+export { Button } from './button'
+export { OptionButton } from './option-button'
+export { ProgressBar } from './progress-bar'
+export { Card, CardHeader } from './card'
+export { Checkbox } from './checkbox'
