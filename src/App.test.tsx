@@ -5,7 +5,7 @@ import App from './App'
 describe('App', () => {
   it('renders the wizard', () => {
     render(<App />)
-    expect(screen.getByText('Cotizá tu iPhone')).toBeInTheDocument()
+    expect(screen.getByText('¿Cuánto vale tu iPhone?')).toBeInTheDocument()
   })
 
   it('shows step 1 (model selection) by default', () => {
