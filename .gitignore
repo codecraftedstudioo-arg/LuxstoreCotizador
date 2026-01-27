@@ -48,3 +48,7 @@ coverage
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Large media files (add your own video)
+public/background.mp4
+*.mp4
