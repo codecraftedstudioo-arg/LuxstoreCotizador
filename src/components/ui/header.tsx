@@ -1,5 +1,6 @@
 /**
  * Header with logo and link to main site
+ * Logo styled to blend with dark background
  */
 export function Header() {
   const mainSiteUrl = 'https://electronicpoint.com.ar/'
@@ -8,17 +9,24 @@ export function Header() {
   return (
     <header className="w-full py-4 px-4">
       <div className="max-w-md mx-auto flex items-center justify-between">
-        {/* Logo con link al sitio principal */}
+        {/* Logo con link al sitio principal - con fondo blur para integrar */}
         <a
           href={mainSiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 group"
+          className="
+            flex items-center gap-2 group
+            px-4 py-2 rounded-xl
+            bg-white/10 backdrop-blur-md
+            border border-white/10
+            hover:bg-white/20 hover:border-cyan-400/30
+            transition-all duration-300
+          "
         >
           <img
             src={logoUrl}
             alt="Electronic Point"
-            className="h-10 w-auto object-contain filter drop-shadow-lg transition-transform group-hover:scale-105"
+            className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
           />
         </a>
 
@@ -28,9 +36,13 @@ export function Header() {
           target="_blank"
           rel="noopener noreferrer"
           className="
-            text-sm text-white/80 hover:text-cyan-300
-            transition-colors duration-200
-            flex items-center gap-1
+            px-4 py-2 rounded-xl
+            bg-white/10 backdrop-blur-md
+            border border-white/10
+            text-sm text-white/80
+            hover:bg-white/20 hover:text-cyan-300 hover:border-cyan-400/30
+            transition-all duration-300
+            flex items-center gap-2
           "
         >
           Ver tienda
