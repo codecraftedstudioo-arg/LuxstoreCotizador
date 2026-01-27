@@ -6,13 +6,37 @@ import { formatPrice } from './pricing-engine'
 const BUSINESS_PHONE = '5491140949046'
 
 /**
+ * Optional contact info from the user
+ */
+export interface ContactInfo {
+  name?: string
+  phone?: string
+}
+
+/**
  * Builds a WhatsApp message summarizing the phone condition
  */
-function buildMessage(state: WizardState, priceResult: PriceResult): string {
+function buildMessage(
+  state: WizardState,
+  priceResult: PriceResult,
+  contactInfo?: ContactInfo
+): string {
   const lines: string[] = []
 
   lines.push('¡Hola! Quiero vender mi iPhone.')
   lines.push('')
+
+  // Contact info at the top if provided
+  if (contactInfo?.name) {
+    lines.push(`*Nombre:* ${contactInfo.name}`)
+  }
+  if (contactInfo?.phone) {
+    lines.push(`*Teléfono:* ${contactInfo.phone}`)
+  }
+  if (contactInfo?.name || contactInfo?.phone) {
+    lines.push('')
+  }
+
   lines.push(`*Modelo:* ${state.model?.name}`)
   lines.push(`*Almacenamiento:* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
   lines.push(`*Batería:* ${state.batteryBelow80 ? 'Menor a 80%' : '80% o más'}`)
@@ -55,11 +79,15 @@ function buildMessage(state: WizardState, priceResult: PriceResult): string {
  * Generates wa.me link with pre-filled message
  *
  * @example
- * buildWhatsAppLink(state, result)
- * // Returns: "https://wa.me/5491112345678?text=Hola%20quiero%20vender..."
+ * buildWhatsAppLink(state, result, { name: 'Juan', phone: '1155667788' })
+ * // Returns: "https://wa.me/5491140949046?text=Hola%20quiero%20vender..."
  */
-export function buildWhatsAppLink(state: WizardState, priceResult: PriceResult): string {
-  const message = buildMessage(state, priceResult)
+export function buildWhatsAppLink(
+  state: WizardState,
+  priceResult: PriceResult,
+  contactInfo?: ContactInfo
+): string {
+  const message = buildMessage(state, priceResult, contactInfo)
   const encodedMessage = encodeURIComponent(message)
 
   return `https://wa.me/${BUSINESS_PHONE}?text=${encodedMessage}`

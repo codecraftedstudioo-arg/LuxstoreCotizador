@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Card, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { calculatePrice, formatPrice } from '@/lib/pricing-engine'
@@ -5,10 +6,15 @@ import { buildWhatsAppLink } from '@/lib/whatsapp-builder'
 
 /**
  * Final step: Show price and WhatsApp button
+ * Includes optional contact info fields
  */
 export function StepResult() {
   const { state, reset } = useWizard()
   const priceResult = calculatePrice(state)
+
+  // Contact info (optional)
+  const [contactName, setContactName] = useState('')
+  const [contactPhone, setContactPhone] = useState('')
 
   if (!priceResult || !state.model) {
     return (
@@ -23,7 +29,10 @@ export function StepResult() {
     )
   }
 
-  const whatsappLink = buildWhatsAppLink(state, priceResult)
+  const whatsappLink = buildWhatsAppLink(state, priceResult, {
+    name: contactName || undefined,
+    phone: contactPhone || undefined,
+  })
 
   return (
     <Card className="text-center">
@@ -48,6 +57,29 @@ export function StepResult() {
           </ul>
         </div>
       )}
+
+      {/* Contact info (optional) */}
+      <div className="mb-6 p-4 bg-blue-50 rounded-xl text-left">
+        <p className="text-sm font-medium text-gray-700 mb-3">
+          Datos de contacto <span className="text-gray-400">(opcional)</span>
+        </p>
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="Tu nombre"
+            value={contactName}
+            onChange={(e) => setContactName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <input
+            type="tel"
+            placeholder="Tu teléfono"
+            value={contactPhone}
+            onChange={(e) => setContactPhone(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+      </div>
 
       {/* Botón WhatsApp */}
       <a
