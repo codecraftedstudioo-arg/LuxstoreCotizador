@@ -1,5 +1,9 @@
 {
   "models": [
+    { "id": "iphone-16-pro-max", "name": "iPhone 16 Pro Max", "basePrice": 1500000 },
+    { "id": "iphone-16-pro", "name": "iPhone 16 Pro", "basePrice": 1350000 },
+    { "id": "iphone-16-plus", "name": "iPhone 16 Plus", "basePrice": 1150000 },
+    { "id": "iphone-16", "name": "iPhone 16", "basePrice": 1000000 },
     { "id": "iphone-15-pro-max", "name": "iPhone 15 Pro Max", "basePrice": 1200000 },
     { "id": "iphone-15-pro", "name": "iPhone 15 Pro", "basePrice": 1050000 },
     { "id": "iphone-15-plus", "name": "iPhone 15 Plus", "basePrice": 900000 },
@@ -10,10 +14,17 @@
     { "id": "iphone-14", "name": "iPhone 14", "basePrice": 600000 },
     { "id": "iphone-13-pro-max", "name": "iPhone 13 Pro Max", "basePrice": 750000 },
     { "id": "iphone-13-pro", "name": "iPhone 13 Pro", "basePrice": 650000 },
+    { "id": "iphone-13-mini", "name": "iPhone 13 Mini", "basePrice": 450000 },
     { "id": "iphone-13", "name": "iPhone 13", "basePrice": 500000 },
     { "id": "iphone-12-pro-max", "name": "iPhone 12 Pro Max", "basePrice": 550000 },
     { "id": "iphone-12-pro", "name": "iPhone 12 Pro", "basePrice": 480000 },
-    { "id": "iphone-12", "name": "iPhone 12", "basePrice": 400000 }
+    { "id": "iphone-12-mini", "name": "iPhone 12 Mini", "basePrice": 320000 },
+    { "id": "iphone-12", "name": "iPhone 12", "basePrice": 400000 },
+    { "id": "iphone-11-pro-max", "name": "iPhone 11 Pro Max", "basePrice": 420000 },
+    { "id": "iphone-11-pro", "name": "iPhone 11 Pro", "basePrice": 380000 },
+    { "id": "iphone-11", "name": "iPhone 11", "basePrice": 300000 },
+    { "id": "iphone-se-3", "name": "iPhone SE (3ra gen)", "basePrice": 350000 },
+    { "id": "iphone-se-2", "name": "iPhone SE (2da gen)", "basePrice": 220000 }
   ],
   "storageMultipliers": {
     "128": 1.0,
