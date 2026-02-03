@@ -10,6 +10,6 @@ describe('App', () => {
 
   it('shows step 1 (basics) by default', () => {
     render(<App />)
-    expect(screen.getByText('Datos del equipo')).toBeInTheDocument()
+    expect(screen.getByText('¿Qué iPhone tenés?')).toBeInTheDocument()
   })
 })

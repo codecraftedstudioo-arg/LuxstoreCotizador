@@ -67,7 +67,7 @@ describe('calculatePrice', () => {
     expect(result!.finalPrice).toBe(945000)
     expect(result!.totalDeductions).toBe(0.10)
     expect(result!.deductionBreakdown).toHaveLength(1)
-    expect(result!.deductionBreakdown[0].reason).toBe('Batería menor a 80%')
+    expect(result!.deductionBreakdown[0].reason).toBe('deductBattery')
   })
 
   it('applies screen deductions correctly', () => {
@@ -89,7 +89,7 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result!.totalDeductions).toBe(0.15)
-    expect(result!.deductionBreakdown.some(d => d.reason === 'Face ID no funciona')).toBe(true)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductFaceId')).toBe(true)
   })
 
   it('applies multiple deductions correctly', () => {
