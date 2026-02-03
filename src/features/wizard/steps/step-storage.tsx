@@ -1,8 +1,8 @@
-import { Card, CardHeader, OptionButton } from '@/components/ui'
+import { Card, CardHeader, Select, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import type { StorageCapacity } from '../types'
 
-const storageOptions: { value: StorageCapacity; label: string }[] = [
+const storageOptions = [
   { value: '128', label: '128 GB' },
   { value: '256', label: '256 GB' },
   { value: '512', label: '512 GB' },
@@ -13,7 +13,7 @@ const storageOptions: { value: StorageCapacity; label: string }[] = [
  * Step 2: Select storage capacity
  */
 export function StepStorage() {
-  const { state, setStorage } = useWizard()
+  const { state, setStorage, nextStep } = useWizard()
 
   return (
     <Card>
@@ -21,17 +21,16 @@ export function StepStorage() {
         title="¿Cuánto almacenamiento tiene?"
         subtitle="Podés verlo en Ajustes → General → Información"
       />
-      <div className="grid grid-cols-2 gap-3">
-        {storageOptions.map((option) => (
-          <OptionButton
-            key={option.value}
-            selected={state.storage === option.value}
-            onClick={() => setStorage(option.value)}
-          >
-            {option.label}
-          </OptionButton>
-        ))}
-      </div>
+      <Select
+        label="Almacenamiento"
+        placeholder="Seleccioná la capacidad..."
+        options={storageOptions}
+        value={state.storage ?? undefined}
+        onChange={(val) => setStorage(val as StorageCapacity)}
+      />
+      <Button onClick={nextStep} fullWidth disabled={!state.storage} className="mt-4">
+        Continuar
+      </Button>
     </Card>
   )
 }

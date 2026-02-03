@@ -8,8 +8,8 @@ describe('App', () => {
     expect(screen.getByText('¿Cuánto vale tu iPhone?')).toBeInTheDocument()
   })
 
-  it('shows step 1 (model selection) by default', () => {
+  it('shows step 1 (basics) by default', () => {
     render(<App />)
-    expect(screen.getByText('¿Qué modelo de iPhone tenés?')).toBeInTheDocument()
+    expect(screen.getByText('Datos del equipo')).toBeInTheDocument()
   })
 })

@@ -1,13 +1,22 @@
-import { Card, CardHeader, OptionButton } from '@/components/ui'
+import { Card, CardHeader, Select, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import pricingConfig from '@/config/pricing.json'
 
 /**
  * Step 1: Select iPhone model
- * Shows all available models from pricing config
  */
 export function StepModel() {
-  const { state, setModel } = useWizard()
+  const { state, setModel, nextStep } = useWizard()
+
+  const modelOptions = pricingConfig.models.map((model) => ({
+    value: model.id,
+    label: model.name,
+  }))
+
+  const handleSelect = (modelId: string) => {
+    const model = pricingConfig.models.find(m => m.id === modelId)
+    if (model) setModel(model)
+  }
 
   return (
     <Card>
@@ -15,17 +24,16 @@ export function StepModel() {
         title="¿Qué modelo de iPhone tenés?"
         subtitle="Seleccioná el modelo exacto de tu dispositivo"
       />
-      <div className="grid gap-3 max-h-96 overflow-y-auto">
-        {pricingConfig.models.map((model) => (
-          <OptionButton
-            key={model.id}
-            selected={state.model?.id === model.id}
-            onClick={() => setModel(model)}
-          >
-            {model.name}
-          </OptionButton>
-        ))}
-      </div>
+      <Select
+        label="Modelo"
+        placeholder="Seleccioná tu modelo..."
+        options={modelOptions}
+        value={state.model?.id}
+        onChange={handleSelect}
+      />
+      <Button onClick={nextStep} fullWidth disabled={!state.model} className="mt-4">
+        Continuar
+      </Button>
     </Card>
   )
 }

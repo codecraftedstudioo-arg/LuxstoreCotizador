@@ -1,5 +1,10 @@
-import { Card, CardHeader, OptionButton } from '@/components/ui'
+import { Card, CardHeader, Select } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
+
+const batteryOptions = [
+  { value: 'good', label: '80% o más de salud' },
+  { value: 'bad', label: 'Menos de 80% de salud' },
+]
 
 /**
  * Step 3: Battery health
@@ -8,28 +13,23 @@ import { useWizard } from '../hooks/use-wizard'
 export function StepBattery() {
   const { state, setBattery } = useWizard()
 
+  const currentValue = state.batteryBelow80 === undefined
+    ? undefined
+    : state.batteryBelow80 ? 'bad' : 'good'
+
   return (
     <Card>
       <CardHeader
         title="¿Cómo está la batería?"
         subtitle="Ajustes → Batería → Estado de la batería"
       />
-      <div className="grid gap-3">
-        <OptionButton
-          selected={state.batteryBelow80 === false}
-          onClick={() => setBattery(false)}
-          description="La batería mantiene buena autonomía"
-        >
-          80% o más de salud
-        </OptionButton>
-        <OptionButton
-          selected={state.batteryBelow80 === true}
-          onClick={() => setBattery(true)}
-          description="Apple recomienda cambiarla"
-        >
-          Menos de 80% de salud
-        </OptionButton>
-      </div>
+      <Select
+        label="Estado de batería"
+        placeholder="Seleccioná el estado..."
+        options={batteryOptions}
+        value={currentValue}
+        onChange={(val) => setBattery(val === 'bad')}
+      />
     </Card>
   )
 }
