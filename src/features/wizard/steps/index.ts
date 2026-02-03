@@ -1,8 +1,5 @@
-export { StepModel } from './step-model'
-export { StepStorage } from './step-storage'
-export { StepBattery } from './step-battery'
-export { StepScreen } from './step-screen'
-export { StepFunctionality } from './step-functionality'
-export { StepParts } from './step-parts'
-export { StepAesthetic } from './step-aesthetic'
+// Grouped steps (3 steps instead of 7)
+export { Step1Basics } from './step-1-basics'
+export { Step2Condition } from './step-2-condition'
+export { Step3Details } from './step-3-details'
 export { StepResult } from './step-result'

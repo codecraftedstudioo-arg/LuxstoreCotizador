@@ -1,28 +1,37 @@
 import { useState } from 'react'
 import { Card, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
+import { useI18n } from '@/lib/i18n'
 import { calculatePrice, formatPrice } from '@/lib/pricing-engine'
-import { buildWhatsAppLink } from '@/lib/whatsapp-builder'
+import { buildWhatsAppLink, buildMessage } from '@/lib/whatsapp-builder'
 
 /**
  * Final step: Show price and WhatsApp button
- * Includes optional contact info fields
+ * Paleta blanco y negro
  */
 export function StepResult() {
   const { state, reset } = useWizard()
+  const { t, lang } = useI18n()
   const priceResult = calculatePrice(state)
 
   // Contact info (optional)
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
+  const [showPreview, setShowPreview] = useState(false)
+
+  // Handler para solo permitir números en teléfono
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '') // Solo dígitos
+    setContactPhone(value)
+  }
 
   if (!priceResult || !state.model) {
     return (
       <Card>
         <div className="text-center py-8">
-          <p className="text-gray-600">Error al calcular el precio</p>
+          <p className="text-gray-300">{lang === 'es' ? 'Error al calcular el precio' : 'Error calculating price'}</p>
           <Button onClick={reset} className="mt-4">
-            Volver a empezar
+            {lang === 'es' ? 'Volver a empezar' : 'Start over'}
           </Button>
         </div>
       </Card>
@@ -32,26 +41,35 @@ export function StepResult() {
   const whatsappLink = buildWhatsAppLink(state, priceResult, {
     name: contactName || undefined,
     phone: contactPhone || undefined,
-  })
+  }, lang)
+
+  const messagePreview = buildMessage(state, priceResult, {
+    name: contactName || undefined,
+    phone: contactPhone || undefined,
+  }, lang)
 
   return (
     <Card className="text-center">
-      <div className="mb-6">
-        <p className="text-gray-600 mb-2">Tu {state.model.name} vale aproximadamente</p>
-        <p className="text-5xl font-bold text-green-600">
+      {/* Confetti - CSS only, no re-render */}
+      <Confetti />
+
+      <div className="mb-8 py-6 border-b border-white/10">
+        <p className="text-white/70 mb-3">{t('resultTitle', { model: state.model.name })}</p>
+        <p className="text-6xl lg:text-7xl font-black text-white tracking-tight animate-countUp">
           {formatPrice(priceResult.finalPrice)}
         </p>
+        <p className="text-white/50 text-sm mt-2">{t('resultDisclaimer')}</p>
       </div>
 
       {/* Desglose de deducciones */}
       {priceResult.deductionBreakdown.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 rounded-xl text-left">
-          <p className="text-sm font-medium text-gray-700 mb-2">Ajustes aplicados:</p>
-          <ul className="space-y-1">
+        <div className="mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
+          <p className="text-sm font-medium text-white mb-3">{t('adjustments')}</p>
+          <ul className="space-y-2">
             {priceResult.deductionBreakdown.map((d, i) => (
-              <li key={i} className="text-sm text-gray-600 flex justify-between">
-                <span>{d.reason}</span>
-                <span className="text-red-500">-{formatPrice(d.amount)}</span>
+              <li key={i} className="text-sm flex justify-between items-center">
+                <span className="text-white/80">{t(d.reason as any)}</span>
+                <span className="text-white font-medium">-{formatPrice(d.amount)}</span>
               </li>
             ))}
           </ul>
@@ -59,49 +77,63 @@ export function StepResult() {
       )}
 
       {/* Contact info (optional) */}
-      <div className="mb-6 p-4 bg-blue-50 rounded-xl text-left">
-        <p className="text-sm font-medium text-gray-700 mb-3">
-          Datos de contacto <span className="text-gray-400">(opcional)</span>
+      <div className="mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
+        <p className="text-sm font-medium text-white mb-3">
+          {t('contactInfo')} <span className="text-gray-500">{t('optional')}</span>
         </p>
         <div className="space-y-3">
           <input
             type="text"
-            placeholder="Tu nombre"
+            placeholder={t('yourName')}
             value={contactName}
             onChange={(e) => setContactName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white"
           />
           <input
             type="tel"
-            placeholder="Tu teléfono"
+            inputMode="numeric"
+            placeholder={t('yourPhone')}
             value={contactPhone}
-            onChange={(e) => setContactPhone(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={handlePhoneChange}
+            className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white"
           />
         </div>
       </div>
 
-      {/* Botón WhatsApp */}
+      {/* Preview del mensaje */}
+      <div className="mb-4">
+        <button
+          onClick={() => setShowPreview(!showPreview)}
+          className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-1 mx-auto"
+        >
+          {showPreview ? '▼' : '▶'} {t('previewMessage')}
+        </button>
+        {showPreview && (
+          <div className="mt-3 p-4 bg-white/5 rounded-xl text-left border border-white/10 text-sm text-white/80 whitespace-pre-line">
+            {messagePreview}
+          </div>
+        )}
+      </div>
+
+      {/* Botón WhatsApp - blanco y negro */}
       <a
         href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
         className="block"
       >
-        <Button variant="whatsapp" size="lg" fullWidth>
-          <span className="flex items-center justify-center gap-2">
-            <WhatsAppIcon />
-            Contactar por WhatsApp
-          </span>
-        </Button>
+        <button className="w-full px-8 py-4 bg-white text-black font-semibold text-lg rounded-xl hover:bg-gray-100 transition-all flex items-center justify-center gap-3 shadow-lg">
+          <WhatsAppIcon />
+          {t('contactWhatsApp')}
+        </button>
       </a>
 
       {/* Volver a empezar */}
       <button
         onClick={reset}
-        className="mt-4 text-sm text-gray-500 hover:text-gray-700 underline"
+        className="mt-4 text-sm text-gray-400 hover:text-white underline transition-colors"
       >
-        Cotizar otro iPhone
+        {t('quoteAnother')}
       </button>
     </Card>
   )
@@ -114,3 +146,37 @@ function WhatsAppIcon() {
     </svg>
   )
 }
+
+/** Confetti burst effect - pure CSS, memoized to prevent re-renders */
+const Confetti = (() => {
+  const colors = ['#fff', '#ccc', '#888', '#444']
+  const pieces = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    delay: `${Math.random() * 0.5}s`,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    size: Math.random() * 8 + 4,
+    isRound: Math.random() > 0.5,
+  }))
+
+  return function ConfettiComponent() {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden animate-confetti-container">
+        {pieces.map((piece) => (
+          <div
+            key={piece.id}
+            className="confetti-piece"
+            style={{
+              left: piece.left,
+              animationDelay: piece.delay,
+              width: piece.size,
+              height: piece.size,
+              backgroundColor: piece.color,
+              borderRadius: piece.isRound ? '50%' : '0',
+            }}
+          />
+        ))}
+      </div>
+    )
+  }
+})()

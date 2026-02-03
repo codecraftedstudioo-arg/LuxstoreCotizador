@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
 import type {
   WizardState,
   PhoneModel,
@@ -59,7 +59,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
     case 'SET_AESTHETIC':
       return { ...state, aestheticCondition: action.payload }
     case 'NEXT_STEP':
-      return { ...state, currentStep: Math.min(state.currentStep + 1, 8) }
+      return { ...state, currentStep: Math.min(state.currentStep + 1, 4) }
     case 'PREV_STEP':
       return { ...state, currentStep: Math.max(state.currentStep - 1, 1) }
     case 'GO_TO_STEP':
@@ -90,43 +90,51 @@ interface WizardContextValue {
 
 const WizardContext = createContext<WizardContextValue | null>(null)
 
+const STORAGE_KEY = 'wizard-state'
+
+// Cargar estado desde localStorage
+function loadState(): WizardState {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      return JSON.parse(saved)
+    }
+  } catch (e) {
+    console.error('Error loading wizard state:', e)
+  }
+  return initialState
+}
+
 // Provider - envuelve la app y provee el estado a todos los hijos
 export function WizardProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(wizardReducer, initialState)
+  const [state, dispatch] = useReducer(wizardReducer, initialState, loadState)
+
+  // Guardar en localStorage cuando cambia el estado
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    } catch (e) {
+      console.error('Error saving wizard state:', e)
+    }
+  }, [state])
 
   const value: WizardContextValue = {
     state,
-    setModel: (model) => {
-      dispatch({ type: 'SET_MODEL', payload: model })
-      dispatch({ type: 'NEXT_STEP' })
-    },
-    setStorage: (storage) => {
-      dispatch({ type: 'SET_STORAGE', payload: storage })
-      dispatch({ type: 'NEXT_STEP' })
-    },
-    setBattery: (below80) => {
-      dispatch({ type: 'SET_BATTERY', payload: below80 })
-      dispatch({ type: 'NEXT_STEP' })
-    },
-    setScreen: (condition) => {
-      dispatch({ type: 'SET_SCREEN', payload: condition })
-      dispatch({ type: 'NEXT_STEP' })
-    },
-    setFunctionality: (issues) => {
-      dispatch({ type: 'SET_FUNCTIONALITY', payload: issues })
-    },
-    setOriginalParts: (hasNonOriginal) => {
-      dispatch({ type: 'SET_ORIGINAL_PARTS', payload: hasNonOriginal })
-      dispatch({ type: 'NEXT_STEP' })
-    },
-    setAesthetic: (condition) => {
-      dispatch({ type: 'SET_AESTHETIC', payload: condition })
-      dispatch({ type: 'NEXT_STEP' })
-    },
+    // Ya no auto-avanzan - el usuario debe hacer click en Continuar
+    setModel: (model) => dispatch({ type: 'SET_MODEL', payload: model }),
+    setStorage: (storage) => dispatch({ type: 'SET_STORAGE', payload: storage }),
+    setBattery: (below80) => dispatch({ type: 'SET_BATTERY', payload: below80 }),
+    setScreen: (condition) => dispatch({ type: 'SET_SCREEN', payload: condition }),
+    setFunctionality: (issues) => dispatch({ type: 'SET_FUNCTIONALITY', payload: issues }),
+    setOriginalParts: (hasNonOriginal) => dispatch({ type: 'SET_ORIGINAL_PARTS', payload: hasNonOriginal }),
+    setAesthetic: (condition) => dispatch({ type: 'SET_AESTHETIC', payload: condition }),
     nextStep: () => dispatch({ type: 'NEXT_STEP' }),
     prevStep: () => dispatch({ type: 'PREV_STEP' }),
     goToStep: (step) => dispatch({ type: 'GO_TO_STEP', payload: step }),
-    reset: () => dispatch({ type: 'RESET' }),
+    reset: () => {
+      localStorage.removeItem(STORAGE_KEY)
+      dispatch({ type: 'RESET' })
+    },
     isStepComplete: (step: number) => {
       switch (step) {
         case 1: return state.model !== null
