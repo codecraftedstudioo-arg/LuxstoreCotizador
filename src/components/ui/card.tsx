@@ -7,19 +7,11 @@ interface CardProps {
 
 /**
  * Card container for wizard steps
- * Glassmorphism effect: frosted glass look
+ * Dark theme - transparent, no extra background
  */
 export function Card({ children, className = '' }: CardProps) {
   return (
-    <div
-      className={`
-        bg-white/80 backdrop-blur-xl
-        rounded-2xl shadow-2xl
-        border border-white/20
-        p-6
-        ${className}
-      `}
-    >
+    <div className={className}>
       {children}
     </div>
   )
@@ -32,10 +24,10 @@ interface CardHeaderProps {
 
 export function CardHeader({ title, subtitle }: CardHeaderProps) {
   return (
-    <div className="mb-6">
-      <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+    <div className="mb-5">
+      <h2 className="text-xl font-bold text-white">{title}</h2>
       {subtitle && (
-        <p className="mt-2 text-gray-600">{subtitle}</p>
+        <p className="mt-1 text-gray-300 text-sm">{subtitle}</p>
       )}
     </div>
   )

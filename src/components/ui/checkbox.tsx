@@ -11,17 +11,20 @@ interface CheckboxProps {
  */
 export function Checkbox({ label, checked, onChange, description }: CheckboxProps) {
   return (
-    <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-gray-200 hover:border-gray-300 cursor-pointer transition-all">
+    <label className={`
+      flex items-start gap-3 p-3 rounded-xl cursor-pointer transition-all
+      border ${checked ? 'border-white bg-white/10' : 'border-gray-600 hover:border-gray-500'}
+    `}>
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-1 h-5 w-5 rounded border-gray-300 text-red-500 focus:ring-red-500"
+        className="mt-0.5 h-5 w-5 rounded border-gray-500 bg-transparent text-white focus:ring-white"
       />
       <div>
-        <div className="font-medium text-gray-900">{label}</div>
+        <div className="font-medium text-white">{label}</div>
         {description && (
-          <div className="text-sm text-gray-500">{description}</div>
+          <div className="text-sm text-gray-400">{description}</div>
         )}
       </div>
     </label>

@@ -4,12 +4,12 @@
  * For mobile: subtle background behind wizard
  */
 export function VideoBackground() {
-  // Imágenes de iPhones de Unsplash (free, no attribution required)
+  // iPhones elegantes - múltiples
   const images = [
-    'https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=1920&q=80', // iPhone colorido
-    'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=1920&q=80', // iPhone Pro silver
-    'https://images.unsplash.com/photo-1512054502232-10a0a035d672?w=1920&q=80', // iPhones múltiples
-    'https://images.unsplash.com/photo-1580910051074-3eb694886f3b?w=1920&q=80', // iPhone gold elegante
+    'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=1920&q=80', // iPhones en fila elegante
+    'https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?w=1920&q=80', // iPhones sobre fondo oscuro
+    'https://images.unsplash.com/photo-1556656793-08538906a9f8?w=1920&q=80', // setup moderno con iPhone
+    'https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=1920&q=80', // iPhone 12 Pro Max
   ]
 
   return (
@@ -34,17 +34,11 @@ export function VideoBackground() {
         ))}
       </div>
 
-      {/* Subtle overlay - less dark to show images better */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/50" />
+      {/* Very subtle center vignette */}
+      <div className="absolute inset-0 bg-radial-[ellipse_at_center] from-transparent via-transparent to-black/50" />
 
       {/* Animated light reflection */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/10 to-transparent animate-shimmer" />
-
-      {/* Brand color accent at bottom */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-transparent to-transparent" />
-
-      {/* Edge fade towards wizard side */}
-      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-gray-950 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent animate-shimmer" />
     </div>
   )
 }

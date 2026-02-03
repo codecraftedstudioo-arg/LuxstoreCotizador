@@ -29,10 +29,10 @@ export function Button({
   `
 
   const variants = {
-    // Brand cyan color
-    primary: 'bg-cyan-400 text-gray-900 hover:bg-cyan-300 focus:ring-cyan-400 shadow-lg hover:shadow-cyan-400/25 disabled:bg-cyan-200',
+    // Brand: blanco y negro
+    primary: 'bg-white text-black hover:bg-gray-100 focus:ring-white shadow-lg hover:shadow-white/25 disabled:bg-gray-400',
     secondary: 'bg-white/20 text-white hover:bg-white/30 focus:ring-white/50 backdrop-blur-sm disabled:bg-white/10',
-    outline: 'border-2 border-white/30 text-white hover:border-cyan-400 hover:text-cyan-400 focus:ring-cyan-400 backdrop-blur-sm',
+    outline: 'border-2 border-white/30 text-white hover:border-white hover:bg-white/10 focus:ring-white backdrop-blur-sm',
     whatsapp: 'bg-green-500 text-white hover:bg-green-400 focus:ring-green-500 shadow-lg hover:shadow-green-500/25 disabled:bg-green-300',
   }
 
