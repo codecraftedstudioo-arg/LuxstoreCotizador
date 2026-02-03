@@ -33,7 +33,7 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   // Batería
   if (batteryBelow80) {
     deductionBreakdown.push({
-      reason: 'Batería menor a 80%',
+      reason: 'deductBattery',
       percentage: deductions.batteryBelow80,
       amount: 0, // Se calcula después
     })
@@ -42,13 +42,13 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   // Pantalla
   if (screenCondition === 'minor-scratches') {
     deductionBreakdown.push({
-      reason: 'Pantalla con rayones leves',
+      reason: 'deductScreenMinor',
       percentage: deductions.screenMinorScratches,
       amount: 0,
     })
   } else if (screenCondition === 'cracked') {
     deductionBreakdown.push({
-      reason: 'Pantalla rajada/rota',
+      reason: 'deductScreenCracked',
       percentage: deductions.screenCracked,
       amount: 0,
     })
@@ -57,7 +57,7 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   // Funcionalidades
   if (functionalityIssues.faceId) {
     deductionBreakdown.push({
-      reason: 'Face ID no funciona',
+      reason: 'deductFaceId',
       percentage: deductions.faceIdNotWorking,
       amount: 0,
     })
@@ -65,7 +65,7 @@ export function calculatePrice(state: WizardState): PriceResult | null {
 
   if (functionalityIssues.camera) {
     deductionBreakdown.push({
-      reason: 'Problemas de cámara',
+      reason: 'deductCamera',
       percentage: deductions.cameraIssues,
       amount: 0,
     })
@@ -73,7 +73,7 @@ export function calculatePrice(state: WizardState): PriceResult | null {
 
   if (functionalityIssues.audio) {
     deductionBreakdown.push({
-      reason: 'Problemas de audio',
+      reason: 'deductAudio',
       percentage: deductions.audioIssues,
       amount: 0,
     })
@@ -82,7 +82,7 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   // Piezas no originales
   if (hasNonOriginalParts) {
     deductionBreakdown.push({
-      reason: 'Piezas no originales',
+      reason: 'deductParts',
       percentage: deductions.nonOriginalParts,
       amount: 0,
     })
@@ -91,13 +91,13 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   // Estado estético
   if (aestheticCondition === 'minor-details') {
     deductionBreakdown.push({
-      reason: 'Detalles estéticos menores',
+      reason: 'deductAestheticMinor',
       percentage: deductions.aestheticMinorDetails,
       amount: 0,
     })
   } else if (aestheticCondition === 'visible-damage') {
     deductionBreakdown.push({
-      reason: 'Golpes visibles',
+      reason: 'deductAestheticDamage',
       percentage: deductions.aestheticVisibleDamage,
       amount: 0,
     })

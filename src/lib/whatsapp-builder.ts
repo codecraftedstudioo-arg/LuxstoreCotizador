@@ -1,4 +1,5 @@
 import type { WizardState, PriceResult } from '@/features/wizard/types'
+import type { Language } from './i18n'
 import { formatPrice } from './pricing-engine'
 
 // Número de WhatsApp del negocio (sin +, sin espacios)
@@ -13,64 +14,126 @@ export interface ContactInfo {
   phone?: string
 }
 
+// Translations for WhatsApp message
+const waTranslations = {
+  es: {
+    greeting: '¡Hola! Quiero vender mi iPhone.',
+    name: 'Nombre:',
+    phone: 'Teléfono:',
+    model: 'Modelo:',
+    storage: 'Almacenamiento:',
+    battery: 'Batería:',
+    batteryLow: 'Menor a 80%',
+    batteryOk: '80% o más',
+    screen: 'Pantalla:',
+    screenPerfect: 'Perfecta',
+    screenMinor: 'Rayones leves',
+    screenCracked: 'Rajada/rota',
+    issues: 'Problemas:',
+    noIssues: 'Ninguno',
+    faceId: 'Face ID',
+    camera: 'Cámara',
+    audio: 'Audio',
+    parts: 'Piezas originales:',
+    partsYes: 'Sí',
+    partsNo: 'No',
+    aesthetic: 'Estado estético:',
+    aestheticPerfect: 'Impecable',
+    aestheticMinor: 'Detalles leves',
+    aestheticDamage: 'Golpes visibles',
+    quote: 'Cotización:',
+    coordinate: '¿Podemos coordinar?',
+  },
+  en: {
+    greeting: 'Hi! I want to sell my iPhone.',
+    name: 'Name:',
+    phone: 'Phone:',
+    model: 'Model:',
+    storage: 'Storage:',
+    battery: 'Battery:',
+    batteryLow: 'Below 80%',
+    batteryOk: '80% or more',
+    screen: 'Screen:',
+    screenPerfect: 'Perfect',
+    screenMinor: 'Minor scratches',
+    screenCracked: 'Cracked/broken',
+    issues: 'Issues:',
+    noIssues: 'None',
+    faceId: 'Face ID',
+    camera: 'Camera',
+    audio: 'Audio',
+    parts: 'Original parts:',
+    partsYes: 'Yes',
+    partsNo: 'No',
+    aesthetic: 'Aesthetic condition:',
+    aestheticPerfect: 'Pristine',
+    aestheticMinor: 'Minor details',
+    aestheticDamage: 'Visible damage',
+    quote: 'Quote:',
+    coordinate: 'Can we coordinate?',
+  },
+}
+
 /**
  * Builds a WhatsApp message summarizing the phone condition
  */
-function buildMessage(
+export function buildMessage(
   state: WizardState,
   priceResult: PriceResult,
-  contactInfo?: ContactInfo
+  contactInfo?: ContactInfo,
+  lang: Language = 'es'
 ): string {
+  const t = waTranslations[lang]
   const lines: string[] = []
 
-  lines.push('¡Hola! Quiero vender mi iPhone.')
+  lines.push(t.greeting)
   lines.push('')
 
   // Contact info at the top if provided
   if (contactInfo?.name) {
-    lines.push(`*Nombre:* ${contactInfo.name}`)
+    lines.push(`*${t.name}* ${contactInfo.name}`)
   }
   if (contactInfo?.phone) {
-    lines.push(`*Teléfono:* ${contactInfo.phone}`)
+    lines.push(`*${t.phone}* ${contactInfo.phone}`)
   }
   if (contactInfo?.name || contactInfo?.phone) {
     lines.push('')
   }
 
-  lines.push(`*Modelo:* ${state.model?.name}`)
-  lines.push(`*Almacenamiento:* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
-  lines.push(`*Batería:* ${state.batteryBelow80 ? 'Menor a 80%' : '80% o más'}`)
+  lines.push(`*${t.model}* ${state.model?.name}`)
+  lines.push(`*${t.storage}* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
+  lines.push(`*${t.battery}* ${state.batteryBelow80 ? t.batteryLow : t.batteryOk}`)
 
   // Pantalla
   const screenLabels = {
-    perfect: 'Perfecta',
-    'minor-scratches': 'Rayones leves',
-    cracked: 'Rajada/rota',
+    perfect: t.screenPerfect,
+    'minor-scratches': t.screenMinor,
+    cracked: t.screenCracked,
   }
-  lines.push(`*Pantalla:* ${screenLabels[state.screenCondition!]}`)
+  lines.push(`*${t.screen}* ${screenLabels[state.screenCondition!]}`)
 
   // Funcionalidades
   const issues: string[] = []
-  if (state.functionalityIssues.faceId) issues.push('Face ID')
-  if (state.functionalityIssues.camera) issues.push('Cámara')
-  if (state.functionalityIssues.audio) issues.push('Audio')
-  lines.push(`*Problemas:* ${issues.length > 0 ? issues.join(', ') : 'Ninguno'}`)
+  if (state.functionalityIssues.faceId) issues.push(t.faceId)
+  if (state.functionalityIssues.camera) issues.push(t.camera)
+  if (state.functionalityIssues.audio) issues.push(t.audio)
+  lines.push(`*${t.issues}* ${issues.length > 0 ? issues.join(', ') : t.noIssues}`)
 
   // Piezas
-  lines.push(`*Piezas originales:* ${state.hasNonOriginalParts ? 'No' : 'Sí'}`)
+  lines.push(`*${t.parts}* ${state.hasNonOriginalParts ? t.partsNo : t.partsYes}`)
 
   // Estado estético
   const aestheticLabels = {
-    perfect: 'Impecable',
-    'minor-details': 'Detalles leves',
-    'visible-damage': 'Golpes visibles',
+    perfect: t.aestheticPerfect,
+    'minor-details': t.aestheticMinor,
+    'visible-damage': t.aestheticDamage,
   }
-  lines.push(`*Estado estético:* ${aestheticLabels[state.aestheticCondition!]}`)
+  lines.push(`*${t.aesthetic}* ${aestheticLabels[state.aestheticCondition!]}`)
 
   lines.push('')
-  lines.push(`*Cotización:* ${formatPrice(priceResult.finalPrice)}`)
+  lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)
   lines.push('')
-  lines.push('¿Podemos coordinar?')
+  lines.push(t.coordinate)
 
   return lines.join('\n')
 }
@@ -85,9 +148,10 @@ function buildMessage(
 export function buildWhatsAppLink(
   state: WizardState,
   priceResult: PriceResult,
-  contactInfo?: ContactInfo
+  contactInfo?: ContactInfo,
+  lang: Language = 'es'
 ): string {
-  const message = buildMessage(state, priceResult, contactInfo)
+  const message = buildMessage(state, priceResult, contactInfo, lang)
   const encodedMessage = encodeURIComponent(message)
 
   return `https://wa.me/${BUSINESS_PHONE}?text=${encodedMessage}`
