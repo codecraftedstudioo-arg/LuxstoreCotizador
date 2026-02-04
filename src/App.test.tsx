@@ -1,15 +1,18 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import App from './App'
 
 describe('App', () => {
-  it('renders the wizard', () => {
+  it('renders the intro screen', () => {
     render(<App />)
-    expect(screen.getByText('¿Cuánto vale tu iPhone?')).toBeInTheDocument()
+    expect(screen.getByText('Vendé tu iPhone')).toBeInTheDocument()
+    expect(screen.getByText('Cotizar ahora')).toBeInTheDocument()
   })
 
-  it('shows step 1 (basics) by default', () => {
+  it('shows wizard step 1 after clicking Cotizar ahora', () => {
     render(<App />)
+    const startButton = screen.getByText('Cotizar ahora')
+    fireEvent.click(startButton)
     expect(screen.getByText('¿Qué iPhone tenés?')).toBeInTheDocument()
   })
 })
