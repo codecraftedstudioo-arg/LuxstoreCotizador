@@ -1,61 +1,117 @@
 import type { WizardState, PriceResult, PricingConfig } from '@/features/wizard/types'
 import pricingData from '@/config/pricing.json'
 
-// Type assertion - le decimos a TS que el JSON tiene la forma de PricingConfig
 const config = pricingData as unknown as PricingConfig
 
 /**
  * Pricing Engine - calculates iPhone price based on condition
  *
- * Formula:
- * finalPrice = basePrice × storageMultiplier × (1 - totalDeductions)
- *
- * This is a pure function - same input = same output (easy to test)
+ * New structure: Fixed prices per model+storage combination
+ * Deductions are percentage-based
+ * iCloud locked = blocked (no quote)
  */
 export function calculatePrice(state: WizardState): PriceResult | null {
-  // Validar que tengamos todos los datos necesarios
+  // Validate required fields
   if (!state.model || !state.storage) {
     return null
   }
 
-  const { model, storage, batteryBelow80, screenCondition, functionalityIssues, hasNonOriginalParts, aestheticCondition } = state
-  const deductions = config.deductions
-
-  // 1. Precio base del modelo
-  const basePrice = model.basePrice
-
-  // 2. Multiplicador por almacenamiento
-  const storageMultiplier = config.storageMultipliers[storage]
-
-  // 3. Calcular deducciones
-  const deductionBreakdown: PriceResult['deductionBreakdown'] = []
-
-  // Batería
-  if (batteryBelow80) {
-    deductionBreakdown.push({
-      reason: 'deductBattery',
-      percentage: deductions.batteryBelow80,
-      amount: 0, // Se calcula después
-    })
+  // Check for iCloud block
+  if (state.iCloudOff === false) {
+    return {
+      basePrice: 0,
+      totalDeductions: 0,
+      finalPrice: 0,
+      deductionBreakdown: [],
+      blocked: true,
+      blockedReason: 'iCloudBlocked',
+    }
   }
 
-  // Pantalla
-  if (screenCondition === 'minor-scratches') {
-    deductionBreakdown.push({
-      reason: 'deductScreenMinor',
-      percentage: deductions.screenMinorScratches,
-      amount: 0,
-    })
-  } else if (screenCondition === 'cracked') {
+  // Find price for model + storage combination
+  const priceEntry = config.prices.find(
+    (p) => p.model === state.model && p.storage === state.storage
+  )
+
+  if (!priceEntry) {
+    return null // Combination not found
+  }
+
+  const basePrice = priceEntry.price
+  const deductions = config.deductions
+  const deductionBreakdown: PriceResult['deductionBreakdown'] = []
+
+  // Screen condition
+  if (state.screenCondition === 'cracked') {
     deductionBreakdown.push({
       reason: 'deductScreenCracked',
       percentage: deductions.screenCracked,
       amount: 0,
     })
+  } else if (state.screenCondition === 'scratches') {
+    deductionBreakdown.push({
+      reason: 'deductScreenScratches',
+      percentage: deductions.screenScratches,
+      amount: 0,
+    })
   }
 
-  // Funcionalidades
-  if (functionalityIssues.faceId) {
+  // Back condition
+  if (state.backCondition === 'cracked') {
+    deductionBreakdown.push({
+      reason: 'deductBackCracked',
+      percentage: deductions.backCracked,
+      amount: 0,
+    })
+  }
+
+  // Frame condition
+  if (state.frameCondition === 'damaged') {
+    deductionBreakdown.push({
+      reason: 'deductFrameDamaged',
+      percentage: deductions.frameDamaged,
+      amount: 0,
+    })
+  }
+
+  // Liquid damage
+  if (state.hasLiquidDamage) {
+    deductionBreakdown.push({
+      reason: 'deductLiquidDamage',
+      percentage: deductions.liquidDamage,
+      amount: 0,
+    })
+  }
+
+  // Battery health
+  if (state.batteryHealth === 'low') {
+    deductionBreakdown.push({
+      reason: 'deductBatteryLow',
+      percentage: deductions.batteryBelow85,
+      amount: 0,
+    })
+  }
+
+  // Original parts - battery
+  if (state.originalParts.battery === false) {
+    deductionBreakdown.push({
+      reason: 'deductBatteryNotOriginal',
+      percentage: deductions.batteryNotOriginal,
+      amount: 0,
+    })
+  }
+
+  // Original parts - screen
+  if (state.originalParts.screen === false) {
+    deductionBreakdown.push({
+      reason: 'deductScreenNotOriginal',
+      percentage: deductions.screenNotOriginal,
+      amount: 0,
+    })
+  }
+
+  // Functionality issues
+  if (state.functionalityIssues.faceId) {
     deductionBreakdown.push({
       reason: 'deductFaceId',
       percentage: deductions.faceIdNotWorking,
@@ -63,66 +119,73 @@ export function calculatePrice(state: WizardState): PriceResult | null {
     })
   }
 
-  if (functionalityIssues.camera) {
+  if (state.functionalityIssues.trueTone) {
+    deductionBreakdown.push({
+      reason: 'deductTrueTone',
+      percentage: deductions.trueToneNotWorking,
+      amount: 0,
+    })
+  }
+
+  if (state.functionalityIssues.camera) {
     deductionBreakdown.push({
       reason: 'deductCamera',
-      percentage: deductions.cameraIssues,
+      percentage: deductions.cameraNotWorking,
       amount: 0,
     })
   }
 
-  if (functionalityIssues.audio) {
+  if (state.functionalityIssues.audio) {
     deductionBreakdown.push({
       reason: 'deductAudio',
-      percentage: deductions.audioIssues,
+      percentage: deductions.audioNotWorking,
       amount: 0,
     })
   }
 
-  // Piezas no originales
-  if (hasNonOriginalParts) {
+  if (state.functionalityIssues.charging) {
     deductionBreakdown.push({
-      reason: 'deductParts',
-      percentage: deductions.nonOriginalParts,
+      reason: 'deductCharging',
+      percentage: deductions.chargingNotWorking,
       amount: 0,
     })
   }
 
-  // Estado estético
-  if (aestheticCondition === 'minor-details') {
-    deductionBreakdown.push({
-      reason: 'deductAestheticMinor',
-      percentage: deductions.aestheticMinorDetails,
-      amount: 0,
-    })
-  } else if (aestheticCondition === 'visible-damage') {
-    deductionBreakdown.push({
-      reason: 'deductAestheticDamage',
-      percentage: deductions.aestheticVisibleDamage,
-      amount: 0,
-    })
-  }
-
-  // 4. Calcular totales
-  const priceAfterStorage = basePrice * storageMultiplier
+  // Calculate totals
   const totalDeductionPercentage = deductionBreakdown.reduce((sum, d) => sum + d.percentage, 0)
 
-  // Calcular monto de cada deducción
+  // Calculate amount for each deduction
   deductionBreakdown.forEach((d) => {
-    d.amount = Math.round(priceAfterStorage * d.percentage)
+    d.amount = Math.round(basePrice * d.percentage)
   })
 
-  // Precio final (nunca menor a 0)
-  const totalDeductionAmount = Math.round(priceAfterStorage * totalDeductionPercentage)
-  const finalPrice = Math.max(0, Math.round(priceAfterStorage - totalDeductionAmount))
+  // Final price (never below 0)
+  const totalDeductionAmount = Math.round(basePrice * totalDeductionPercentage)
+  const finalPrice = Math.max(0, Math.round(basePrice - totalDeductionAmount))
 
   return {
     basePrice,
-    storageMultiplier,
     totalDeductions: totalDeductionPercentage,
     finalPrice,
     deductionBreakdown,
   }
+}
+
+/**
+ * Get available models from config
+ */
+export function getAvailableModels(): string[] {
+  const models = new Set(config.prices.map((p) => p.model))
+  return Array.from(models)
+}
+
+/**
+ * Get available storage options for a model
+ */
+export function getStorageForModel(model: string): string[] {
+  return config.prices
+    .filter((p) => p.model === model)
+    .map((p) => p.storage)
 }
 
 /**

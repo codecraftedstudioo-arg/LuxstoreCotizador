@@ -1,18 +1,21 @@
 import { describe, it, expect } from 'vitest'
-import { calculatePrice, formatPrice } from './pricing-engine'
+import { calculatePrice, formatPrice, getAvailableModels, getStorageForModel } from './pricing-engine'
 import type { WizardState } from '@/features/wizard/types'
 
-// Helper para crear estado completo
+// Helper para crear estado completo con nueva estructura
 function createWizardState(overrides: Partial<WizardState> = {}): WizardState {
   return {
-    currentStep: 8,
-    model: { id: 'iphone-15-pro', name: 'iPhone 15 Pro', basePrice: 1050000 },
+    currentStep: 6,
+    model: 'iPhone 15 Pro',
     storage: '128',
-    batteryBelow80: false,
     screenCondition: 'perfect',
-    functionalityIssues: { faceId: false, camera: false, audio: false },
-    hasNonOriginalParts: false,
-    aestheticCondition: 'perfect',
+    backCondition: 'perfect',
+    frameCondition: 'perfect',
+    hasLiquidDamage: false,
+    batteryHealth: 'good',
+    originalParts: { screen: true, battery: true },
+    functionalityIssues: { faceId: false, trueTone: false, camera: false, audio: false, charging: false },
+    iCloudOff: true,
     ...overrides,
   }
 }
@@ -28,107 +31,189 @@ describe('calculatePrice', () => {
     expect(calculatePrice(state)).toBeNull()
   })
 
-  it('calculates perfect condition iPhone at base price', () => {
+  it('returns blocked if iCloud is on', () => {
+    const state = createWizardState({ iCloudOff: false })
+    const result = calculatePrice(state)
+
+    expect(result).not.toBeNull()
+    expect(result!.blocked).toBe(true)
+    expect(result!.blockedReason).toBe('iCloudBlocked')
+  })
+
+  it('calculates perfect condition iPhone at fixed price', () => {
     const state = createWizardState()
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    expect(result!.finalPrice).toBe(1050000) // Base price for iPhone 15 Pro
+    expect(result!.finalPrice).toBe(550000) // Fixed price for iPhone 15 Pro 128GB
     expect(result!.totalDeductions).toBe(0)
     expect(result!.deductionBreakdown).toHaveLength(0)
   })
 
-  it('applies storage multiplier for 256GB', () => {
+  it('returns correct price for different storage', () => {
     const state = createWizardState({ storage: '256' })
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // 1,050,000 × 1.10 = 1,155,000
-    expect(result!.finalPrice).toBe(1155000)
-    expect(result!.storageMultiplier).toBe(1.10)
+    expect(result!.finalPrice).toBe(600000) // Fixed price for iPhone 15 Pro 256GB
   })
 
-  it('applies storage multiplier for 1TB', () => {
-    const state = createWizardState({ storage: '1024' })
+  it('applies battery low deduction (15%)', () => {
+    const state = createWizardState({ batteryHealth: 'low' })
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // 1,050,000 × 1.30 = 1,365,000
-    expect(result!.finalPrice).toBe(1365000)
-    expect(result!.storageMultiplier).toBe(1.30)
-  })
-
-  it('applies battery deduction when below 80%', () => {
-    const state = createWizardState({ batteryBelow80: true })
-    const result = calculatePrice(state)
-
-    expect(result).not.toBeNull()
-    // 1,050,000 × (1 - 0.10) = 945,000
-    expect(result!.finalPrice).toBe(945000)
-    expect(result!.totalDeductions).toBe(0.10)
+    // 550,000 × 0.15 = 82,500 deduction
+    expect(result!.totalDeductions).toBe(0.15)
+    expect(result!.finalPrice).toBe(467500)
     expect(result!.deductionBreakdown).toHaveLength(1)
-    expect(result!.deductionBreakdown[0].reason).toBe('deductBattery')
+    expect(result!.deductionBreakdown[0].reason).toBe('deductBatteryLow')
   })
 
-  it('applies screen deductions correctly', () => {
-    // Minor scratches
-    let state = createWizardState({ screenCondition: 'minor-scratches' })
-    let result = calculatePrice(state)
+  it('applies screen cracked deduction (50%)', () => {
+    const state = createWizardState({ screenCondition: 'cracked' })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.50)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductScreenCracked')).toBe(true)
+  })
+
+  it('applies screen scratches deduction (5%)', () => {
+    const state = createWizardState({ screenCondition: 'scratches' })
+    const result = calculatePrice(state)
+
     expect(result!.totalDeductions).toBe(0.05)
-
-    // Cracked
-    state = createWizardState({ screenCondition: 'cracked' })
-    result = calculatePrice(state)
-    expect(result!.totalDeductions).toBe(0.25)
   })
 
-  it('applies Face ID deduction', () => {
+  it('applies back cracked deduction (15%)', () => {
+    const state = createWizardState({ backCondition: 'cracked' })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.15)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductBackCracked')).toBe(true)
+  })
+
+  it('applies frame damaged deduction (8%)', () => {
+    const state = createWizardState({ frameCondition: 'damaged' })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.08)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductFrameDamaged')).toBe(true)
+  })
+
+  it('applies liquid damage deduction (20%)', () => {
+    const state = createWizardState({ hasLiquidDamage: true })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.20)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductLiquidDamage')).toBe(true)
+  })
+
+  it('applies non-original battery deduction (15%)', () => {
     const state = createWizardState({
-      functionalityIssues: { faceId: true, camera: false, audio: false },
+      originalParts: { screen: true, battery: false },
     })
     const result = calculatePrice(state)
 
     expect(result!.totalDeductions).toBe(0.15)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductBatteryNotOriginal')).toBe(true)
+  })
+
+  it('applies non-original screen deduction (50%)', () => {
+    const state = createWizardState({
+      originalParts: { screen: false, battery: true },
+    })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.50)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductScreenNotOriginal')).toBe(true)
+  })
+
+  it('applies Face ID deduction (30%)', () => {
+    const state = createWizardState({
+      functionalityIssues: { faceId: true, trueTone: false, camera: false, audio: false, charging: false },
+    })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.30)
     expect(result!.deductionBreakdown.some(d => d.reason === 'deductFaceId')).toBe(true)
+  })
+
+  it('applies True Tone deduction (15%)', () => {
+    const state = createWizardState({
+      functionalityIssues: { faceId: false, trueTone: true, camera: false, audio: false, charging: false },
+    })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.15)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductTrueTone')).toBe(true)
+  })
+
+  it('applies camera deduction (30%)', () => {
+    const state = createWizardState({
+      functionalityIssues: { faceId: false, trueTone: false, camera: true, audio: false, charging: false },
+    })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.30)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductCamera')).toBe(true)
+  })
+
+  it('applies charging deduction (30%)', () => {
+    const state = createWizardState({
+      functionalityIssues: { faceId: false, trueTone: false, camera: false, audio: false, charging: true },
+    })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.30)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductCharging')).toBe(true)
   })
 
   it('applies multiple deductions correctly', () => {
     const state = createWizardState({
-      batteryBelow80: true, // 10%
-      screenCondition: 'minor-scratches', // 5%
-      functionalityIssues: { faceId: true, camera: false, audio: false }, // 15%
-      hasNonOriginalParts: true, // 10%
-      aestheticCondition: 'minor-details', // 5%
+      batteryHealth: 'low', // 15%
+      screenCondition: 'scratches', // 5%
+      frameCondition: 'damaged', // 8%
     })
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // Total deductions: 10 + 5 + 15 + 10 + 5 = 45%
-    expect(result!.totalDeductions).toBe(0.45)
-    // 1,050,000 × (1 - 0.45) = 577,500
-    expect(result!.finalPrice).toBe(577500)
-    expect(result!.deductionBreakdown).toHaveLength(5)
+    // Total deductions: 15 + 5 + 8 = 28%
+    expect(result!.totalDeductions).toBe(0.28)
+    // 550,000 × (1 - 0.28) = 396,000
+    expect(result!.finalPrice).toBe(396000)
+    expect(result!.deductionBreakdown).toHaveLength(3)
+  })
+})
+
+describe('getAvailableModels', () => {
+  it('returns array of model names', () => {
+    const models = getAvailableModels()
+    expect(Array.isArray(models)).toBe(true)
+    expect(models.length).toBeGreaterThan(0)
+    expect(models).toContain('iPhone 15 Pro')
+  })
+})
+
+describe('getStorageForModel', () => {
+  it('returns storage options for a model', () => {
+    const storage = getStorageForModel('iPhone 15 Pro')
+    expect(Array.isArray(storage)).toBe(true)
+    expect(storage).toContain('128')
+    expect(storage).toContain('256')
   })
 
-  it('combines storage multiplier with deductions', () => {
-    const state = createWizardState({
-      storage: '256', // 1.10x
-      batteryBelow80: true, // 10%
-    })
-    const result = calculatePrice(state)
-
-    expect(result).not.toBeNull()
-    // 1,050,000 × 1.10 = 1,155,000
-    // 1,155,000 × (1 - 0.10) = 1,039,500
-    expect(result!.finalPrice).toBe(1039500)
+  it('returns empty array for unknown model', () => {
+    const storage = getStorageForModel('Unknown Model')
+    expect(storage).toHaveLength(0)
   })
 })
 
 describe('formatPrice', () => {
   it('formats price as Argentine Pesos', () => {
-    const formatted = formatPrice(1050000)
+    const formatted = formatPrice(550000)
     // Should contain the number and ARS symbol
-    expect(formatted).toContain('1.050.000')
+    expect(formatted).toContain('550.000')
   })
 
   it('handles zero price', () => {

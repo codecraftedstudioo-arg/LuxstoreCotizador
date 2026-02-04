@@ -1,117 +1,385 @@
-import { ProgressBar, VideoBackground, Header } from '@/components/ui'
+import { useState, useEffect } from 'react'
+import { ProgressBar } from '@/components/ui'
 import { useWizard, WizardProvider } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import {
   Step1Basics,
   Step2Condition,
   Step3Details,
+  Step4Functionality,
+  Step5ICloud,
   StepResult,
 } from './steps'
+import { IntroScreen } from './components/intro-screen'
 
-const TOTAL_STEPS = 3
+const TOTAL_STEPS = 5
 
 /**
- * Main wizard content - 3 grouped steps
- * Full-screen image background with Ken Burns effect
- * Wide glassmorphism card centered on screen
+ * iPhone 15 Pro Frame - Ultra realistic
+ */
+function IPhoneFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative mx-auto w-[280px] sm:w-[320px] md:w-[360px]">
+      {/* Phone shadow */}
+      <div className="absolute inset-4 bg-black/40 blur-2xl rounded-[50px]" />
+
+      {/* Outer titanium frame */}
+      <div
+        className="relative rounded-[48px] sm:rounded-[52px] p-[2px]"
+        style={{
+          background: 'linear-gradient(145deg, #5a5a5c 0%, #3d3d3f 15%, #252527 50%, #3d3d3f 85%, #5a5a5c 100%)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1)'
+        }}
+      >
+        {/* Inner black bezel */}
+        <div className="bg-[#111] rounded-[46px] sm:rounded-[50px] p-[8px] sm:p-[10px]">
+          {/* Screen */}
+          <div
+            className="relative bg-[#000] rounded-[38px] sm:rounded-[42px] overflow-hidden flex flex-col h-[600px] sm:h-[650px]"
+          >
+            {/* Status bar area with Dynamic Island */}
+            <div className="flex-shrink-0 relative h-12 sm:h-14">
+              {/* Time - left */}
+              <div className="absolute left-5 top-3 text-white text-[11px] sm:text-xs font-semibold">
+                9:41
+              </div>
+
+              {/* Dynamic Island - center */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-2 sm:top-2.5">
+                <div
+                  className="bg-black rounded-[20px] w-24 sm:w-28 h-[26px] sm:h-[30px] flex items-center justify-center gap-2"
+                  style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}
+                >
+                  <div className="w-[10px] h-[10px] rounded-full bg-[#111] flex items-center justify-center">
+                    <div className="w-[6px] h-[6px] rounded-full bg-[#1a365d]/80" />
+                  </div>
+                  <div className="w-[8px] h-[8px] rounded-full bg-[#111]" />
+                </div>
+              </div>
+
+              {/* Status icons - right */}
+              <div className="absolute right-5 top-3 flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 20.5c4.14 0 7.5-3.36 7.5-7.5S16.14 5.5 12 5.5 4.5 8.86 4.5 13s3.36 7.5 7.5 7.5zm0-13c3.03 0 5.5 2.47 5.5 5.5s-2.47 5.5-5.5 5.5S6.5 16.03 6.5 13 8.97 7.5 12 7.5z"/>
+                </svg>
+                <div className="w-5 h-2.5 rounded-sm border border-white flex items-center p-[1px]">
+                  <div className="w-3/4 h-full bg-white rounded-[1px]" />
+                </div>
+              </div>
+            </div>
+
+            {/* App header */}
+            <div className="flex-shrink-0 px-3 py-2 flex items-center gap-2 border-b border-white/10">
+              {/* App icon estilo iOS */}
+              <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-lg">
+                <img
+                  src="/ep-logo.jpg"
+                  alt="Electronic Point"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-white text-xs font-semibold">Electronic Point</p>
+                <p className="text-white/40 text-[10px]">Cotizador iPhone</p>
+              </div>
+            </div>
+
+            {/* Screen content - starts from top with padding */}
+            <div className="flex-1 overflow-y-auto overflow-x-hidden pl-3 pr-4 sm:pl-4 sm:pr-5 scrollbar-thin pt-2">
+              {children}
+            </div>
+
+            {/* Home indicator */}
+            <div className="flex-shrink-0 flex justify-center py-2">
+              <div className="w-28 sm:w-32 h-[5px] bg-white/30 rounded-full" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Physical buttons */}
+      <div className="hidden sm:block">
+        {/* Silent switch */}
+        <div className="absolute -left-[3px] top-[17%] w-[4px] h-7 rounded-l-sm bg-gradient-to-r from-[#4a4a4c] to-[#3a3a3c]" />
+        {/* Volume up */}
+        <div className="absolute -left-[3px] top-[25%] w-[4px] h-11 rounded-l-sm bg-gradient-to-r from-[#4a4a4c] to-[#3a3a3c]" />
+        {/* Volume down */}
+        <div className="absolute -left-[3px] top-[37%] w-[4px] h-11 rounded-l-sm bg-gradient-to-r from-[#4a4a4c] to-[#3a3a3c]" />
+        {/* Power/Action button */}
+        <div className="absolute -right-[3px] top-[26%] w-[4px] h-14 rounded-r-sm bg-gradient-to-l from-[#4a4a4c] to-[#3a3a3c]" />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Animated counter hook
+ */
+function useCounter(target: number, duration = 2000) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    let startTime: number
+    let animationFrame: number
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / duration, 1)
+      setCount(Math.floor(progress * target))
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate)
+      }
+    }
+
+    animationFrame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationFrame)
+  }, [target, duration])
+
+  return count
+}
+
+/**
+ * Side info panels
+ */
+function SideInfo({ position }: { position: 'left' | 'right' }) {
+  const clientCount = useCounter(500, 1500)
+  if (position === 'left') {
+    return (
+      <div className="hidden lg:flex flex-col gap-4 text-right pr-8">
+        <div className="space-y-1">
+          <div className="flex items-center justify-end gap-2">
+            <span className="text-white/70 text-sm font-medium">Cotización instantánea</span>
+            <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-white/40 text-xs">Resultado en 1 minuto</p>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center justify-end gap-2">
+            <span className="text-white/70 text-sm font-medium">Mejor precio</span>
+            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-white/40 text-xs">Garantizado del mercado</p>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center justify-end gap-2">
+            <span className="text-white/70 text-sm font-medium">Pago inmediato</span>
+            <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+              <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-white/40 text-xs">Efectivo o transferencia</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="hidden lg:flex flex-col gap-4 text-left pl-8">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
+            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <span className="text-white/70 text-sm font-medium">100% Seguro</span>
+        </div>
+        <p className="text-white/40 text-xs pl-10">Local físico en CABA</p>
+      </div>
+
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
+            <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <span className="text-white/70 text-sm font-medium">Soporte WhatsApp</span>
+        </div>
+        <p className="text-white/40 text-xs pl-10">Respondemos en minutos</p>
+      </div>
+
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
+            <svg className="w-4 h-4 text-rose-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </div>
+          <span className="text-white/70 text-sm font-medium">+{clientCount} clientes</span>
+        </div>
+        <p className="text-white/40 text-xs pl-10">Confían en nosotros</p>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Main wizard content
+ * Form inside iPhone mockup
  */
 function WizardContent() {
+  const [showIntro, setShowIntro] = useState(true)
   const { state, prevStep } = useWizard()
-  const { t } = useI18n()
+  useI18n() // Keep provider active
   const { currentStep } = state
+
+  // Show intro screen first (has its own layout)
+  if (showIntro) {
+    return <IntroScreen onStart={() => setShowIntro(false)} />
+  }
 
   const renderStep = () => {
     switch (currentStep) {
       case 1: return <Step1Basics />
       case 2: return <Step2Condition />
       case 3: return <Step3Details />
-      case 4: return <StepResult />
+      case 4: return <Step4Functionality />
+      case 5: return <Step5ICloud />
+      case 6: return <StepResult />
       default: return <Step1Basics />
     }
   }
 
-  const showBackButton = currentStep > 1 && currentStep <= TOTAL_STEPS
   const showProgress = currentStep <= TOTAL_STEPS
 
   return (
-    <div className="min-h-screen relative">
-      {/* Full background with images */}
-      <div className="fixed inset-0 -z-10">
-        <VideoBackground />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">
+      {/* Subtle gradient orbs */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
 
-      {/* Centered wizard container */}
-      <div className="min-h-screen flex flex-col">
-        {/* Header */}
-        <Header />
+      {/* Grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }}
+      />
 
-        {/* Wizard content - subtle integrated card */}
-        <main className="flex-1 py-4 px-4 overflow-y-auto flex items-center justify-center">
-          <div className="w-full max-w-2xl bg-black/40 backdrop-blur-md rounded-3xl p-6 lg:p-8">
-            {/* Title - compact */}
-            <div className="text-center mb-4 lg:mb-6">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <AppleIcon className="w-7 h-7 text-white/80" />
-                <h1 className="text-2xl lg:text-3xl font-bold text-white">
-                  {t('title')}
-                </h1>
-              </div>
-              <p className="text-gray-300 text-sm mt-2">
-                {t('subtitle')}
-              </p>
+      {/* Main content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Navbar - same as intro */}
+        <nav className="sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-white/10">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            {/* Logo - click to go back to intro */}
+            <button
+              onClick={() => setShowIntro(true)}
+              className="hover:opacity-80 transition-opacity"
+            >
+              <img
+                src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
+                alt="Electronic Point"
+                className="h-12 md:h-14 lg:h-16 w-auto"
+              />
+            </button>
+
+            {/* Back to intro + Step indicator */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowIntro(true)}
+                className="flex items-center gap-1 text-white/60 hover:text-white text-sm transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Inicio
+              </button>
+              {showProgress && (
+                <span className="text-white/40 text-sm font-medium">
+                  Paso {currentStep}/{TOTAL_STEPS}
+                </span>
+              )}
             </div>
+          </div>
+        </nav>
 
-            {/* Progress bar with back button */}
-            {showProgress && (
-              <div className="mb-4 flex items-center gap-3">
-                {showBackButton && (
-                  <button
-                    onClick={prevStep}
-                    className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
+        {/* iPhone mockup area with side info */}
+        <main className="flex-1 flex items-center justify-center px-4 py-4">
+          <div className="flex items-center justify-center gap-6 xl:gap-12">
+            {/* Left side info */}
+            <SideInfo position="left" />
+
+            {/* iPhone Frame */}
+            <div className="flex-shrink-0">
+              <IPhoneFrame>
+                {/* Progress bar */}
+                {showProgress && (
+                  <div className="mb-2">
+                    <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+                  </div>
                 )}
-                <div className="flex-1">
-                  <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+
+                {/* Step content */}
+                <div>
+                  {renderStep()}
+                </div>
+
+                {/* Navigation inside iPhone */}
+                {showProgress && (
+                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between px-1">
+                    <button
+                      onClick={prevStep}
+                      disabled={currentStep <= 1}
+                      className={`flex items-center gap-1 text-sm transition-colors ${
+                        currentStep <= 1
+                          ? 'text-white/20 cursor-not-allowed'
+                          : 'text-white/60 hover:text-white'
+                      }`}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Atrás
+                    </button>
+                    <span className="text-white/30 text-xs">
+                      {currentStep} de {TOTAL_STEPS}
+                    </span>
+                    <div className="w-14" /> {/* Spacer for alignment */}
+                  </div>
+                )}
+              </IPhoneFrame>
+
+              {/* Trust badges below phone - mobile only */}
+              <div className="lg:hidden mt-4 flex justify-center gap-4">
+                <div className="flex items-center gap-1.5 text-white/50 text-xs">
+                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Pago inmediato
+                </div>
+                <div className="flex items-center gap-1.5 text-white/50 text-xs">
+                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Mejor precio
                 </div>
               </div>
-            )}
-
-            {/* Current step - con animación */}
-            <div key={currentStep} className="relative z-10 animate-fadeSlideIn">
-              {renderStep()}
             </div>
+
+            {/* Right side info */}
+            <SideInfo position="right" />
           </div>
         </main>
 
         {/* Footer */}
-        <footer className="py-4 text-center text-white/60 text-sm">
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <a
-              href="https://electronicpoint.com.ar/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              Electronic Point
-            </a>
-            <span>·</span>
-            <a
-              href="https://maps.google.com/?q=Electronic+Point,+Costa+Rica+5509,+Buenos+Aires"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors flex items-center gap-1"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              {t('howToGet')}
-            </a>
-          </div>
+        <footer className="py-4 text-center">
+          <p className="text-white/30 text-xs">© 2026 Electronic Point · Costa Rica 5509, CABA</p>
         </footer>
       </div>
     </div>
@@ -120,21 +388,11 @@ function WizardContent() {
 
 /**
  * Wizard component with provider
- * Wrap content in provider so useWizard works
  */
 export function Wizard() {
   return (
     <WizardProvider>
       <WizardContent />
     </WizardProvider>
-  )
-}
-
-/** Apple icon - manzana simple */
-function AppleIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-    </svg>
   )
 }

@@ -22,25 +22,31 @@ const waTranslations = {
     phone: 'Teléfono:',
     model: 'Modelo:',
     storage: 'Almacenamiento:',
-    battery: 'Batería:',
-    batteryLow: 'Menor a 80%',
-    batteryOk: '80% o más',
+    battery: 'Salud de batería:',
+    batteryLow: 'Menor a 85%',
+    batteryOk: '85% o más',
     screen: 'Pantalla:',
     screenPerfect: 'Perfecta',
-    screenMinor: 'Rayones leves',
-    screenCracked: 'Rajada/rota',
+    screenScratches: 'Rayones visibles',
+    screenCracked: 'Rota/rajada',
+    back: 'Tapa trasera:',
+    backPerfect: 'Perfecta',
+    backCracked: 'Rota/rajada',
+    frame: 'Marco:',
+    framePerfect: 'Perfecto',
+    frameDamaged: 'Dañado',
+    liquidDamage: 'Daño por líquido:',
+    yes: 'Sí',
+    no: 'No',
     issues: 'Problemas:',
     noIssues: 'Ninguno',
     faceId: 'Face ID',
+    trueTone: 'True Tone',
     camera: 'Cámara',
     audio: 'Audio',
-    parts: 'Piezas originales:',
-    partsYes: 'Sí',
-    partsNo: 'No',
-    aesthetic: 'Estado estético:',
-    aestheticPerfect: 'Impecable',
-    aestheticMinor: 'Detalles leves',
-    aestheticDamage: 'Golpes visibles',
+    charging: 'Carga',
+    originalScreen: 'Pantalla original:',
+    originalBattery: 'Batería original:',
     quote: 'Cotización:',
     coordinate: '¿Podemos coordinar?',
   },
@@ -50,25 +56,31 @@ const waTranslations = {
     phone: 'Phone:',
     model: 'Model:',
     storage: 'Storage:',
-    battery: 'Battery:',
-    batteryLow: 'Below 80%',
-    batteryOk: '80% or more',
+    battery: 'Battery health:',
+    batteryLow: 'Below 85%',
+    batteryOk: '85% or more',
     screen: 'Screen:',
     screenPerfect: 'Perfect',
-    screenMinor: 'Minor scratches',
+    screenScratches: 'Visible scratches',
     screenCracked: 'Cracked/broken',
+    back: 'Back glass:',
+    backPerfect: 'Perfect',
+    backCracked: 'Cracked/broken',
+    frame: 'Frame:',
+    framePerfect: 'Perfect',
+    frameDamaged: 'Damaged',
+    liquidDamage: 'Liquid damage:',
+    yes: 'Yes',
+    no: 'No',
     issues: 'Issues:',
     noIssues: 'None',
     faceId: 'Face ID',
+    trueTone: 'True Tone',
     camera: 'Camera',
     audio: 'Audio',
-    parts: 'Original parts:',
-    partsYes: 'Yes',
-    partsNo: 'No',
-    aesthetic: 'Aesthetic condition:',
-    aestheticPerfect: 'Pristine',
-    aestheticMinor: 'Minor details',
-    aestheticDamage: 'Visible damage',
+    charging: 'Charging',
+    originalScreen: 'Original screen:',
+    originalBattery: 'Original battery:',
     quote: 'Quote:',
     coordinate: 'Can we coordinate?',
   },
@@ -100,35 +112,58 @@ export function buildMessage(
     lines.push('')
   }
 
-  lines.push(`*${t.model}* ${state.model?.name}`)
+  // Model and storage
+  lines.push(`*${t.model}* ${state.model}`)
   lines.push(`*${t.storage}* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
-  lines.push(`*${t.battery}* ${state.batteryBelow80 ? t.batteryLow : t.batteryOk}`)
 
-  // Pantalla
+  // Battery health
+  lines.push(`*${t.battery}* ${state.batteryHealth === 'low' ? t.batteryLow : t.batteryOk}`)
+
+  // Screen condition
   const screenLabels = {
     perfect: t.screenPerfect,
-    'minor-scratches': t.screenMinor,
+    scratches: t.screenScratches,
     cracked: t.screenCracked,
   }
-  lines.push(`*${t.screen}* ${screenLabels[state.screenCondition!]}`)
+  if (state.screenCondition) {
+    lines.push(`*${t.screen}* ${screenLabels[state.screenCondition]}`)
+  }
 
-  // Funcionalidades
+  // Back condition
+  const backLabels = {
+    perfect: t.backPerfect,
+    cracked: t.backCracked,
+  }
+  if (state.backCondition) {
+    lines.push(`*${t.back}* ${backLabels[state.backCondition]}`)
+  }
+
+  // Frame condition
+  const frameLabels = {
+    perfect: t.framePerfect,
+    damaged: t.frameDamaged,
+  }
+  if (state.frameCondition) {
+    lines.push(`*${t.frame}* ${frameLabels[state.frameCondition]}`)
+  }
+
+  // Liquid damage
+  if (state.hasLiquidDamage !== null) {
+    lines.push(`*${t.liquidDamage}* ${state.hasLiquidDamage ? t.yes : t.no}`)
+  }
+
+  // Functionality issues
   const issues: string[] = []
   if (state.functionalityIssues.faceId) issues.push(t.faceId)
+  if (state.functionalityIssues.trueTone) issues.push(t.trueTone)
   if (state.functionalityIssues.camera) issues.push(t.camera)
   if (state.functionalityIssues.audio) issues.push(t.audio)
+  if (state.functionalityIssues.charging) issues.push(t.charging)
   lines.push(`*${t.issues}* ${issues.length > 0 ? issues.join(', ') : t.noIssues}`)
 
-  // Piezas
-  lines.push(`*${t.parts}* ${state.hasNonOriginalParts ? t.partsNo : t.partsYes}`)
-
-  // Estado estético
-  const aestheticLabels = {
-    perfect: t.aestheticPerfect,
-    'minor-details': t.aestheticMinor,
-    'visible-damage': t.aestheticDamage,
-  }
-  lines.push(`*${t.aesthetic}* ${aestheticLabels[state.aestheticCondition!]}`)
+  // Original parts
+  lines.push(`*${t.originalScreen}* ${state.originalParts.screen ? t.yes : t.no}`)
+  lines.push(`*${t.originalBattery}* ${state.originalParts.battery ? t.yes : t.no}`)
 
   lines.push('')
   lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)
@@ -156,4 +191,3 @@ export function buildWhatsAppLink(
 
   return `https://wa.me/${BUSINESS_PHONE}?text=${encodedMessage}`
 }
-

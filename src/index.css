@@ -1,10 +1,20 @@
 @import "tailwindcss";
 
-/* Animación de entrada para los steps */
+/* Prevent double scrollbar */
+html, body {
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Animación de entrada para los steps y hero */
 @keyframes fadeSlideIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -13,7 +23,8 @@
 }
 
 .animate-fadeSlideIn {
-  animation: fadeSlideIn 0.3s ease-out;
+  opacity: 0;
+  animation: fadeSlideIn 0.8s ease-out forwards;
 }
 
 /* Animación contador de precio */
@@ -101,4 +112,102 @@
 
 .animate-shimmer {
   animation: shimmer 8s ease-in-out infinite;
+}
+
+/* Infinite scroll animation for reviews */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Ken Burns slow - zoom suave para intro */
+@keyframes kenburnsSlow {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  100% {
+    transform: scale(1.1) translateX(-2%);
+  }
+}
+
+.animate-kenburns-slow {
+  animation: kenburnsSlow 4s ease-out forwards;
+}
+
+/* Floating animations for 3D iPhones */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes floatDelayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 7s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thin visible scrollbar for iPhone screen */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.35);
 }

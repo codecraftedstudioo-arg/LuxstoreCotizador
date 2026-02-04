@@ -6,30 +6,59 @@ import { calculatePrice, formatPrice } from '@/lib/pricing-engine'
 import { buildWhatsAppLink, buildMessage } from '@/lib/whatsapp-builder'
 
 /**
- * Final step: Show price and WhatsApp button
- * Paleta blanco y negro
+ * Final step: Show price or blocked message
  */
 export function StepResult() {
   const { state, reset } = useWizard()
   const { t, lang } = useI18n()
   const priceResult = calculatePrice(state)
 
-  // Contact info (optional)
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [showPreview, setShowPreview] = useState(false)
 
-  // Handler para solo permitir números en teléfono
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '') // Solo dígitos
+    const value = e.target.value.replace(/\D/g, '')
     setContactPhone(value)
   }
 
+  // Blocked by iCloud
+  if (priceResult?.blocked) {
+    return (
+      <Card className="text-center">
+        <div className="py-8">
+          <div className="text-6xl mb-4">🔒</div>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            {lang === 'es' ? 'No podemos cotizar este iPhone' : 'We cannot quote this iPhone'}
+          </h2>
+          <p className="text-white/70 mb-6">
+            {lang === 'es'
+              ? 'El iPhone tiene iCloud / Buscar mi iPhone activado. Necesitamos que lo desactives para poder comprarlo.'
+              : 'The iPhone has iCloud / Find My iPhone enabled. You need to disable it for us to buy it.'}
+          </p>
+          <div className="p-4 bg-white/5 rounded-xl text-left mb-6">
+            <p className="text-sm text-white/80">
+              {lang === 'es'
+                ? '📱 Para desactivar: Ajustes → Tu nombre → Buscar → Buscar mi iPhone → Desactivar'
+                : '📱 To disable: Settings → Your Name → Find My → Find My iPhone → Turn Off'}
+            </p>
+          </div>
+          <Button onClick={reset} fullWidth>
+            {t('quoteAnother')}
+          </Button>
+        </div>
+      </Card>
+    )
+  }
+
+  // Error calculating
   if (!priceResult || !state.model) {
     return (
       <Card>
         <div className="text-center py-8">
-          <p className="text-gray-300">{lang === 'es' ? 'Error al calcular el precio' : 'Error calculating price'}</p>
+          <p className="text-gray-300">
+            {lang === 'es' ? 'Error al calcular el precio' : 'Error calculating price'}
+          </p>
           <Button onClick={reset} className="mt-4">
             {lang === 'es' ? 'Volver a empezar' : 'Start over'}
           </Button>
@@ -50,18 +79,18 @@ export function StepResult() {
 
   return (
     <Card className="text-center">
-      {/* Confetti - CSS only, no re-render */}
       <Confetti />
 
       <div className="mb-8 py-6 border-b border-white/10">
-        <p className="text-white/70 mb-3">{t('resultTitle', { model: state.model.name })}</p>
-        <p className="text-6xl lg:text-7xl font-black text-white tracking-tight animate-countUp">
+        <p className="text-white/70 mb-3">
+          {lang === 'es' ? `Tu ${state.model} vale aproximadamente` : `Your ${state.model} is worth approximately`}
+        </p>
+        <p className="text-4xl sm:text-5xl font-black text-white tracking-tight animate-countUp">
           {formatPrice(priceResult.finalPrice)}
         </p>
         <p className="text-white/50 text-sm mt-2">{t('resultDisclaimer')}</p>
       </div>
 
-      {/* Desglose de deducciones */}
       {priceResult.deductionBreakdown.length > 0 && (
         <div className="mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
           <p className="text-sm font-medium text-white mb-3">{t('adjustments')}</p>
@@ -76,7 +105,6 @@ export function StepResult() {
         </div>
       )}
 
-      {/* Contact info (optional) */}
       <div className="mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
         <p className="text-sm font-medium text-white mb-3">
           {t('contactInfo')} <span className="text-gray-500">{t('optional')}</span>
@@ -100,7 +128,6 @@ export function StepResult() {
         </div>
       </div>
 
-      {/* Preview del mensaje */}
       <div className="mb-4">
         <button
           onClick={() => setShowPreview(!showPreview)}
@@ -115,23 +142,23 @@ export function StepResult() {
         )}
       </div>
 
-      {/* Botón WhatsApp - blanco y negro */}
-      <a
-        href={whatsappLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block"
-      >
-        <button className="w-full px-8 py-4 bg-white text-black font-semibold text-lg rounded-xl hover:bg-gray-100 transition-all flex items-center justify-center gap-3 shadow-lg">
+      {/* Main CTA - WhatsApp */}
+      <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="block">
+        <button className="w-full px-6 py-4 bg-green-500 hover:bg-green-600 text-white font-semibold text-lg rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20">
           <WhatsAppIcon />
-          {t('contactWhatsApp')}
+          {lang === 'es' ? '¡Vender mi iPhone!' : 'Sell my iPhone!'}
         </button>
       </a>
 
-      {/* Volver a empezar */}
+      <p className="text-center text-white/40 text-xs mt-3">
+        {lang === 'es'
+          ? 'Te responderemos en minutos por WhatsApp'
+          : 'We\'ll reply within minutes on WhatsApp'}
+      </p>
+
       <button
         onClick={reset}
-        className="mt-4 text-sm text-gray-400 hover:text-white underline transition-colors"
+        className="mt-4 w-full py-2 text-sm text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-lg transition-all"
       >
         {t('quoteAnother')}
       </button>
@@ -147,7 +174,6 @@ function WhatsAppIcon() {
   )
 }
 
-/** Confetti burst effect - pure CSS, memoized to prevent re-renders */
 const Confetti = (() => {
   const colors = ['#fff', '#ccc', '#888', '#444']
   const pieces = Array.from({ length: 50 }, (_, i) => ({

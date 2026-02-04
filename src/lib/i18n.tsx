@@ -4,6 +4,15 @@ export type Language = 'es' | 'en'
 
 const translations = {
   es: {
+    // Intro screen
+    introTitle: 'Vendé tu iPhone',
+    introSubtitle: 'Cotizá en segundos y cobrá al instante. El mejor precio del mercado.',
+    introCta: 'Cotizar ahora',
+    badgeInstant: 'Pago inmediato',
+    badgeSecure: 'Transacción segura',
+    badgeLocation: 'Costa Rica 5509, CABA',
+    introFooter: '@electronicpoint.ar',
+
     // Header & general
     title: '¿Cuánto vale tu iPhone?',
     subtitle: 'Cotizá en menos de 1 minuto · Pago inmediato',
@@ -80,17 +89,30 @@ const translations = {
     waCoordinate: '¿Podemos coordinar?',
 
     // Deductions
-    deductBattery: 'Batería menor a 80%',
-    deductScreenMinor: 'Pantalla con rayones',
     deductScreenCracked: 'Pantalla rajada/rota',
+    deductScreenScratches: 'Pantalla con rayones',
+    deductBackCracked: 'Tapa trasera rota',
+    deductFrameDamaged: 'Marco/chasis dañado',
+    deductLiquidDamage: 'Daño por líquido',
+    deductBatteryLow: 'Batería menor a 85%',
+    deductBatteryNotOriginal: 'Batería no original',
+    deductScreenNotOriginal: 'Pantalla no original',
     deductFaceId: 'Face ID no funciona',
+    deductTrueTone: 'True Tone no funciona',
     deductCamera: 'Problemas de cámara',
     deductAudio: 'Problemas de audio',
-    deductParts: 'Piezas no originales',
-    deductAestheticMinor: 'Detalles estéticos leves',
-    deductAestheticDamage: 'Golpes visibles',
+    deductCharging: 'Problemas de carga',
   },
   en: {
+    // Intro screen
+    introTitle: 'Sell your iPhone',
+    introSubtitle: 'Get a quote in seconds and get paid instantly. Best market price.',
+    introCta: 'Get quote',
+    badgeInstant: 'Instant payment',
+    badgeSecure: 'Secure transaction',
+    badgeLocation: 'Costa Rica 5509, CABA',
+    introFooter: '@electronicpoint.ar',
+
     // Header & general
     title: 'How much is your iPhone worth?',
     subtitle: 'Get a quote in less than 1 minute · Instant payment',
@@ -167,15 +189,19 @@ const translations = {
     waCoordinate: 'Can we coordinate?',
 
     // Deductions
-    deductBattery: 'Battery below 80%',
-    deductScreenMinor: 'Screen with scratches',
     deductScreenCracked: 'Cracked/broken screen',
+    deductScreenScratches: 'Screen with scratches',
+    deductBackCracked: 'Cracked back glass',
+    deductFrameDamaged: 'Damaged frame/chassis',
+    deductLiquidDamage: 'Liquid damage',
+    deductBatteryLow: 'Battery below 85%',
+    deductBatteryNotOriginal: 'Non-original battery',
+    deductScreenNotOriginal: 'Non-original screen',
     deductFaceId: 'Face ID not working',
+    deductTrueTone: 'True Tone not working',
     deductCamera: 'Camera issues',
     deductAudio: 'Audio issues',
-    deductParts: 'Non-original parts',
-    deductAestheticMinor: 'Minor aesthetic details',
-    deductAestheticDamage: 'Visible damage',
+    deductCharging: 'Charging issues',
   },
 } as const
 

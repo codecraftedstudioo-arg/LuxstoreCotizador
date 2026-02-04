@@ -1,64 +1,78 @@
-import { Card, CardHeader, Select, Button } from '@/components/ui'
+import { Card, CardHeader, Button, Select, StoragePill } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
-import pricingConfig from '@/config/pricing.json'
+import { getAvailableModels, getStorageForModel } from '@/lib/pricing-engine'
 import type { StorageCapacity } from '../types'
 
 /**
- * Step 1: Basics - Model + Storage
+ * Step 1: Model (dropdown) + Storage (pills)
  */
 export function Step1Basics() {
-  const { state, setModel, setStorage, nextStep } = useWizard()
+  const { state, setModel, nextStep } = useWizard()
   const { t, lang } = useI18n()
 
-  const storageOptions = [
-    { value: '128', label: '128 GB' },
-    { value: '256', label: '256 GB' },
-    { value: '512', label: '512 GB' },
-    { value: '1024', label: t('storage1TB') },
-  ]
-
-  const modelOptions = pricingConfig.models.map((model) => ({
-    value: model.id,
-    label: model.name,
+  const models = getAvailableModels()
+  const modelOptions = models.map((model) => ({
+    value: model,
+    label: model,
   }))
 
-  const handleModelSelect = (modelId: string) => {
-    const model = pricingConfig.models.find(m => m.id === modelId)
-    if (model) setModel(model)
-  }
-
-  const canContinue = state.model && state.storage
+  const storageOptions = state.model ? getStorageForModel(state.model) : []
+  const canContinue = state.model !== null && state.storage !== null
 
   return (
     <Card>
       <CardHeader
         title={t('step1Title')}
-        subtitle={t('step1Subtitle')}
+        subtitle={lang === 'es' ? 'Seleccioná tu iPhone' : 'Select your iPhone'}
       />
 
       <div className="space-y-4">
+        {/* Model Dropdown */}
         <Select
-          label={lang === 'es' ? 'Modelo de iPhone' : 'iPhone Model'}
+          label={lang === 'es' ? 'Modelo' : 'Model'}
           placeholder={t('selectModel')}
           options={modelOptions}
-          value={state.model?.id}
-          onChange={handleModelSelect}
+          value={state.model ?? undefined}
+          onChange={(val) => setModel(val)}
         />
 
-        <Select
-          label={t('selectStorage')}
-          placeholder={lang === 'es' ? 'Seleccioná la capacidad...' : 'Select capacity...'}
-          options={storageOptions}
-          value={state.storage ?? undefined}
-          onChange={(val) => setStorage(val as StorageCapacity)}
-          disabled={!state.model}
-        />
+        {/* Storage Pills */}
+        {state.model && storageOptions.length > 0 && (
+          <div className="space-y-2 animate-fadeSlideIn">
+            <p className="text-sm text-white/50 font-medium">
+              {lang === 'es' ? 'Capacidad' : 'Storage'}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {storageOptions.map((storage) => (
+                <StoragePillButton
+                  key={storage}
+                  value={storage}
+                  selected={state.storage === storage}
+                  storage={storage as StorageCapacity}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <Button onClick={nextStep} fullWidth disabled={!canContinue} className="mt-6">
         {t('continue')}
       </Button>
     </Card>
+  )
+}
+
+// Separate component to use the hook
+function StoragePillButton({ value, selected, storage }: { value: string; selected: boolean; storage: StorageCapacity }) {
+  const { setStorage } = useWizard()
+
+  return (
+    <StoragePill
+      value={value}
+      selected={selected}
+      onClick={() => setStorage(storage)}
+    />
   )
 }

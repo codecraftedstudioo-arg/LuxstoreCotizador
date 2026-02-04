@@ -1,44 +1,49 @@
+import { useState, useEffect } from 'react'
+
 /**
- * Image Background Component with Ken Burns Effect
- * For split view: shows prominently on left side
- * For mobile: subtle background behind wizard
+ * Background Component for Wizard
+ * Subtle iPhone images with dark overlay
  */
+
+const wizardImages = [
+  'https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=1200&q=80',
+  'https://images.unsplash.com/photo-1580910051074-3eb694886f8b?w=1200&q=80',
+  'https://images.unsplash.com/photo-1512054502232-10a0a035d672?w=1200&q=80',
+]
+
 export function VideoBackground() {
-  // iPhones elegantes - múltiples
-  const images = [
-    'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=1920&q=80', // iPhones en fila elegante
-    'https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?w=1920&q=80', // iPhones sobre fondo oscuro
-    'https://images.unsplash.com/photo-1556656793-08538906a9f8?w=1920&q=80', // setup moderno con iPhone
-    'https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=1920&q=80', // iPhone 12 Pro Max
-  ]
+  const [currentImage, setCurrentImage] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % wizardImages.length)
+    }, 6000)
+    return () => clearInterval(timer)
+  }, [])
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-black">
-      {/* Base gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-black" />
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Base black */}
+      <div className="absolute inset-0 bg-black" />
 
-      {/* Images with Ken Burns effect */}
-      <div className="absolute inset-0">
-        {images.map((src, index) => (
-          <div
-            key={index}
-            className="absolute inset-0 opacity-0 animate-kenburns"
-            style={{
-              backgroundImage: `url(${src})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              animationDelay: `${index * 8}s`,
-              animationDuration: '32s',
-            }}
+      {/* Images with fade */}
+      {wizardImages.map((src, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            index === currentImage ? 'opacity-30' : 'opacity-0'
+          }`}
+        >
+          <img
+            src={src}
+            alt=""
+            className="w-full h-full object-cover"
           />
-        ))}
-      </div>
+        </div>
+      ))}
 
-      {/* Very subtle center vignette */}
-      <div className="absolute inset-0 bg-radial-[ellipse_at_center] from-transparent via-transparent to-black/50" />
-
-      {/* Animated light reflection */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent animate-shimmer" />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
     </div>
   )
 }
