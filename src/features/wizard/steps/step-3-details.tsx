@@ -1,4 +1,4 @@
-import { Card, CardHeader, Button, ConditionCard, ToggleCard } from '@/components/ui'
+import { Card, CardHeader, Button, ToggleCard } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 
@@ -57,20 +57,20 @@ export function Step3Details() {
               ? 'Ajustes → Batería → Estado de la batería'
               : 'Settings → Battery → Battery Health'}
           </p>
-          <div className="grid grid-cols-2 gap-3">
-            <ConditionCard
+          <div className="flex gap-3">
+            <ToggleCard
               selected={state.batteryHealth === 'good'}
               onClick={() => setBatteryHealth('good')}
               icon={<BatteryFullIcon />}
               label={lang === 'es' ? '85% o más' : '85% or more'}
-              variant="good"
+              neutral={true}
             />
-            <ConditionCard
+            <ToggleCard
               selected={state.batteryHealth === 'low'}
               onClick={() => setBatteryHealth('low')}
               icon={<BatteryLowIcon />}
               label={lang === 'es' ? 'Menos de 85%' : 'Below 85%'}
-              variant="warning"
+              neutral={true}
             />
           </div>
         </div>
