@@ -19,7 +19,7 @@ const TOTAL_STEPS = 5
  */
 function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; contentRef?: React.RefObject<HTMLDivElement | null> }) {
   return (
-    <div className="relative mx-auto w-[280px] sm:w-[320px] md:w-[360px]">
+    <div className="relative mx-auto w-[300px] sm:w-[350px] md:w-[390px]">
       {/* Phone shadow */}
       <div className="absolute inset-4 bg-black/40 blur-2xl rounded-[50px]" />
 
@@ -35,7 +35,7 @@ function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; cont
         <div className="bg-[#111] rounded-[46px] sm:rounded-[50px] p-[8px] sm:p-[10px]">
           {/* Screen */}
           <div
-            className="relative bg-[#000] rounded-[38px] sm:rounded-[42px] overflow-hidden flex flex-col h-[600px] sm:h-[650px]"
+            className="relative bg-[#000] rounded-[38px] sm:rounded-[42px] overflow-hidden flex flex-col h-[640px] sm:h-[700px]"
           >
             {/* Status bar area with Dynamic Island */}
             <div className="flex-shrink-0 relative h-12 sm:h-14">
