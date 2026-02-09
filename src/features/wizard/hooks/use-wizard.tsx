@@ -23,8 +23,8 @@ const initialState: WizardState = {
   // Step 3 - Battery & Parts
   batteryHealth: null,
   originalParts: {
-    screen: true,
-    battery: true,
+    screen: null,
+    battery: null,
   },
   // Step 4 - Functionality
   functionalityIssues: {

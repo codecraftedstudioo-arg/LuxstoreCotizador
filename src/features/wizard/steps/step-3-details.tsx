@@ -37,7 +37,11 @@ export function Step3Details() {
   const { state, setBatteryHealth, setOriginalParts, nextStep } = useWizard()
   const { t, lang } = useI18n()
 
-  const canContinue = state.batteryHealth !== null
+  // All 3 questions must be answered
+  const canContinue =
+    state.batteryHealth !== null &&
+    state.originalParts.screen !== null &&
+    state.originalParts.battery !== null
 
   return (
     <Card>
@@ -63,14 +67,14 @@ export function Step3Details() {
               onClick={() => setBatteryHealth('good')}
               icon={<BatteryFullIcon />}
               label={lang === 'es' ? '85% o más' : '85% or more'}
-              neutral={true}
+              isPositive={true}
             />
             <ToggleCard
               selected={state.batteryHealth === 'low'}
               onClick={() => setBatteryHealth('low')}
               icon={<BatteryLowIcon />}
               label={lang === 'es' ? 'Menos de 85%' : 'Below 85%'}
-              neutral={true}
+              isPositive={false}
             />
           </div>
         </div>
@@ -86,14 +90,14 @@ export function Step3Details() {
               onClick={() => setOriginalParts({ screen: true })}
               icon={<OriginalIcon />}
               label={lang === 'es' ? 'Original' : 'Original'}
-              neutral={true}
+              isPositive={true}
             />
             <ToggleCard
               selected={state.originalParts.screen === false}
               onClick={() => setOriginalParts({ screen: false })}
               icon={<ReplacedIcon />}
               label={lang === 'es' ? 'Cambiada' : 'Replaced'}
-              neutral={true}
+              isPositive={false}
             />
           </div>
         </div>
@@ -109,14 +113,14 @@ export function Step3Details() {
               onClick={() => setOriginalParts({ battery: true })}
               icon={<OriginalIcon />}
               label={lang === 'es' ? 'Original' : 'Original'}
-              neutral={true}
+              isPositive={true}
             />
             <ToggleCard
               selected={state.originalParts.battery === false}
               onClick={() => setOriginalParts({ battery: false })}
               icon={<ReplacedIcon />}
               label={lang === 'es' ? 'Cambiada' : 'Replaced'}
-              neutral={true}
+              isPositive={false}
             />
           </div>
         </div>

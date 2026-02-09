@@ -33,8 +33,8 @@ export interface FunctionalityIssues {
  * Original parts status
  */
 export interface OriginalParts {
-  screen: boolean  // true = original, false = not original
-  battery: boolean // true = original, false = not original
+  screen: boolean | null  // true = original, false = not original, null = not answered
+  battery: boolean | null // true = original, false = not original, null = not answered
 }
 
 /**
