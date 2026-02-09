@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { calculatePrice, formatPrice, getAvailableModels, getStorageForModel } from './pricing-engine'
-import type { WizardState } from '@/features/wizard/types'
+import type { WizardState, StorageCapacity } from '@/features/wizard/types'
 
 // Helper para crear estado completo con nueva estructura
 function createWizardState(overrides: Partial<WizardState> = {}): WizardState {
@@ -45,7 +45,7 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    expect(result!.finalPrice).toBe(550000) // Fixed price for iPhone 15 Pro 128GB
+    expect(result!.finalPrice).toBe(550) // Fixed price for iPhone 15 Pro 128GB
     expect(result!.totalDeductions).toBe(0)
     expect(result!.deductionBreakdown).toHaveLength(0)
   })
@@ -55,7 +55,7 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    expect(result!.finalPrice).toBe(600000) // Fixed price for iPhone 15 Pro 256GB
+    expect(result!.finalPrice).toBe(600) // Fixed price for iPhone 15 Pro 256GB
   })
 
   it('applies battery low deduction (15%)', () => {
@@ -63,9 +63,9 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // 550,000 × 0.15 = 82,500 deduction
+    // 550 × 0.15 = 82.5 → rounded to 85, final = 550-85 = 465 → 465
     expect(result!.totalDeductions).toBe(0.15)
-    expect(result!.finalPrice).toBe(467500)
+    expect(result!.finalPrice).toBe(465)
     expect(result!.deductionBreakdown).toHaveLength(1)
     expect(result!.deductionBreakdown[0].reason).toBe('deductBatteryLow')
   })
@@ -170,9 +170,113 @@ describe('calculatePrice', () => {
     expect(result).not.toBeNull()
     // Total deductions: 15 + 5 + 8 = 28%
     expect(result!.totalDeductions).toBe(0.28)
-    // 550,000 × (1 - 0.28) = 396,000
-    expect(result!.finalPrice).toBe(396000)
+    // 550 × (1 - 0.28) = 396 → rounded to 395
+    expect(result!.finalPrice).toBe(395)
     expect(result!.deductionBreakdown).toHaveLength(3)
+  })
+
+  // === EDGE CASES & STRESS TESTS ===
+
+  it('worst case: all deductions maxed out, price never goes below 0', () => {
+    const state = createWizardState({
+      model: 'iPhone 13 mini',
+      storage: '128', // lowest price: $180
+      screenCondition: 'cracked', // 50%
+      backCondition: 'cracked', // 15%
+      frameCondition: 'damaged', // 8%
+      hasLiquidDamage: true, // 20%
+      batteryHealth: 'low', // 15%
+      originalParts: { screen: false, battery: false }, // 50% + 15%
+      functionalityIssues: { faceId: true, camera: true, audio: true, charging: true }, // 30+30+15+30
+    })
+    const result = calculatePrice(state)
+
+    expect(result).not.toBeNull()
+    // Total: 50+15+8+20+15+50+15+30+30+15+30 = 278% → capped behavior
+    expect(result!.finalPrice).toBe(0) // should never be negative
+    expect(result!.finalPrice).toBeGreaterThanOrEqual(0)
+  })
+
+  it('screen cracked + screen not original both apply (100% screen penalty)', () => {
+    const state = createWizardState({
+      screenCondition: 'cracked', // 50%
+      originalParts: { screen: false, battery: true }, // 50%
+    })
+    const result = calculatePrice(state)
+
+    expect(result).not.toBeNull()
+    // 50% + 50% = 100% deduction
+    expect(result!.totalDeductions).toBe(1.0)
+    expect(result!.finalPrice).toBe(0)
+    expect(result!.deductionBreakdown).toHaveLength(2)
+  })
+
+  it('all functionality issues apply together', () => {
+    const state = createWizardState({
+      functionalityIssues: { faceId: true, camera: true, audio: true, charging: true },
+    })
+    const result = calculatePrice(state)
+
+    // 30 + 30 + 15 + 30 = 105%
+    expect(result!.totalDeductions).toBe(1.05)
+    expect(result!.finalPrice).toBe(0) // can't go negative
+    expect(result!.deductionBreakdown).toHaveLength(4)
+  })
+
+  it('audio deduction applies (15%)', () => {
+    const state = createWizardState({
+      functionalityIssues: { faceId: false, camera: false, audio: true, charging: false },
+    })
+    const result = calculatePrice(state)
+
+    expect(result!.totalDeductions).toBe(0.15)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductAudio')).toBe(true)
+  })
+
+  it('perfect condition for every model returns base price', () => {
+    const models = [
+      { model: 'iPhone 13', storage: '128', expected: 220 },
+      { model: 'iPhone 13 mini', storage: '128', expected: 180 },
+      { model: 'iPhone 14 Pro Max', storage: '1024', expected: 600 },
+      { model: 'iPhone 15 Pro Max', storage: '1024', expected: 750 },
+      { model: 'iPhone 16 Pro Max', storage: '1024', expected: 980 },
+    ]
+
+    models.forEach(({ model, storage, expected }) => {
+      const state = createWizardState({ model, storage: storage as StorageCapacity })
+      const result = calculatePrice(state)
+      expect(result).not.toBeNull()
+      expect(result!.finalPrice).toBe(expected)
+      expect(result!.totalDeductions).toBe(0)
+    })
+  })
+
+  it('returns null for valid model but invalid storage', () => {
+    const state = createWizardState({ model: 'iPhone 13', storage: '1024' })
+    expect(calculatePrice(state)).toBeNull()
+  })
+
+  it('iCloud blocked returns 0 price with blocked flag', () => {
+    const state = createWizardState({ iCloudOff: false })
+    const result = calculatePrice(state)
+
+    expect(result!.blocked).toBe(true)
+    expect(result!.finalPrice).toBe(0)
+    expect(result!.basePrice).toBe(0)
+  })
+
+  it('user scenario: iPhone 13 256GB camera broken + screen not original', () => {
+    const state = createWizardState({
+      model: 'iPhone 13',
+      storage: '256', // base $260
+      functionalityIssues: { faceId: false, camera: true, audio: false, charging: false }, // 30%
+      originalParts: { screen: false, battery: true }, // 50%
+    })
+    const result = calculatePrice(state)
+
+    // 260 * 0.80 = 208 → round to 210
+    // 260 - 210 = 50
+    expect(result!.finalPrice).toBe(50)
   })
 })
 
@@ -200,10 +304,9 @@ describe('getStorageForModel', () => {
 })
 
 describe('formatPrice', () => {
-  it('formats price as Argentine Pesos', () => {
-    const formatted = formatPrice(550000)
-    // Should contain the number and ARS symbol
-    expect(formatted).toContain('550.000')
+  it('formats price as US Dollars', () => {
+    const formatted = formatPrice(550)
+    expect(formatted).toBe('USD $550')
   })
 
   it('handles zero price', () => {
