@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '@/components/ui'
 import { useWizard } from './hooks/use-wizard'
@@ -17,7 +17,7 @@ const TOTAL_STEPS = 5
 /**
  * iPhone 15 Pro Frame - Ultra realistic
  */
-function IPhoneFrame({ children }: { children: React.ReactNode }) {
+function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; contentRef?: React.RefObject<HTMLDivElement | null> }) {
   return (
     <div className="relative mx-auto w-[280px] sm:w-[320px] md:w-[360px]">
       {/* Phone shadow */}
@@ -85,7 +85,7 @@ function IPhoneFrame({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Screen content - starts from top with padding */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden pl-3 pr-4 sm:pl-4 sm:pr-5 scrollbar-thin pt-2">
+            <div ref={contentRef} className="flex-1 overflow-y-auto overflow-x-hidden pl-3 pr-4 sm:pl-4 sm:pr-5 scrollbar-thin pt-2">
               {children}
             </div>
 
@@ -236,10 +236,13 @@ export function WizardPage() {
   const { state, prevStep } = useWizard()
   useI18n() // Keep provider active
   const { currentStep } = state
+  const contentRef = useRef<HTMLDivElement>(null)
 
   // Scroll to top when step changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (contentRef.current) {
+      contentRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }, [currentStep])
 
   const renderStep = () => {
@@ -317,7 +320,7 @@ export function WizardPage() {
 
             {/* iPhone Frame */}
             <div className="flex-shrink-0">
-              <IPhoneFrame>
+              <IPhoneFrame contentRef={contentRef}>
                 {/* Progress bar */}
                 {showProgress && (
                   <div className="mb-2">
