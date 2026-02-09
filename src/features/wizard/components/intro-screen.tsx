@@ -162,11 +162,11 @@ export function IntroScreen() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-white/5 to-transparent rounded-full blur-3xl" />
         </div>
 
-        {/* Floating 3D iPhones - Premium decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Floating 3D iPhones - Premium decoration (hidden on mobile) */}
+        <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none">
           {/* iPhone 1 - Left large (back view) */}
           <div
-            className="absolute left-[2%] md:left-[8%] top-[15%] w-44 md:w-64 lg:w-72 animate-float"
+            className="absolute left-[8%] top-[15%] w-64 lg:w-72 animate-float"
             style={{
               transform: `perspective(1200px) rotateY(20deg) rotateX(-5deg) translateY(${scrollY * 0.08}px)`,
             }}
@@ -185,7 +185,7 @@ export function IntroScreen() {
 
           {/* iPhone 2 - Right large (front view) */}
           <div
-            className="absolute right-[2%] md:right-[8%] top-[10%] w-48 md:w-72 lg:w-80 animate-float-delayed"
+            className="absolute right-[8%] top-[10%] w-72 lg:w-80 animate-float-delayed"
             style={{
               transform: `perspective(1200px) rotateY(-25deg) rotateX(5deg) translateY(${scrollY * 0.1}px)`,
             }}
@@ -269,9 +269,13 @@ export function IntroScreen() {
               </div>
 
               {/* Location - Mobile only */}
-              <p className="md:hidden mt-8 text-white/50 text-sm animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
-                📍 Estamos en Palermo, Buenos Aires
-              </p>
+              <div className="md:hidden mt-8 flex items-center justify-center gap-2 text-white/50 text-sm animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+                <span>Estamos en Palermo, Buenos Aires</span>
+              </div>
             </div>
         </div>
       </section>
