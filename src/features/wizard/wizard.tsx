@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '@/components/ui'
-import { useWizard, WizardProvider } from './hooks/use-wizard'
+import { useWizard } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import {
   Step1Basics,
@@ -10,7 +11,6 @@ import {
   Step5ICloud,
   StepResult,
 } from './steps'
-import { IntroScreen } from './components/intro-screen'
 
 const TOTAL_STEPS = 5
 
@@ -228,19 +228,14 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
 }
 
 /**
- * Main wizard content
+ * Wizard page component
  * Form inside iPhone mockup
  */
-function WizardContent() {
-  const [showIntro, setShowIntro] = useState(true)
+export function WizardPage() {
+  const navigate = useNavigate()
   const { state, prevStep } = useWizard()
   useI18n() // Keep provider active
   const { currentStep } = state
-
-  // Show intro screen first (has its own layout)
-  if (showIntro) {
-    return <IntroScreen onStart={() => setShowIntro(false)} />
-  }
 
   const renderStep = () => {
     switch (currentStep) {
@@ -277,9 +272,9 @@ function WizardContent() {
         {/* Navbar - same as intro */}
         <nav className="sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-white/10">
           <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            {/* Logo - click to go back to intro */}
+            {/* Logo - click to go back to home */}
             <button
-              onClick={() => setShowIntro(true)}
+              onClick={() => navigate('/')}
               className="hover:opacity-80 transition-opacity"
             >
               <img
@@ -289,10 +284,10 @@ function WizardContent() {
               />
             </button>
 
-            {/* Back to intro + Step indicator */}
+            {/* Back to home + Step indicator */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setShowIntro(true)}
+                onClick={() => navigate('/')}
                 className="flex items-center gap-1 text-white/60 hover:text-white text-sm transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,13 +381,5 @@ function WizardContent() {
   )
 }
 
-/**
- * Wizard component with provider
- */
-export function Wizard() {
-  return (
-    <WizardProvider>
-      <WizardContent />
-    </WizardProvider>
-  )
-}
+// Re-export WizardProvider for App.tsx
+export { WizardProvider } from './hooks/use-wizard'
