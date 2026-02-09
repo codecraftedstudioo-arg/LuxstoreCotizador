@@ -123,10 +123,11 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
 
           {/* Nav Links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#como-funciona"
+            <button
+               onClick={() => document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' })}
                className="text-white/60 hover:text-white transition-colors text-sm">
               ¿Cómo funciona?
-            </a>
+            </button>
             <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer"
                className="text-white/60 hover:text-white transition-colors text-sm">
               Ver iPhones
