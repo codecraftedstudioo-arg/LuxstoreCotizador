@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWizard } from '../hooks/use-wizard'
 
@@ -8,30 +8,6 @@ const heroImages = [
   'https://pngimg.com/d/iphone_14_PNG9.png',  // iPhone front screen
 ]
 
-// Hook para detectar cuando un elemento es visible
-function useInView(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [isInView, setIsInView] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-        }
-      },
-      { threshold }
-    )
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => observer.disconnect()
-  }, [threshold])
-
-  return { ref, isInView }
-}
 
 
 
@@ -103,9 +79,6 @@ export function IntroScreen() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Scroll-triggered sections
-  const featuresSection = useInView(0.2)
-  const reviewsSection = useInView(0.2)
 
   return (
     <div className="min-h-screen bg-black">
@@ -297,12 +270,9 @@ export function IntroScreen() {
         </div>
       </section>
 
-      {/* Features Section - Scroll triggered */}
+      {/* Features Section */}
       <section
-        ref={featuresSection.ref}
-        className={`relative z-10 border-t border-white/10 bg-neutral-950 transition-all duration-1000 ${
-          featuresSection.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
+        className="relative z-10 border-t border-white/10 bg-neutral-950"
       >
         <div className="max-w-6xl mx-auto px-4 py-20">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
@@ -360,7 +330,6 @@ export function IntroScreen() {
 
       {/* Reviews Section */}
       <section
-        ref={reviewsSection.ref}
         className="relative z-10 border-t border-white/10 bg-black py-12 overflow-hidden"
       >
         <div className="max-w-6xl mx-auto px-4 mb-6">
