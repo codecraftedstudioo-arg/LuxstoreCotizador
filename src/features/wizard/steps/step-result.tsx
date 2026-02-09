@@ -81,14 +81,15 @@ export function StepResult() {
     <Card className="text-center">
       <Confetti />
 
-      <div className="mb-8 py-6 border-b border-white/10">
-        <p className="text-white/70 mb-3">
-          {lang === 'es' ? `Tu ${state.model} vale aproximadamente` : `Your ${state.model} is worth approximately`}
+      {/* Sticky price header */}
+      <div className="sticky top-0 z-10 bg-black/95 backdrop-blur-sm -mx-3 px-3 py-4 mb-4 border-b border-white/10">
+        <p className="text-white/70 text-sm mb-1">
+          {lang === 'es' ? `Tu ${state.model} vale` : `Your ${state.model} is worth`}
         </p>
-        <p className="text-4xl sm:text-5xl font-black text-white tracking-tight animate-countUp">
+        <p className="text-3xl sm:text-4xl font-black text-white tracking-tight animate-countUp">
           {formatPrice(priceResult.finalPrice)}
         </p>
-        <p className="text-white/50 text-sm mt-2">{t('resultDisclaimer')}</p>
+        <p className="text-white/40 text-xs mt-1">{t('resultDisclaimer')}</p>
       </div>
 
       {priceResult.deductionBreakdown.length > 0 && (

@@ -154,14 +154,25 @@ interface ToggleCardProps {
   icon: ReactNode
   label: string
   isPositive?: boolean
+  neutral?: boolean
 }
 
 /**
  * Toggle card for yes/no options
  */
-export function ToggleCard({ selected, onClick, icon, label, isPositive = true }: ToggleCardProps) {
-  const selectedColor = isPositive ? 'border-green-500 bg-green-500/10' : 'border-red-500 bg-red-500/10'
-  const iconSelected = isPositive ? 'text-green-400' : 'text-red-400'
+export function ToggleCard({ selected, onClick, icon, label, isPositive = true, neutral = false }: ToggleCardProps) {
+  // Neutral uses gray for both options
+  const selectedColor = neutral
+    ? 'border-white/40 bg-white/10'
+    : isPositive
+      ? 'border-green-500 bg-green-500/10'
+      : 'border-red-500 bg-red-500/10'
+
+  const iconSelected = neutral
+    ? 'text-white'
+    : isPositive
+      ? 'text-green-400'
+      : 'text-red-400'
 
   return (
     <button

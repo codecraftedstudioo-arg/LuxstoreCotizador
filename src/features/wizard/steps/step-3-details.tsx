@@ -86,14 +86,14 @@ export function Step3Details() {
               onClick={() => setOriginalParts({ screen: true })}
               icon={<OriginalIcon />}
               label={lang === 'es' ? 'Original' : 'Original'}
-              isPositive={true}
+              neutral={true}
             />
             <ToggleCard
               selected={state.originalParts.screen === false}
               onClick={() => setOriginalParts({ screen: false })}
               icon={<ReplacedIcon />}
               label={lang === 'es' ? 'Cambiada' : 'Replaced'}
-              isPositive={false}
+              neutral={true}
             />
           </div>
         </div>
@@ -109,14 +109,14 @@ export function Step3Details() {
               onClick={() => setOriginalParts({ battery: true })}
               icon={<OriginalIcon />}
               label={lang === 'es' ? 'Original' : 'Original'}
-              isPositive={true}
+              neutral={true}
             />
             <ToggleCard
               selected={state.originalParts.battery === false}
               onClick={() => setOriginalParts({ battery: false })}
               icon={<ReplacedIcon />}
               label={lang === 'es' ? 'Cambiada' : 'Replaced'}
-              isPositive={false}
+              neutral={true}
             />
           </div>
         </div>
