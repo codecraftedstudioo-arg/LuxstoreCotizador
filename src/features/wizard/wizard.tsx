@@ -237,6 +237,11 @@ export function WizardPage() {
   useI18n() // Keep provider active
   const { currentStep } = state
 
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [currentStep])
+
   const renderStep = () => {
     switch (currentStep) {
       case 1: return <Step1Basics />
