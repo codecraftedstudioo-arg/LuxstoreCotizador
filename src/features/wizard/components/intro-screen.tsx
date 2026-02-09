@@ -1,12 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWizard } from '../hooks/use-wizard'
-
-// Hero images - PNGs transparentes de iPhones (verificados)
-const heroImages = [
-  'https://pngimg.com/d/iphone_14_PNG23.png', // iPhone Pro back (Sierra Blue)
-  'https://pngimg.com/d/iphone_14_PNG9.png',  // iPhone front screen
-]
 
 
 
@@ -70,14 +64,7 @@ const HandshakeIcon = () => (
 export function IntroScreen() {
   const navigate = useNavigate()
   const { reset } = useWizard()
-  const [scrollY, setScrollY] = useState(0)
-
-  // Scroll tracking for parallax
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const [menuOpen, setMenuOpen] = useState(false)
 
 
   return (
@@ -115,92 +102,70 @@ export function IntroScreen() {
             </a>
           </div>
 
-          {/* Nav Links - Mobile (icons) */}
-          <div className="flex md:hidden items-center gap-4">
-            <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
-               className="text-white/60 hover:text-white transition-colors p-2" title="Instagram">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          {/* Hamburger button - Mobile */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden text-white/70 hover:text-white p-2 transition-colors"
+          >
+            {menuOpen ? (
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </a>
-            <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer"
-               className="text-white/60 hover:text-white transition-colors p-2" title="Ubicación">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            ) : (
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
-            </a>
-          </div>
+            )}
+          </button>
 
-          {/* CTA button */}
+          {/* CTA button - Desktop */}
           <a
             href="https://electronicpoint.com.ar"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-2.5 rounded-full text-sm font-semibold text-black bg-white hover:bg-white/90 transition-all"
+            className="hidden md:block px-5 py-2.5 rounded-full text-sm font-semibold text-black bg-white hover:bg-white/90 transition-all"
           >
-            Tienda oficial
+            Tienda online
           </a>
         </div>
+
+        {/* Mobile menu dropdown */}
+        {menuOpen && (
+          <div className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl">
+            <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-4">
+              <button
+                onClick={() => {
+                  document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' })
+                  setMenuOpen(false)
+                }}
+                className="text-white/70 hover:text-white transition-colors text-sm text-left py-2"
+              >
+                ¿Cómo funciona?
+              </button>
+              <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer"
+                 className="text-white/70 hover:text-white transition-colors text-sm py-2">
+                Tienda online
+              </a>
+              <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
+                 className="text-white/70 hover:text-white transition-colors text-sm py-2">
+                Instagram
+              </a>
+              <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer"
+                 className="text-white/70 hover:text-white transition-colors text-sm py-2">
+                ¿Cómo llegar?
+              </a>
+            </div>
+          </div>
+        )}
       </nav>
 
-      {/* Hero Section - Apple Style */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 -z-10 bg-black">
-          {/* Subtle gradient glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-white/5 to-transparent rounded-full blur-3xl" />
-        </div>
-
-        {/* Floating 3D iPhones - Premium decoration (hidden on mobile) */}
-        <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none">
-          {/* iPhone 1 - Left large (back view) */}
-          <div
-            className="absolute left-[8%] top-[15%] w-64 lg:w-72 animate-float"
-            style={{
-              transform: `perspective(1200px) rotateY(20deg) rotateX(-5deg) translateY(${scrollY * 0.08}px)`,
-            }}
-          >
-            <div className="relative">
-              <img
-                src={heroImages[0]}
-                alt=""
-                className="w-full drop-shadow-[0_0_100px_rgba(255,255,255,0.25)]"
-                style={{ filter: 'brightness(1.1)' }}
-              />
-              {/* Glow behind */}
-              <div className="absolute -inset-10 bg-white/5 rounded-full blur-3xl -z-10" />
-            </div>
-          </div>
-
-          {/* iPhone 2 - Right large (front view) */}
-          <div
-            className="absolute right-[8%] top-[10%] w-72 lg:w-80 animate-float-delayed"
-            style={{
-              transform: `perspective(1200px) rotateY(-25deg) rotateX(5deg) translateY(${scrollY * 0.1}px)`,
-            }}
-          >
-            <div className="relative">
-              <img
-                src={heroImages[1]}
-                alt=""
-                className="w-full drop-shadow-[0_0_120px_rgba(255,255,255,0.3)]"
-                style={{ filter: 'brightness(1.05)' }}
-              />
-              {/* Glow behind */}
-              <div className="absolute -inset-10 bg-blue-500/10 rounded-full blur-3xl -z-10" />
-            </div>
-          </div>
-
-          {/* Subtle reflection/glow at bottom */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-gradient-to-t from-white/5 to-transparent blur-3xl" />
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 py-20 w-full relative z-10">
-          {/* Center content */}
-          <div className="text-center">
-              {/* Title - Large Apple style */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
+      {/* Hero Section */}
+      <section className="relative bg-black overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:min-h-[75vh]">
+            {/* Left - Text */}
+            <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-8 md:py-20 md:w-1/2">
+              <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
                 Vendé tu iPhone
                 <span className="block bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent mt-2">
                   al mejor precio
@@ -208,15 +173,14 @@ export function IntroScreen() {
               </h1>
 
               <p
-                className="text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed animate-fadeSlideIn"
+                className="text-lg md:text-xl text-white/60 mb-8 leading-relaxed animate-fadeSlideIn"
                 style={{ animationDelay: '0.1s' }}
               >
                 Cotización en 1 minuto. Pago en efectivo o transferencia. Sin vueltas.
               </p>
 
-              {/* CTAs - with animation */}
               <div
-                className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fadeSlideIn"
+                className="mb-10 animate-fadeSlideIn"
                 style={{ animationDelay: '0.2s' }}
               >
                 <button
@@ -229,21 +193,10 @@ export function IntroScreen() {
                 >
                   Cotizar ahora
                 </button>
-                <a
-                  href="https://electronicpoint.com.ar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-10 py-5 rounded-full text-lg font-semibold text-white
-                             border border-white/30 hover:border-white/60 hover:bg-white/5
-                             transition-all duration-300 text-center"
-                >
-                  Ver tienda
-                </a>
               </div>
 
-              {/* Stats */}
               <div
-                className="flex flex-wrap gap-10 justify-center animate-fadeSlideIn"
+                className="flex flex-wrap gap-8 animate-fadeSlideIn"
                 style={{ animationDelay: '0.3s' }}
               >
                 {[
@@ -251,15 +204,15 @@ export function IntroScreen() {
                   { value: '4.9★', label: 'Google Reviews' },
                   { value: '24hs', label: 'Pago inmediato' },
                 ].map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-white">{stat.value}</div>
+                  <div key={i}>
+                    <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
                     <div className="text-white/40 text-sm">{stat.label}</div>
                   </div>
                 ))}
               </div>
 
               {/* Location - Mobile only */}
-              <div className="md:hidden mt-8 flex items-center justify-center gap-2 text-white/50 text-sm animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
+              <div className="md:hidden mt-6 flex items-center gap-2 text-white/50 text-sm animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -267,6 +220,25 @@ export function IntroScreen() {
                 <span>Estamos en Palermo, Buenos Aires</span>
               </div>
             </div>
+
+            {/* Right - Image */}
+            <div className="relative md:w-1/2 h-[50vh] md:h-auto md:min-h-[75vh]">
+              <img
+                src="/hero-mobile.webp"
+                alt="iPhones"
+                className="md:hidden w-full h-full object-cover object-[center_20%]"
+              />
+              <img
+                src="/hero-desktop.webp"
+                alt="iPhones"
+                className="hidden md:block w-full h-full object-cover object-center absolute inset-0"
+              />
+              {/* Gradient fade into black on the left */}
+              <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
+              {/* Gradient fade on bottom for mobile */}
+              <div className="md:hidden absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+            </div>
+          </div>
         </div>
       </section>
 

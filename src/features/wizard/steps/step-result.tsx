@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
@@ -16,6 +16,17 @@ export function StepResult() {
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [showPreview, setShowPreview] = useState(false)
+
+  // Play cha-ching sound on successful quote
+  useEffect(() => {
+    if (priceResult && !priceResult.blocked) {
+      const audio = new Audio('/cha-ching.mp3')
+      audio.volume = 0.5
+      audio.play().catch(() => {
+        // Ignore autoplay errors (browser may block)
+      })
+    }
+  }, [])
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '')
@@ -176,13 +187,14 @@ function WhatsAppIcon() {
 }
 
 const Confetti = (() => {
-  const colors = ['#fff', '#ccc', '#888', '#444']
-  const pieces = Array.from({ length: 50 }, (_, i) => ({
+  // Colores tipo piñata/fiesta
+  const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA', '#FF9F43', '#6BCB77']
+  const pieces = Array.from({ length: 60 }, (_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
     delay: `${Math.random() * 0.5}s`,
     color: colors[Math.floor(Math.random() * colors.length)],
-    size: Math.random() * 8 + 4,
+    size: Math.random() * 10 + 5,
     isRound: Math.random() > 0.5,
   }))
 
