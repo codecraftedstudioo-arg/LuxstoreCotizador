@@ -161,10 +161,20 @@ export function IntroScreen() {
 
       {/* Hero Section */}
       <section className="relative bg-black overflow-hidden">
+        {/* Mobile background image */}
+        <div className="md:hidden absolute inset-0">
+          <img
+            src="/hero-mobile.webp"
+            alt=""
+            className="w-full h-full object-cover object-[center_20%] opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/80" />
+        </div>
+
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center md:min-h-[75vh]">
             {/* Left - Text */}
-            <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-8 md:py-20 md:w-1/2">
+            <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-12 md:py-20 md:w-1/2">
               <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
                 Vendé tu iPhone
                 <span className="block bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent mt-2">
@@ -221,22 +231,14 @@ export function IntroScreen() {
               </div>
             </div>
 
-            {/* Right - Image */}
-            <div className="relative md:w-1/2 h-[50vh] md:h-auto md:min-h-[75vh]">
-              <img
-                src="/hero-mobile.webp"
-                alt="iPhones"
-                className="md:hidden w-full h-full object-cover object-[center_20%]"
-              />
+            {/* Right - Image (desktop only) */}
+            <div className="hidden md:block relative md:w-1/2 md:min-h-[75vh]">
               <img
                 src="/hero-desktop.webp"
                 alt="iPhones"
-                className="hidden md:block w-full h-full object-cover object-center absolute inset-0"
+                className="w-full h-full object-cover object-center absolute inset-0"
               />
-              {/* Gradient fade into black on the left */}
-              <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
-              {/* Gradient fade on bottom for mobile */}
-              <div className="md:hidden absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
             </div>
           </div>
         </div>
