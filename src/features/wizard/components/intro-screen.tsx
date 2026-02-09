@@ -136,9 +136,9 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
                className="text-white/60 hover:text-white transition-colors text-sm">
               Instagram
             </a>
-            <a href="https://maps.google.com/?q=Costa+Rica+5509+CABA" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer"
                className="text-white/60 hover:text-white transition-colors text-sm">
-              Ubicación
+              ¿Cómo llegar?
             </a>
           </div>
 
