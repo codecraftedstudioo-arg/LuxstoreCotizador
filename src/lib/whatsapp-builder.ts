@@ -91,7 +91,8 @@ export function buildMessage(
   state: WizardState,
   priceResult: PriceResult,
   contactInfo?: ContactInfo,
-  lang: Language = 'es'
+  lang: Language = 'es',
+  exchangeRate: number = 0
 ): string {
   const t = waTranslations[lang]
   const lines: string[] = []
@@ -164,6 +165,12 @@ export function buildMessage(
 
   lines.push('')
   lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)
+  if (exchangeRate > 0) {
+    const arsEquivalent = (priceResult.finalPrice * exchangeRate).toLocaleString('es-AR')
+    lines.push(lang === 'es'
+      ? `Equivale a $${arsEquivalent} ARS (dólar $${exchangeRate.toLocaleString('es-AR')})`
+      : `Equivalent to $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+  }
   lines.push('')
   lines.push(t.coordinate)
 
@@ -181,9 +188,10 @@ export function buildWhatsAppLink(
   state: WizardState,
   priceResult: PriceResult,
   contactInfo?: ContactInfo,
-  lang: Language = 'es'
+  lang: Language = 'es',
+  exchangeRate: number = 0
 ): string {
-  const message = buildMessage(state, priceResult, contactInfo, lang)
+  const message = buildMessage(state, priceResult, contactInfo, lang, exchangeRate)
   const encodedMessage = encodeURIComponent(message)
 
   return `https://wa.me/${BUSINESS_PHONE}?text=${encodedMessage}`

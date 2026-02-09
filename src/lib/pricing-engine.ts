@@ -146,14 +146,17 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   // Calculate totals
   const totalDeductionPercentage = deductionBreakdown.reduce((sum, d) => sum + d.percentage, 0)
 
+  // Round to nearest 5
+  const roundTo5 = (n: number) => Math.round(n / 5) * 5
+
   // Calculate amount for each deduction
   deductionBreakdown.forEach((d) => {
-    d.amount = Math.round(basePrice * d.percentage)
+    d.amount = roundTo5(basePrice * d.percentage)
   })
 
   // Final price (never below 0)
-  const totalDeductionAmount = Math.round(basePrice * totalDeductionPercentage)
-  const finalPrice = Math.max(0, Math.round(basePrice - totalDeductionAmount))
+  const totalDeductionAmount = roundTo5(basePrice * totalDeductionPercentage)
+  const finalPrice = Math.max(0, roundTo5(basePrice - totalDeductionAmount))
 
   return {
     basePrice,
@@ -181,13 +184,8 @@ export function getStorageForModel(model: string): string[] {
 }
 
 /**
- * Format price as Argentine Pesos
+ * Format price as US Dollars
  */
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price)
+  return `USD $${price.toLocaleString('es-AR')}`
 }

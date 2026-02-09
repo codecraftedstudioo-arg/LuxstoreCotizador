@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '@/components/ui'
 import { useWizard } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
+import { useExchangeRate } from '@/lib/use-exchange-rate'
 import {
   Step1Basics,
   Step2Condition,
@@ -235,6 +236,7 @@ export function WizardPage() {
   const navigate = useNavigate()
   const { state, prevStep } = useWizard()
   useI18n() // Keep provider active
+  const { rate } = useExchangeRate()
   const { currentStep } = state
   const contentRef = useRef<HTMLDivElement>(null)
 
@@ -311,6 +313,15 @@ export function WizardPage() {
             </div>
           </div>
         </nav>
+
+        {/* Exchange rate banner */}
+        <div className="bg-white/5 border-b border-white/10">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-center gap-3 text-sm text-white/60">
+            <span>Cotizamos en USD</span>
+            <span className="text-white/20">|</span>
+            <span>Dólar blue: <span className="text-white font-bold text-base">${rate.toLocaleString('es-AR')}</span></span>
+          </div>
+        </div>
 
         {/* iPhone mockup area with side info */}
         <main className="flex-1 flex items-center justify-center px-4 py-4">

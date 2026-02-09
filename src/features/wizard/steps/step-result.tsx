@@ -4,6 +4,7 @@ import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import { calculatePrice, formatPrice } from '@/lib/pricing-engine'
 import { buildWhatsAppLink, buildMessage } from '@/lib/whatsapp-builder'
+import { useExchangeRate } from '@/lib/use-exchange-rate'
 
 /**
  * Final step: Show price or blocked message
@@ -12,20 +13,47 @@ export function StepResult() {
   const { state, reset } = useWizard()
   const { t, lang } = useI18n()
   const priceResult = calculatePrice(state)
+  const { rate } = useExchangeRate()
 
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [showPreview, setShowPreview] = useState(false)
 
-  // Play cha-ching sound on successful quote
+  // Play celebration sound on successful quote
   useEffect(() => {
-    if (priceResult && !priceResult.blocked) {
-      const audio = new Audio('/cha-ching.mp3')
-      audio.volume = 0.5
-      audio.play().catch(() => {
-        // Ignore autoplay errors (browser may block)
+    if (!priceResult || priceResult.blocked) return
+
+    const audio = new Audio('/celebration.mp3')
+    audio.volume = 0.5
+    audio.setAttribute('playsinline', 'true')
+    let cleaned = false
+
+    const cleanup = () => {
+      cleaned = true
+      audio.pause()
+      audio.currentTime = 0
+      document.removeEventListener('touchstart', playOnInteraction)
+      document.removeEventListener('click', playOnInteraction)
+    }
+
+    const playOnInteraction = () => {
+      if (!cleaned) {
+        audio.play().catch(() => {})
+      }
+      cleanup()
+    }
+
+    const playPromise = audio.play()
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        if (!cleaned) {
+          document.addEventListener('touchstart', playOnInteraction, { once: true })
+          document.addEventListener('click', playOnInteraction, { once: true })
+        }
       })
     }
+
+    return cleanup
   }, [])
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,12 +109,12 @@ export function StepResult() {
   const whatsappLink = buildWhatsAppLink(state, priceResult, {
     name: contactName || undefined,
     phone: contactPhone || undefined,
-  }, lang)
+  }, lang, rate)
 
   const messagePreview = buildMessage(state, priceResult, {
     name: contactName || undefined,
     phone: contactPhone || undefined,
-  }, lang)
+  }, lang, rate)
 
   return (
     <Card className="text-center">
@@ -99,6 +127,11 @@ export function StepResult() {
         </p>
         <p className="text-3xl sm:text-4xl font-black text-white tracking-tight animate-countUp">
           {formatPrice(priceResult.finalPrice)}
+        </p>
+        <p className="text-white/50 text-sm mt-1">
+          {lang === 'es'
+            ? `Equivale a $${(priceResult.finalPrice * rate).toLocaleString('es-AR')} ARS`
+            : `Equivalent to $${(priceResult.finalPrice * rate).toLocaleString('en-US')} ARS`}
         </p>
         <p className="text-white/40 text-xs mt-1">{t('resultDisclaimer')}</p>
       </div>

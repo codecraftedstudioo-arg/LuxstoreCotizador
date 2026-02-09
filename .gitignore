@@ -52,3 +52,5 @@ coverage
 # Large media files (add your own video)
 public/background.mp4
 *.mp4
+
+.vercel

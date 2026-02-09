@@ -66,14 +66,14 @@ export function Step5ICloud() {
             selected={state.iCloudOff === true}
             onClick={() => setICloud(true)}
             icon={<CloudCheckIcon />}
-            label={lang === 'es' ? 'Sí, desactivado' : 'Yes, it\'s off'}
+            label={lang === 'es' ? 'Sí' : 'Yes'}
             isPositive={true}
           />
           <ToggleCard
             selected={state.iCloudOff === false}
             onClick={() => setICloud(false)}
             icon={<CloudXIcon />}
-            label={lang === 'es' ? 'No / No sé' : 'No / Not sure'}
+            label={lang === 'es' ? 'No' : 'No'}
             isPositive={false}
           />
         </div>

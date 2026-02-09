@@ -43,11 +43,12 @@ const XIcon = () => (
 interface FunctionalityItemProps {
   icon: React.ReactNode
   label: string
+  issueLabel: string
   hasIssue: boolean
   onToggle: (hasIssue: boolean) => void
 }
 
-function FunctionalityItem({ icon, label, hasIssue, onToggle }: FunctionalityItemProps) {
+function FunctionalityItem({ icon, label, issueLabel, hasIssue, onToggle }: FunctionalityItemProps) {
   return (
     <button
       type="button"
@@ -64,7 +65,7 @@ function FunctionalityItem({ icon, label, hasIssue, onToggle }: FunctionalityIte
         {icon}
       </div>
       <span className={`flex-1 text-sm text-left ${hasIssue ? 'text-white' : 'text-white/70'}`}>
-        {label}
+        {hasIssue ? issueLabel : label}
       </span>
       <div className="flex items-center gap-1">
         {hasIssue ? <XIcon /> : <CheckIcon />}
@@ -85,22 +86,26 @@ export function Step4Functionality() {
     {
       key: 'faceId' as const,
       icon: <FaceIdIcon />,
-      label: lang === 'es' ? 'Face ID / Touch ID no funciona' : 'Face ID / Touch ID not working',
+      label: lang === 'es' ? 'Face ID funciona' : 'Face ID works',
+      issueLabel: lang === 'es' ? 'Face ID no funciona' : 'Face ID not working',
     },
     {
       key: 'camera' as const,
       icon: <CameraIcon />,
-      label: lang === 'es' ? 'Cámara con problemas' : 'Camera issues',
+      label: lang === 'es' ? 'Cámara funciona' : 'Camera works',
+      issueLabel: lang === 'es' ? 'Cámara con problemas' : 'Camera issues',
     },
     {
       key: 'audio' as const,
       icon: <AudioIcon />,
-      label: lang === 'es' ? 'Audio / Parlantes con problemas' : 'Audio / Speakers issues',
+      label: lang === 'es' ? 'Audio funciona' : 'Audio works',
+      issueLabel: lang === 'es' ? 'Audio con problemas' : 'Audio issues',
     },
     {
       key: 'charging' as const,
       icon: <ChargingIcon />,
-      label: lang === 'es' ? 'Carga con problemas' : 'Charging issues',
+      label: lang === 'es' ? 'Carga funciona' : 'Charging works',
+      issueLabel: lang === 'es' ? 'Carga con problemas' : 'Charging issues',
     },
   ]
 
@@ -119,6 +124,7 @@ export function Step4Functionality() {
             key={issue.key}
             icon={issue.icon}
             label={issue.label}
+            issueLabel={issue.issueLabel}
             hasIssue={state.functionalityIssues[issue.key]}
             onToggle={(hasIssue) => setFunctionality({ [issue.key]: hasIssue })}
           />

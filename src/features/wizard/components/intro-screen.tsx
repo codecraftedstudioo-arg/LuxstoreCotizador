@@ -1,9 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWizard } from '../hooks/use-wizard'
 
 
 
+
+// Typewriter effect component
+function Typewriter({ text, delay = 0, speed = 30 }: { text: string; delay?: number; speed?: number }) {
+  const [displayed, setDisplayed] = useState('')
+  const [started, setStarted] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setStarted(true), delay)
+    return () => clearTimeout(timeout)
+  }, [delay])
+
+  useEffect(() => {
+    if (!started) return
+    if (displayed.length >= text.length) return
+    const timeout = setTimeout(() => {
+      setDisplayed(text.slice(0, displayed.length + 1))
+    }, speed)
+    return () => clearTimeout(timeout)
+  }, [started, displayed, text, speed])
+
+  return (
+    <span className="relative block">
+      <span className="invisible">{text}</span>
+      <span className="absolute inset-0">
+        {displayed}
+        {started && displayed.length < text.length && <span className="inline-block w-[2px] h-[1em] bg-white/60 align-middle ml-0.5 animate-pulse" />}
+      </span>
+    </span>
+  )
+}
 
 // Google Reviews - based on real reviews from Electronic Point
 const reviewsData = [
@@ -28,7 +58,7 @@ const GoogleIcon = () => (
 // Star Icon
 const StarIcon = ({ filled = false, small = false }: { filled?: boolean; small?: boolean }) => (
   <svg
-    className={`${small ? 'w-3.5 h-3.5' : 'w-5 h-5'} ${filled ? 'text-yellow-400' : 'text-white/20'}`}
+    className={`${small ? 'w-3.5 h-3.5' : 'w-5 h-5'} ${filled ? 'text-amber-400 drop-shadow-[0_0_3px_rgba(251,191,36,0.4)]' : 'text-white/20'}`}
     fill="currentColor"
     viewBox="0 0 20 20"
   >
@@ -38,25 +68,25 @@ const StarIcon = ({ filled = false, small = false }: { filled?: boolean; small?:
 
 // Professional SVG Icons - White
 const ClockIcon = () => (
-  <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 )
 
 const CurrencyIcon = () => (
-  <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 )
 
 const ShieldCheckIcon = () => (
-  <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
   </svg>
 )
 
 const HandshakeIcon = () => (
-  <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
   </svg>
 )
@@ -77,7 +107,7 @@ export function IntroScreen() {
             <img
               src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
               alt="Electronic Point"
-              className="h-12 md:h-14 lg:h-16 w-auto"
+              className="h-20 md:h-20 lg:h-24 w-auto"
             />
           </a>
 
@@ -85,19 +115,19 @@ export function IntroScreen() {
           <div className="hidden md:flex items-center gap-8">
             <button
                onClick={() => document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' })}
-               className="text-white/60 hover:text-white transition-colors text-sm">
+               className="text-white/80 hover:text-white transition-colors text-sm">
               ¿Cómo funciona?
             </button>
             <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer"
-               className="text-white/60 hover:text-white transition-colors text-sm">
+               className="text-white/80 hover:text-white transition-colors text-sm">
               Ver iPhones
             </a>
             <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
-               className="text-white/60 hover:text-white transition-colors text-sm">
+               className="text-white/80 hover:text-white transition-colors text-sm">
               Instagram
             </a>
             <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer"
-               className="text-white/60 hover:text-white transition-colors text-sm">
+               className="text-white/80 hover:text-white transition-colors text-sm">
               ¿Cómo llegar?
             </a>
           </div>
@@ -123,7 +153,7 @@ export function IntroScreen() {
             href="https://electronicpoint.com.ar"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:block px-5 py-2.5 rounded-full text-sm font-semibold text-black bg-white hover:bg-white/90 transition-all"
+            className="hidden md:block px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-[#6B8AED] hover:bg-[#5A7AE0] transition-all"
           >
             Tienda online
           </a>
@@ -164,11 +194,11 @@ export function IntroScreen() {
         {/* Mobile background image */}
         <div className="md:hidden absolute inset-0">
           <img
-            src="/hero-mobile.webp"
+            src="/hero-desktop.webp"
             alt=""
-            className="w-full h-full object-cover object-[center_20%] opacity-40"
+            className="w-full h-full object-cover object-[center_20%] opacity-85"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60" />
         </div>
 
         <div className="max-w-7xl mx-auto">
@@ -183,10 +213,10 @@ export function IntroScreen() {
               </h1>
 
               <p
-                className="text-lg md:text-xl text-white/60 mb-8 leading-relaxed animate-fadeSlideIn"
+                className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed animate-fadeSlideIn"
                 style={{ animationDelay: '0.1s' }}
               >
-                Cotización en 1 minuto. Pago en efectivo o transferencia. Sin vueltas.
+                <Typewriter text="Cotización en 1 minuto. Pago en efectivo o transferencia. Sin vueltas." delay={800} speed={30} />
               </p>
 
               <div
@@ -198,8 +228,8 @@ export function IntroScreen() {
                     reset()
                     navigate('/cotizar')
                   }}
-                  className="px-10 py-5 rounded-full text-lg font-bold text-black bg-white
-                             hover:scale-105 transition-all duration-300 shadow-2xl shadow-white/20"
+                  className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-[#4A6BDB]
+                             hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#4A6BDB]/30 hover:shadow-[#4A6BDB]/50"
                 >
                   Cotizar ahora
                 </button>
@@ -211,7 +241,7 @@ export function IntroScreen() {
               >
                 {[
                   { value: '+500', label: 'iPhones comprados' },
-                  { value: '4.9★', label: 'Google Reviews' },
+                  { value: <>4.9<span className="text-amber-400 animate-star-twinkle">★</span></>, label: 'Google Reviews' },
                   { value: '24hs', label: 'Pago inmediato' },
                 ].map((stat, i) => (
                   <div key={i}>
@@ -264,8 +294,8 @@ export function IntroScreen() {
                 className="text-center group"
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
-                <div className="flex justify-center mb-4 text-white opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
-                  {item.icon}
+                <div className="w-14 h-14 rounded-full bg-white/5 border-2 border-[#263A99]/60 flex items-center justify-center mx-auto mb-4 group-hover:border-[#263A99] group-hover:scale-110 transition-all duration-300">
+                  <div className="text-[#4A6BDB]">{item.icon}</div>
                 </div>
                 <h3 className="text-white font-semibold mb-1">{item.title}</h3>
                 <p className="text-white/40 text-sm">{item.desc}</p>
@@ -287,9 +317,9 @@ export function IntroScreen() {
               { step: '2', title: 'Confirmamos el precio', desc: 'Te damos el precio final sin sorpresas' },
               { step: '3', title: 'Te pagamos en el momento', desc: 'Efectivo o transferencia, como prefieras' },
             ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-white">{item.step}</span>
+              <div key={i} className="text-center group">
+                <div className="w-14 h-14 rounded-full bg-white/5 border-2 border-[#263A99]/60 flex items-center justify-center mx-auto mb-4 group-hover:border-[#263A99] group-hover:scale-110 transition-all duration-300">
+                  <span className="text-2xl font-bold text-[#4A6BDB]">{item.step}</span>
                 </div>
                 <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
                 <p className="text-white/50 text-sm">{item.desc}</p>
@@ -348,7 +378,7 @@ export function IntroScreen() {
               <img
                 src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
                 alt="Electronic Point"
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                className="h-20 md:h-16 w-auto"
               />
             </a>
 

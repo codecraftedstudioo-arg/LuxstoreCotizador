@@ -186,7 +186,7 @@ export function ToggleCard({ selected, onClick, icon, label, isPositive = true, 
       <div className={`w-10 h-10 ${selected ? iconSelected : 'text-white/50'}`}>
         {icon}
       </div>
-      <span className={`font-medium ${selected ? 'text-white' : 'text-white/70'}`}>
+      <span className={`text-sm sm:text-base font-medium text-center leading-tight ${selected ? 'text-white' : 'text-white/70'}`}>
         {label}
       </span>
     </button>
