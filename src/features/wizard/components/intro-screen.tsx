@@ -123,6 +123,10 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
 
           {/* Nav Links */}
           <div className="hidden md:flex items-center gap-8">
+            <a href="#como-funciona"
+               className="text-white/60 hover:text-white transition-colors text-sm">
+              ¿Cómo funciona?
+            </a>
             <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer"
                className="text-white/60 hover:text-white transition-colors text-sm">
               Ver iPhones
@@ -298,7 +302,7 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
       </section>
 
       {/* FAQ Section - How it works */}
-      <section className="relative z-10 border-t border-white/10 bg-black py-16">
+      <section id="como-funciona" className="relative z-10 border-t border-white/10 bg-black py-16 scroll-mt-20">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
             ¿Cómo funciona?
