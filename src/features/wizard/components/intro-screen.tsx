@@ -267,6 +267,11 @@ export function IntroScreen() {
                   </div>
                 ))}
               </div>
+
+              {/* Location - Mobile only */}
+              <p className="md:hidden mt-8 text-white/50 text-sm animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
+                📍 Estamos en Palermo, Buenos Aires
+              </p>
             </div>
         </div>
       </section>
