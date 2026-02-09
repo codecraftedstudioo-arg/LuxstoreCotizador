@@ -59,7 +59,6 @@
     "batteryNotOriginal": 0.15,
     "screenNotOriginal": 0.50,
     "faceIdNotWorking": 0.30,
-    "trueToneNotWorking": 0.15,
     "cameraNotWorking": 0.30,
     "audioNotWorking": 0.15,
     "chargingNotWorking": 0.30

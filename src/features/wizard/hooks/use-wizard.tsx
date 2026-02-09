@@ -29,7 +29,6 @@ const initialState: WizardState = {
   // Step 4 - Functionality
   functionalityIssues: {
     faceId: false,
-    trueTone: false,
     camera: false,
     audio: false,
     charging: false,

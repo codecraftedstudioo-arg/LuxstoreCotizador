@@ -14,7 +14,7 @@ function createWizardState(overrides: Partial<WizardState> = {}): WizardState {
     hasLiquidDamage: false,
     batteryHealth: 'good',
     originalParts: { screen: true, battery: true },
-    functionalityIssues: { faceId: false, trueTone: false, camera: false, audio: false, charging: false },
+    functionalityIssues: { faceId: false, camera: false, audio: false, charging: false },
     iCloudOff: true,
     ...overrides,
   }
@@ -131,7 +131,7 @@ describe('calculatePrice', () => {
 
   it('applies Face ID deduction (30%)', () => {
     const state = createWizardState({
-      functionalityIssues: { faceId: true, trueTone: false, camera: false, audio: false, charging: false },
+      functionalityIssues: { faceId: true, camera: false, audio: false, charging: false },
     })
     const result = calculatePrice(state)
 
@@ -139,19 +139,9 @@ describe('calculatePrice', () => {
     expect(result!.deductionBreakdown.some(d => d.reason === 'deductFaceId')).toBe(true)
   })
 
-  it('applies True Tone deduction (15%)', () => {
-    const state = createWizardState({
-      functionalityIssues: { faceId: false, trueTone: true, camera: false, audio: false, charging: false },
-    })
-    const result = calculatePrice(state)
-
-    expect(result!.totalDeductions).toBe(0.15)
-    expect(result!.deductionBreakdown.some(d => d.reason === 'deductTrueTone')).toBe(true)
-  })
-
   it('applies camera deduction (30%)', () => {
     const state = createWizardState({
-      functionalityIssues: { faceId: false, trueTone: false, camera: true, audio: false, charging: false },
+      functionalityIssues: { faceId: false, camera: true, audio: false, charging: false },
     })
     const result = calculatePrice(state)
 
@@ -161,7 +151,7 @@ describe('calculatePrice', () => {
 
   it('applies charging deduction (30%)', () => {
     const state = createWizardState({
-      functionalityIssues: { faceId: false, trueTone: false, camera: false, audio: false, charging: true },
+      functionalityIssues: { faceId: false, camera: false, audio: false, charging: true },
     })
     const result = calculatePrice(state)
 

@@ -9,12 +9,6 @@ const FaceIdIcon = () => (
   </svg>
 )
 
-const TrueToneIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-  </svg>
-)
-
 const CameraIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -92,11 +86,6 @@ export function Step4Functionality() {
       key: 'faceId' as const,
       icon: <FaceIdIcon />,
       label: lang === 'es' ? 'Face ID / Touch ID no funciona' : 'Face ID / Touch ID not working',
-    },
-    {
-      key: 'trueTone' as const,
-      icon: <TrueToneIcon />,
-      label: lang === 'es' ? 'True Tone no funciona' : 'True Tone not working',
     },
     {
       key: 'camera' as const,

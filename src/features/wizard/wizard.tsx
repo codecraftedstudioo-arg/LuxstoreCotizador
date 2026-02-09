@@ -240,7 +240,7 @@ export function WizardPage() {
 
   // Scroll to top when step changes
   useEffect(() => {
-    if (contentRef.current) {
+    if (contentRef.current?.scrollTo) {
       contentRef.current.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [currentStep])

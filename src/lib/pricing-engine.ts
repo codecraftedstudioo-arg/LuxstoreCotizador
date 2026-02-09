@@ -119,14 +119,6 @@ export function calculatePrice(state: WizardState): PriceResult | null {
     })
   }
 
-  if (state.functionalityIssues.trueTone) {
-    deductionBreakdown.push({
-      reason: 'deductTrueTone',
-      percentage: deductions.trueToneNotWorking,
-      amount: 0,
-    })
-  }
-
   if (state.functionalityIssues.camera) {
     deductionBreakdown.push({
       reason: 'deductCamera',

@@ -41,7 +41,6 @@ const waTranslations = {
     issues: 'Problemas:',
     noIssues: 'Ninguno',
     faceId: 'Face ID',
-    trueTone: 'True Tone',
     camera: 'Cámara',
     audio: 'Audio',
     charging: 'Carga',
@@ -75,7 +74,6 @@ const waTranslations = {
     issues: 'Issues:',
     noIssues: 'None',
     faceId: 'Face ID',
-    trueTone: 'True Tone',
     camera: 'Camera',
     audio: 'Audio',
     charging: 'Charging',
@@ -155,7 +153,6 @@ export function buildMessage(
   // Functionality issues
   const issues: string[] = []
   if (state.functionalityIssues.faceId) issues.push(t.faceId)
-  if (state.functionalityIssues.trueTone) issues.push(t.trueTone)
   if (state.functionalityIssues.camera) issues.push(t.camera)
   if (state.functionalityIssues.audio) issues.push(t.audio)
   if (state.functionalityIssues.charging) issues.push(t.charging)

@@ -23,7 +23,6 @@ export type FrameCondition = 'perfect' | 'damaged'
  */
 export interface FunctionalityIssues {
   faceId: boolean
-  trueTone: boolean
   camera: boolean
   audio: boolean
   charging: boolean
@@ -88,7 +87,6 @@ export interface PricingConfig {
     batteryNotOriginal: number
     screenNotOriginal: number
     faceIdNotWorking: number
-    trueToneNotWorking: number
     cameraNotWorking: number
     audioNotWorking: number
     chargingNotWorking: number
