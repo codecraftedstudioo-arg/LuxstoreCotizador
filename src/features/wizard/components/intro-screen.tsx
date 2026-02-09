@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useWizard } from '../hooks/use-wizard'
 
 // Hero images - PNGs transparentes de iPhones (verificados)
 const heroImages = [
@@ -92,6 +93,7 @@ const HandshakeIcon = () => (
 
 export function IntroScreen() {
   const navigate = useNavigate()
+  const { reset } = useWizard()
   const [scrollY, setScrollY] = useState(0)
 
   // Scroll tracking for parallax
@@ -228,7 +230,10 @@ export function IntroScreen() {
                 style={{ animationDelay: '0.2s' }}
               >
                 <button
-                  onClick={() => navigate('/cotizar')}
+                  onClick={() => {
+                    reset()
+                    navigate('/cotizar')
+                  }}
                   className="px-10 py-5 rounded-full text-lg font-bold text-black bg-white
                              hover:scale-105 transition-all duration-300 shadow-2xl shadow-white/20"
                 >
