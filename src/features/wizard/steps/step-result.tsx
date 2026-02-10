@@ -19,43 +19,6 @@ export function StepResult() {
   const [contactPhone, setContactPhone] = useState('')
   const [showPreview, setShowPreview] = useState(false)
 
-  // Play celebration sound on successful quote
-  useEffect(() => {
-    if (!priceResult || priceResult.blocked) return
-
-    const audio = new Audio('/celebration.mp3')
-    audio.volume = 0.5
-    audio.setAttribute('playsinline', 'true')
-    let cleaned = false
-
-    const cleanup = () => {
-      cleaned = true
-      audio.pause()
-      audio.currentTime = 0
-      document.removeEventListener('touchstart', playOnInteraction)
-      document.removeEventListener('click', playOnInteraction)
-    }
-
-    const playOnInteraction = () => {
-      if (!cleaned) {
-        audio.play().catch(() => {})
-      }
-      cleanup()
-    }
-
-    const playPromise = audio.play()
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        if (!cleaned) {
-          document.addEventListener('touchstart', playOnInteraction, { once: true })
-          document.addEventListener('click', playOnInteraction, { once: true })
-        }
-      })
-    }
-
-    return cleanup
-  }, [])
-
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '')
     setContactPhone(value)

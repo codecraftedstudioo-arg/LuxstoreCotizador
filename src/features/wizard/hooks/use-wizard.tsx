@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, useRef, type ReactNode } from 'react'
 import type {
   WizardState,
   StorageCapacity,
@@ -137,6 +137,17 @@ function loadState(): WizardState {
 
 export function WizardProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(wizardReducer, initialState, loadState)
+  const celebrationRef = useRef<HTMLAudioElement | null>(null)
+
+  // Preload celebration audio once on mount
+  useEffect(() => {
+    const audio = new Audio('/celebration.mp3')
+    audio.volume = 0.5
+    audio.preload = 'auto'
+    audio.load()
+    celebrationRef.current = audio
+    return () => { audio.pause(); audio.currentTime = 0 }
+  }, [])
 
   useEffect(() => {
     try {
@@ -158,7 +169,13 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setOriginalParts: (parts) => dispatch({ type: 'SET_ORIGINAL_PARTS', payload: parts }),
     setFunctionality: (issues) => dispatch({ type: 'SET_FUNCTIONALITY', payload: issues }),
     setICloud: (isOff) => dispatch({ type: 'SET_ICLOUD', payload: isOff }),
-    nextStep: () => dispatch({ type: 'NEXT_STEP' }),
+    nextStep: () => {
+      if (state.currentStep === 5 && celebrationRef.current) {
+        celebrationRef.current.currentTime = 0
+        celebrationRef.current.play().catch(() => {})
+      }
+      dispatch({ type: 'NEXT_STEP' })
+    },
     prevStep: () => dispatch({ type: 'PREV_STEP' }),
     goToStep: (step) => dispatch({ type: 'GO_TO_STEP', payload: step }),
     reset: () => {

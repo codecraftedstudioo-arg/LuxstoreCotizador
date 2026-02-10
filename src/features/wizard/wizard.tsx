@@ -239,7 +239,6 @@ export function WizardPage() {
   const { rate } = useExchangeRate()
   const { currentStep } = state
   const contentRef = useRef<HTMLDivElement>(null)
-
   // Scroll to top when step changes
   useEffect(() => {
     if (contentRef.current?.scrollTo) {
