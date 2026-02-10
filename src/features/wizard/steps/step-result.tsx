@@ -137,7 +137,7 @@ export function StepResult() {
       </div>
 
       {priceResult.deductionBreakdown.length > 0 && (
-        <div className="mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
+        <div className="mb-4 p-4 bg-white/5 rounded-xl text-left border border-white/10">
           <p className="text-sm font-medium text-white mb-3">{t('adjustments')}</p>
           <ul className="space-y-2">
             {priceResult.deductionBreakdown.map((d, i) => (
@@ -150,7 +150,21 @@ export function StepResult() {
         </div>
       )}
 
-      <div className="mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
+      {/* Main CTA - Vender mi iPhone */}
+      <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="block">
+        <button className="w-full px-6 py-4 bg-green-500 hover:bg-green-600 text-white font-semibold text-lg rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20">
+          <WhatsAppIcon />
+          {lang === 'es' ? '¡Vender mi iPhone!' : 'Sell my iPhone!'}
+        </button>
+      </a>
+
+      <p className="text-center text-white/40 text-xs mt-3">
+        {lang === 'es'
+          ? 'Te responderemos en minutos por WhatsApp'
+          : 'We\'ll reply within minutes on WhatsApp'}
+      </p>
+
+      <div className="mt-6 mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
         <p className="text-sm font-medium text-white mb-3">
           {t('contactInfo')} <span className="text-gray-500">{t('optional')}</span>
         </p>
@@ -187,23 +201,9 @@ export function StepResult() {
         )}
       </div>
 
-      {/* Main CTA - WhatsApp */}
-      <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="block">
-        <button className="w-full px-6 py-4 bg-green-500 hover:bg-green-600 text-white font-semibold text-lg rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20">
-          <WhatsAppIcon />
-          {lang === 'es' ? '¡Vender mi iPhone!' : 'Sell my iPhone!'}
-        </button>
-      </a>
-
-      <p className="text-center text-white/40 text-xs mt-3">
-        {lang === 'es'
-          ? 'Te responderemos en minutos por WhatsApp'
-          : 'We\'ll reply within minutes on WhatsApp'}
-      </p>
-
       <button
         onClick={reset}
-        className="mt-4 w-full py-2 text-sm text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-lg transition-all"
+        className="w-full py-2 text-sm text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-lg transition-all"
       >
         {t('quoteAnother')}
       </button>
