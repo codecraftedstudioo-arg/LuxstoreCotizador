@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Card, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
