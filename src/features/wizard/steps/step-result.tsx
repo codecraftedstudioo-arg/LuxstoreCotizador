@@ -3,7 +3,7 @@ import { Card, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import { calculatePrice, formatPrice } from '@/lib/pricing-engine'
-import { buildWhatsAppLink, buildMessage } from '@/lib/whatsapp-builder'
+import { buildWhatsAppLink, buildInquiryLink } from '@/lib/whatsapp-builder'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
 
 /**
@@ -17,7 +17,6 @@ export function StepResult() {
 
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '')
@@ -69,22 +68,14 @@ export function StepResult() {
     )
   }
 
-  const whatsappLink = buildWhatsAppLink(state, priceResult, {
-    name: contactName || undefined,
-    phone: contactPhone || undefined,
-  }, lang, rate)
-
-  const messagePreview = buildMessage(state, priceResult, {
-    name: contactName || undefined,
-    phone: contactPhone || undefined,
-  }, lang, rate)
+  const whatsappLink = buildWhatsAppLink(state, priceResult, undefined, lang, rate)
 
   return (
     <Card className="text-center">
       <Confetti />
 
       {/* Sticky price header */}
-      <div className="sticky top-0 z-10 bg-black/95 backdrop-blur-sm -mx-3 px-3 py-4 mb-4 border-b border-white/10">
+      <div className="sticky top-0 z-10 bg-black -mx-3 px-3 -mt-2 pt-6 pb-4 mb-4 border-b border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
         <p className="text-white/70 text-sm mb-1">
           {lang === 'es' ? `Tu ${state.model} vale` : `Your ${state.model} is worth`}
         </p>
@@ -127,9 +118,13 @@ export function StepResult() {
           : 'We\'ll reply within minutes on WhatsApp'}
       </p>
 
-      <div className="mt-6 mb-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
-        <p className="text-sm font-medium text-white mb-3">
-          {t('contactInfo')} <span className="text-gray-500">{t('optional')}</span>
+      {/* Inquiry section */}
+      <div className="mt-6 p-4 bg-white/5 rounded-xl text-left border border-white/10">
+        <p className="text-sm font-medium text-white mb-1">
+          {lang === 'es' ? '¿Tenés dudas? Te contactamos sin compromiso.' : 'Any questions? We\'ll contact you, no commitment.'}
+        </p>
+        <p className="text-xs text-white/40 mb-3">
+          {t('optional')}
         </p>
         <div className="space-y-3">
           <input
@@ -147,29 +142,27 @@ export function StepResult() {
             onChange={handlePhoneChange}
             className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white"
           />
+          <a
+            href={buildInquiryLink(state, priceResult, { name: contactName || undefined, phone: contactPhone || undefined }, lang, rate)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <button className="w-full px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-medium text-sm rounded-xl transition-all flex items-center justify-center gap-2 border border-white/20">
+              <WhatsAppIcon />
+              {lang === 'es' ? 'Consultar por WhatsApp' : 'Ask via WhatsApp'}
+            </button>
+          </a>
         </div>
-      </div>
-
-      <div className="mb-4">
-        <button
-          onClick={() => setShowPreview(!showPreview)}
-          className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-1 mx-auto"
-        >
-          {showPreview ? '▼' : '▶'} {t('previewMessage')}
-        </button>
-        {showPreview && (
-          <div className="mt-3 p-4 bg-white/5 rounded-xl text-left border border-white/10 text-sm text-white/80 whitespace-pre-line">
-            {messagePreview}
-          </div>
-        )}
       </div>
 
       <button
         onClick={reset}
-        className="w-full py-2 text-sm text-white/50 hover:text-white border border-white/10 hover:border-white/30 rounded-lg transition-all"
+        className="mt-4 w-full py-3 text-sm font-medium text-white bg-[#4A6BDB] hover:bg-[#3A5BCB] rounded-xl transition-all"
       >
         {t('quoteAnother')}
       </button>
+
     </Card>
   )
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWizard } from '../hooks/use-wizard'
 
@@ -90,6 +90,164 @@ const HandshakeIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
   </svg>
 )
+
+// Custom video player — facade pattern: thumbnail + YouTube IFrame API (no YT UI visible)
+function VideoPlayer() {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'playing' | 'paused' | 'ended'>('idle')
+  const containerRef = useRef<HTMLDivElement>(null)
+  const playerRef = useRef<any>(null)
+
+  useEffect(() => {
+    return () => { playerRef.current?.destroy() }
+  }, [])
+
+  const play = useCallback(() => {
+    setStatus('loading')
+    const create = () => {
+      if (!containerRef.current) return
+      const div = document.createElement('div')
+      containerRef.current.prepend(div)
+      playerRef.current = new (window as any).YT.Player(div, {
+        videoId: 'ARv9wMPlXNs',
+        playerVars: {
+          autoplay: 1, controls: 0, rel: 0, showinfo: 0,
+          modestbranding: 1, iv_load_policy: 3, playsinline: 1, fs: 0, disablekb: 1,
+        },
+        events: {
+          onReady: (e: any) => { e.target.seekTo(0.5, true); setStatus('playing') },
+          onStateChange: (e: any) => {
+            const s = e.data
+            if (s === 1) setStatus('playing')
+            else if (s === 2) setStatus('paused')
+            else if (s === 0) setStatus('ended')
+          },
+        },
+      })
+    }
+    if ((window as any).YT?.Player) create()
+    else {
+      const tag = document.createElement('script')
+      tag.src = 'https://www.youtube.com/iframe_api'
+      document.head.appendChild(tag)
+      ;(window as any).onYouTubeIframeAPIReady = create
+    }
+  }, [])
+
+  const toggle = () => {
+    if (!playerRef.current) return
+    status === 'playing' ? playerRef.current.pauseVideo() : playerRef.current.playVideo()
+  }
+
+  const VIDEO_START = 0.5
+
+  const restart = () => {
+    if (!playerRef.current) return
+    playerRef.current.seekTo(VIDEO_START, true)
+    playerRef.current.playVideo()
+  }
+
+  const rewind = () => {
+    if (!playerRef.current) return
+    const current = playerRef.current.getCurrentTime() || VIDEO_START
+    playerRef.current.seekTo(Math.max(VIDEO_START, current - 10), true)
+  }
+
+  const hasControls = status === 'playing' || status === 'paused' || status === 'ended'
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-[280px] sm:w-[340px] md:w-[400px] aspect-[9/16] rounded-2xl overflow-hidden border border-white/15 shadow-2xl shadow-black/50 bg-black [&>iframe]:absolute [&>iframe]:-top-[8%] [&>iframe]:left-0 [&>iframe]:w-full [&>iframe]:h-[116%] [&>iframe]:pointer-events-none"
+    >
+      {/* Thumbnail + play (idle) */}
+      {status === 'idle' && (
+        <button onClick={play} className="absolute inset-0 z-10 flex items-center justify-center group/play cursor-pointer">
+          <img
+            src="https://img.youtube.com/vi/ARv9wMPlXNs/maxresdefault.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/20 group-hover/play:bg-black/10 transition-colors" />
+          <div className="relative w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-2xl group-hover/play:scale-110 transition-transform">
+            <svg className="w-7 h-7 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </button>
+      )}
+
+      {/* Loading spinner */}
+      {status === 'loading' && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <div className="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Tap area for pause (playing) */}
+      {status === 'playing' && (
+        <button onClick={toggle} className="absolute inset-0 z-10 cursor-pointer" aria-label="Pausar" />
+      )}
+
+      {/* Center icon when paused */}
+      {status === 'paused' && (
+        <button onClick={toggle} className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 cursor-pointer">
+          <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-2xl">
+            <svg className="w-6 h-6 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </button>
+      )}
+
+      {/* Center icon when ended */}
+      {status === 'ended' && (
+        <button onClick={restart} className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 cursor-pointer">
+          <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-2xl">
+            <svg className="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+            </svg>
+          </div>
+        </button>
+      )}
+
+      {/* Top/bottom gradients to mask any YouTube UI residue */}
+      {hasControls && (
+        <div className="absolute top-0 left-0 right-0 z-20 h-14 bg-gradient-to-b from-black/80 to-transparent pointer-events-none" />
+      )}
+
+      {/* Control bar */}
+      {hasControls && (
+        <div className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-6 py-3 bg-gradient-to-t from-black/70 to-transparent">
+          {/* Restart */}
+          <button onClick={restart} className="text-white/80 hover:text-white transition-colors cursor-pointer" aria-label="Reiniciar">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+            </svg>
+          </button>
+          {/* Rewind 10s */}
+          <button onClick={rewind} className="text-white/80 hover:text-white transition-colors cursor-pointer" aria-label="Retroceder 10s">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+              <text x="7.5" y="16.5" fontSize="7.5" fontWeight="bold" fill="currentColor">10</text>
+            </svg>
+          </button>
+          {/* Play / Pause */}
+          <button onClick={toggle} className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors cursor-pointer" aria-label={status === 'playing' ? 'Pausar' : 'Reproducir'}>
+            {status === 'playing' ? (
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            )}
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function IntroScreen() {
   const navigate = useNavigate()
@@ -326,9 +484,24 @@ export function IntroScreen() {
               </div>
             ))}
           </div>
-          <p className="text-center text-white/40 text-sm mt-8">
+          <p className="text-center text-white/40 text-sm mt-10">
             Simple, directo, sin letra chica.
           </p>
+          {/* Separator */}
+          <div className="flex items-center justify-center gap-3 mt-12 mb-2">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#4A6BDB]/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#4A6BDB]/50" />
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#4A6BDB]/40" />
+          </div>
+          {/* Video */}
+          <div className="mt-8 flex flex-col items-center">
+            <p className="text-sm uppercase tracking-widest text-[#4A6BDB] font-semibold mb-2">Miralo en acción</p>
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-8">Así de fácil es vender tu iPhone</h3>
+            <div className="relative group">
+              <div className="absolute -inset-3 bg-[#4A6BDB]/15 rounded-3xl blur-2xl group-hover:bg-[#4A6BDB]/25 transition-all duration-500" />
+              <VideoPlayer />
+            </div>
+          </div>
         </div>
       </section>
 

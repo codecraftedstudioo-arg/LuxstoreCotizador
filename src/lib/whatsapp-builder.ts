@@ -4,7 +4,7 @@ import { formatPrice } from './pricing-engine'
 
 // Número de WhatsApp del negocio (sin +, sin espacios)
 // Formato Argentina: 54 + 9 + código área + número
-const BUSINESS_PHONE = '5491140949046'
+const BUSINESS_PHONE = '5491160050246'
 
 /**
  * Optional contact info from the user
@@ -182,7 +182,7 @@ export function buildMessage(
  *
  * @example
  * buildWhatsAppLink(state, result, { name: 'Juan', phone: '1155667788' })
- * // Returns: "https://wa.me/5491140949046?text=Hola%20quiero%20vender..."
+ * // Returns: "https://wa.me/5491160050246?text=Hola%20quiero%20vender..."
  */
 export function buildWhatsAppLink(
   state: WizardState,
@@ -195,4 +195,64 @@ export function buildWhatsAppLink(
   const encodedMessage = encodeURIComponent(message)
 
   return `https://wa.me/${BUSINESS_PHONE}?text=${encodedMessage}`
+}
+
+/**
+ * Builds a WhatsApp link for inquiries (not selling yet)
+ * Same full message as selling, but with inquiry greeting
+ */
+export function buildInquiryLink(
+  state: WizardState,
+  priceResult: PriceResult,
+  contactInfo?: ContactInfo,
+  lang: Language = 'es',
+  exchangeRate: number = 0
+): string {
+  const t = waTranslations[lang]
+  const lines: string[] = []
+
+  lines.push(lang === 'es'
+    ? 'Hola, tengo una consulta sobre la cotización de mi iPhone.'
+    : 'Hi, I have a question about my iPhone quote.')
+  lines.push('')
+
+  if (contactInfo?.name) lines.push(`*${t.name}* ${contactInfo.name}`)
+  if (contactInfo?.phone) lines.push(`*${t.phone}* ${contactInfo.phone}`)
+  if (contactInfo?.name || contactInfo?.phone) lines.push('')
+
+  lines.push(`*${t.model}* ${state.model}`)
+  lines.push(`*${t.storage}* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
+  lines.push(`*${t.battery}* ${state.batteryHealth === 'low' ? t.batteryLow : t.batteryOk}`)
+
+  const screenLabels = { perfect: t.screenPerfect, scratches: t.screenScratches, cracked: t.screenCracked }
+  if (state.screenCondition) lines.push(`*${t.screen}* ${screenLabels[state.screenCondition]}`)
+
+  const backLabels = { perfect: t.backPerfect, cracked: t.backCracked }
+  if (state.backCondition) lines.push(`*${t.back}* ${backLabels[state.backCondition]}`)
+
+  const frameLabels = { perfect: t.framePerfect, damaged: t.frameDamaged }
+  if (state.frameCondition) lines.push(`*${t.frame}* ${frameLabels[state.frameCondition]}`)
+
+  if (state.hasLiquidDamage !== null) lines.push(`*${t.liquidDamage}* ${state.hasLiquidDamage ? t.yes : t.no}`)
+
+  const issues: string[] = []
+  if (state.functionalityIssues.faceId) issues.push(t.faceId)
+  if (state.functionalityIssues.camera) issues.push(t.camera)
+  if (state.functionalityIssues.audio) issues.push(t.audio)
+  if (state.functionalityIssues.charging) issues.push(t.charging)
+  lines.push(`*${t.issues}* ${issues.length > 0 ? issues.join(', ') : t.noIssues}`)
+
+  lines.push(`*${t.originalScreen}* ${state.originalParts.screen ? t.yes : t.no}`)
+  lines.push(`*${t.originalBattery}* ${state.originalParts.battery ? t.yes : t.no}`)
+
+  lines.push('')
+  lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)
+  if (exchangeRate > 0) {
+    const arsEquivalent = (priceResult.finalPrice * exchangeRate).toLocaleString('es-AR')
+    lines.push(lang === 'es'
+      ? `Equivale a $${arsEquivalent} ARS (dólar $${exchangeRate.toLocaleString('es-AR')})`
+      : `Equivalent to $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+  }
+
+  return `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(lines.join('\n'))}`
 }

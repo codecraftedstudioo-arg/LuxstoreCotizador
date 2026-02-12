@@ -62,7 +62,7 @@ const translations = {
     resultTitle: 'Tu {model} vale aproximadamente',
     resultDisclaimer: '*Precio estimado sujeto a revisión física',
     adjustments: 'Ajustes aplicados:',
-    contactInfo: '¿Querés avanzar? Te contactamos sin compromiso',
+    contactInfo: '¿Tenés dudas? Te contactamos sin compromiso.',
     optional: '(opcional)',
     yourName: 'Tu nombre',
     yourPhone: 'Tu teléfono',
