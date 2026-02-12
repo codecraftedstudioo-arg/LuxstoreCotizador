@@ -144,7 +144,7 @@ function useCounter(target: number, duration = 2000) {
  * Side info panels
  */
 function SideInfo({ position }: { position: 'left' | 'right' }) {
-  const clientCount = useCounter(500, 1500)
+  const clientCount = useCounter(2000, 1500)
   if (position === 'left') {
     return (
       <div className="hidden lg:flex flex-col gap-4 text-right pr-8">
@@ -392,7 +392,7 @@ export function WizardPage() {
 
         {/* Footer */}
         <footer className="py-4 text-center">
-          <p className="text-white/30 text-xs">© 2026 Electronic Point · Costa Rica 5509, CABA</p>
+          <p className="text-white/30 text-xs">© 2026 Electronic Point · <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors underline">Costa Rica 5509, CABA</a></p>
         </footer>
       </div>
     </div>
