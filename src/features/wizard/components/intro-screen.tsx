@@ -367,7 +367,7 @@ export function IntroScreen() {
                 Vendé tu iPhone
                 <span className="block mt-2">
                   <span className="bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">al mejor precio </span>
-                  <span className="text-white/50">en Buenos Aires</span>
+                  <span className="text-white/70">en Buenos Aires</span>
                 </span>
               </h1>
 
