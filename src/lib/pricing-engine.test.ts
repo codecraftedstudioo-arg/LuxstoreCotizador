@@ -85,11 +85,11 @@ describe('calculatePrice', () => {
     expect(result!.totalDeductions).toBe(0.05)
   })
 
-  it('applies back cracked deduction (15%)', () => {
+  it('applies back cracked deduction (20%)', () => {
     const state = createWizardState({ backCondition: 'cracked' })
     const result = calculatePrice(state)
 
-    expect(result!.totalDeductions).toBe(0.15)
+    expect(result!.totalDeductions).toBe(0.20)
     expect(result!.deductionBreakdown.some(d => d.reason === 'deductBackCracked')).toBe(true)
   })
 
@@ -119,13 +119,13 @@ describe('calculatePrice', () => {
     expect(result!.deductionBreakdown.some(d => d.reason === 'deductBatteryNotOriginal')).toBe(true)
   })
 
-  it('applies non-original screen deduction (50%)', () => {
+  it('applies non-original screen deduction (25%)', () => {
     const state = createWizardState({
       originalParts: { screen: false, battery: true },
     })
     const result = calculatePrice(state)
 
-    expect(result!.totalDeductions).toBe(0.50)
+    expect(result!.totalDeductions).toBe(0.25)
     expect(result!.deductionBreakdown.some(d => d.reason === 'deductScreenNotOriginal')).toBe(true)
   })
 
@@ -182,32 +182,32 @@ describe('calculatePrice', () => {
       model: 'iPhone 13 mini',
       storage: '128', // lowest price: $180
       screenCondition: 'cracked', // 50%
-      backCondition: 'cracked', // 15%
+      backCondition: 'cracked', // 20%
       frameCondition: 'damaged', // 8%
       hasLiquidDamage: true, // 20%
       batteryHealth: 'low', // 15%
-      originalParts: { screen: false, battery: false }, // 50% + 15%
+      originalParts: { screen: false, battery: false }, // 25% + 15%
       functionalityIssues: { faceId: true, camera: true, audio: true, charging: true }, // 30+30+15+30
     })
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // Total: 50+15+8+20+15+50+15+30+30+15+30 = 278% → capped behavior
+    // Total: 50+20+8+20+15+25+15+30+30+15+30 = 258% → capped behavior
     expect(result!.finalPrice).toBe(0) // should never be negative
     expect(result!.finalPrice).toBeGreaterThanOrEqual(0)
   })
 
-  it('screen cracked + screen not original both apply (100% screen penalty)', () => {
+  it('screen cracked + screen not original both apply (75% screen penalty)', () => {
     const state = createWizardState({
       screenCondition: 'cracked', // 50%
-      originalParts: { screen: false, battery: true }, // 50%
+      originalParts: { screen: false, battery: true }, // 25%
     })
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // 50% + 50% = 100% deduction
-    expect(result!.totalDeductions).toBe(1.0)
-    expect(result!.finalPrice).toBe(0)
+    // 50% + 25% = 75% deduction
+    expect(result!.totalDeductions).toBe(0.75)
+    expect(result!.finalPrice).toBe(135) // 550 * 0.25 = 137.5 → rounded to 135
     expect(result!.deductionBreakdown).toHaveLength(2)
   })
 
@@ -270,13 +270,13 @@ describe('calculatePrice', () => {
       model: 'iPhone 13',
       storage: '256', // base $260
       functionalityIssues: { faceId: false, camera: true, audio: false, charging: false }, // 30%
-      originalParts: { screen: false, battery: true }, // 50%
+      originalParts: { screen: false, battery: true }, // 25%
     })
     const result = calculatePrice(state)
 
-    // 260 * 0.80 = 208 → round to 210
-    // 260 - 210 = 50
-    expect(result!.finalPrice).toBe(50)
+    // 30% + 25% = 55% deduction
+    // 260 * 0.45 = 117 → rounded to 115
+    expect(result!.finalPrice).toBe(115)
   })
 })
 

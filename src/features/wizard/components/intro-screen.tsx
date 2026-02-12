@@ -366,7 +366,7 @@ export function IntroScreen() {
               <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
                 Vendé tu iPhone
                 <span className="block bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent mt-2">
-                  al mejor precio en Buenos Aires
+                  al mejor precio <span className="font-normal">en Buenos Aires</span>
                 </span>
               </h1>
 
