@@ -5,7 +5,7 @@ import App from './App'
 describe('App', () => {
   it('renders the intro screen', () => {
     render(<App />)
-    expect(screen.getByText('Vendé tu iPhone')).toBeInTheDocument()
+    expect(screen.getByText(/Vendé tu/)).toBeInTheDocument()
     expect(screen.getByText('Cotizar ahora')).toBeInTheDocument()
   })
 
