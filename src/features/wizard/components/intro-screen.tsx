@@ -261,11 +261,11 @@ export function IntroScreen() {
       <nav className="relative z-10 sticky top-0 bg-black/95 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-4 flex items-center justify-between">
           {/* Logo - Brand Identity */}
-          <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer">
+          <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer" className="">
             <img
               src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
               alt="Electronic Point"
-              className="h-20 md:h-20 lg:h-24 w-auto"
+              className="h-24 md:h-24 lg:h-28 w-auto -ml-[55px] md:-ml-[75px]"
             />
           </a>
 
@@ -410,13 +410,18 @@ export function IntroScreen() {
               </div>
 
               {/* Location - Mobile only */}
-              <div className="md:hidden mt-6 flex items-center gap-2 text-white/50 text-sm animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              <a
+                href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="md:hidden mt-6 flex items-center gap-2 text-white/50 hover:text-white/70 text-sm animate-fadeSlideIn transition-colors"
+                style={{ animationDelay: '0.4s' }}
+              >
+                <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                 </svg>
                 <span>Estamos en Palermo, Buenos Aires</span>
-              </div>
+              </a>
             </div>
 
             {/* Right - Image (desktop only) */}
