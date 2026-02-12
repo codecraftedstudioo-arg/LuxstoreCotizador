@@ -6,6 +6,16 @@ import { formatPrice } from './pricing-engine'
 // Formato Argentina: 54 + 9 + código área + número
 const BUSINESS_PHONE = '5491160050246'
 
+// Max URL length for wa.me links (safe limit)
+const MAX_MESSAGE_LENGTH = 1500
+
+/**
+ * Sanitize user input: strip WhatsApp markdown chars and limit length
+ */
+function sanitize(input: string, maxLen = 50): string {
+  return input.replace(/[*_~`\n\r]/g, '').trim().slice(0, maxLen)
+}
+
 /**
  * Optional contact info from the user
  */
@@ -102,10 +112,10 @@ export function buildMessage(
 
   // Contact info at the top if provided
   if (contactInfo?.name) {
-    lines.push(`*${t.name}* ${contactInfo.name}`)
+    lines.push(`*${t.name}* ${sanitize(contactInfo.name, 50)}`)
   }
   if (contactInfo?.phone) {
-    lines.push(`*${t.phone}* ${contactInfo.phone}`)
+    lines.push(`*${t.phone}* ${sanitize(contactInfo.phone, 15)}`)
   }
   if (contactInfo?.name || contactInfo?.phone) {
     lines.push('')
@@ -191,10 +201,8 @@ export function buildWhatsAppLink(
   lang: Language = 'es',
   exchangeRate: number = 0
 ): string {
-  const message = buildMessage(state, priceResult, contactInfo, lang, exchangeRate)
-  const encodedMessage = encodeURIComponent(message)
-
-  return `https://wa.me/${BUSINESS_PHONE}?text=${encodedMessage}`
+  const message = buildMessage(state, priceResult, contactInfo, lang, exchangeRate).slice(0, MAX_MESSAGE_LENGTH)
+  return `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(message)}`
 }
 
 /**
@@ -216,8 +224,8 @@ export function buildInquiryLink(
     : 'Hi, I have a question about my iPhone quote.')
   lines.push('')
 
-  if (contactInfo?.name) lines.push(`*${t.name}* ${contactInfo.name}`)
-  if (contactInfo?.phone) lines.push(`*${t.phone}* ${contactInfo.phone}`)
+  if (contactInfo?.name) lines.push(`*${t.name}* ${sanitize(contactInfo.name, 50)}`)
+  if (contactInfo?.phone) lines.push(`*${t.phone}* ${sanitize(contactInfo.phone, 15)}`)
   if (contactInfo?.name || contactInfo?.phone) lines.push('')
 
   lines.push(`*${t.model}* ${state.model}`)
@@ -254,5 +262,6 @@ export function buildInquiryLink(
       : `Equivalent to $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
   }
 
-  return `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(lines.join('\n'))}`
+  const message = lines.join('\n').slice(0, MAX_MESSAGE_LENGTH)
+  return `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(message)}`
 }

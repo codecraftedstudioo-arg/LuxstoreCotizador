@@ -284,12 +284,12 @@ export function WizardPage() {
             {/* Logo - click to go back to home */}
             <button
               onClick={() => navigate('/')}
-              className="hover:opacity-80 transition-opacity"
+              className="block overflow-visible hover:opacity-80 transition-opacity"
             >
               <img
                 src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
                 alt="Electronic Point"
-                className="h-12 md:h-14 lg:h-16 w-auto"
+                className="h-[96px] w-[240px] lg:h-[110px] lg:w-[275px] max-w-none -ml-[55px] md:-ml-[75px]"
               />
             </button>
 

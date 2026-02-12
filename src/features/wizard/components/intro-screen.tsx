@@ -265,7 +265,7 @@ export function IntroScreen() {
             <img
               src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
               alt="Electronic Point"
-              className="h-[87px] w-[218px] lg:h-[100px] lg:w-[250px] max-w-none -ml-[55px] md:-ml-[75px]"
+              className="h-[96px] w-[240px] lg:h-[110px] lg:w-[275px] max-w-none -ml-[55px] md:-ml-[75px]"
             />
           </a>
 

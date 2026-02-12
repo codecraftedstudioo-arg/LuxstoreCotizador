@@ -19,8 +19,13 @@ export function StepResult() {
   const [contactPhone, setContactPhone] = useState('')
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '')
+    const value = e.target.value.replace(/\D/g, '').slice(0, 15)
     setContactPhone(value)
+  }
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s.-]/g, '').slice(0, 50)
+    setContactName(value)
   }
 
   // Blocked by iCloud
@@ -131,7 +136,7 @@ export function StepResult() {
             type="text"
             placeholder={t('yourName')}
             value={contactName}
-            onChange={(e) => setContactName(e.target.value)}
+            onChange={handleNameChange}
             className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white"
           />
           <input
