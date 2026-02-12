@@ -259,7 +259,7 @@ export function IntroScreen() {
     <div className="min-h-screen bg-black">
       {/* Navbar */}
       <nav className="relative z-10 sticky top-0 bg-black/95 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-4 flex items-center justify-between">
           {/* Logo - Brand Identity */}
           <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer">
             <img
