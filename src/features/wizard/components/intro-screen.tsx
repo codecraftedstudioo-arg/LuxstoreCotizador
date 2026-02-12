@@ -364,10 +364,11 @@ export function IntroScreen() {
             {/* Left - Text */}
             <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-12 md:py-20 md:w-1/2">
               <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
-                Vendé tu iPhone
-                <span className="block mt-2 whitespace-nowrap">
-                  al mejor precio <span className="text-white/70 text-3xl md:text-4xl lg:text-5xl">en Buenos Aires</span>
-                </span>
+                Vendé tu
+                <span className="block">iPhone</span>
+                <span className="block">al mejor</span>
+                <span className="block">precio</span>
+                <span className="block text-3xl md:text-4xl lg:text-5xl text-white/70 mt-1">en Buenos Aires</span>
               </h1>
 
               <p
