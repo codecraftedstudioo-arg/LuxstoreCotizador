@@ -261,11 +261,11 @@ export function IntroScreen() {
       <nav className="relative z-10 sticky top-0 bg-black/95 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-4 flex items-center justify-between">
           {/* Logo - Brand Identity */}
-          <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer" className="">
+          <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer" className="block overflow-visible">
             <img
               src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
               alt="Electronic Point"
-              className="h-24 md:h-24 lg:h-28 w-auto -ml-[55px] md:-ml-[75px]"
+              className="h-[87px] w-[218px] lg:h-[100px] lg:w-[250px] max-w-none -ml-[55px] md:-ml-[75px]"
             />
           </a>
 
@@ -394,13 +394,14 @@ export function IntroScreen() {
               </div>
 
               <div
-                className="flex flex-wrap gap-8 animate-fadeSlideIn"
+                className="grid grid-cols-2 gap-6 animate-fadeSlideIn"
                 style={{ animationDelay: '0.3s' }}
               >
                 {[
-                  { value: '+500', label: 'iPhones comprados' },
+                  { value: '+2000', label: 'iPhones comprados' },
                   { value: <>4.9<span className="text-amber-400 animate-star-twinkle">★</span></>, label: 'Google Reviews' },
                   { value: '24hs', label: 'Pago inmediato' },
+                  { value: '+20', label: 'Años de experiencia' },
                 ].map((stat, i) => (
                   <div key={i}>
                     <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
@@ -494,9 +495,9 @@ export function IntroScreen() {
           </p>
           {/* Separator */}
           <div className="flex items-center justify-center gap-3 mt-12 mb-2">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#4A6BDB]/40" />
-            <div className="w-1.5 h-1.5 rounded-full bg-[#4A6BDB]/50" />
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#4A6BDB]/40" />
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-white/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/50" />
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-white/40" />
           </div>
           {/* Video */}
           <div className="mt-8 flex flex-col items-center">
