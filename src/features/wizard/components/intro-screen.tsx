@@ -365,8 +365,8 @@ export function IntroScreen() {
             <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-12 md:py-20 md:w-1/2">
               <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
                 Vendé tu iPhone
-                <span className="block mt-2">
-                  al mejor precio <span className="text-white/70">en Buenos Aires</span>
+                <span className="block mt-2 whitespace-nowrap">
+                  al mejor precio <span className="text-white/70 text-3xl md:text-4xl lg:text-5xl">en Buenos Aires</span>
                 </span>
               </h1>
 
