@@ -82,7 +82,7 @@ export function StepResult() {
       {/* Sticky price header */}
       <div className="sticky top-0 z-10 bg-black -mx-3 px-3 -mt-2 pt-6 pb-4 mb-4 border-b border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
         <p className="text-white/70 text-sm mb-1">
-          {lang === 'es' ? `Tu ${state.model} vale` : `Your ${state.model} is worth`}
+          {lang === 'es' ? `Tu ${state.model} ${state.storage ? state.storage + 'GB' : ''} vale` : `Your ${state.model} ${state.storage ? state.storage + 'GB' : ''} is worth`}
         </p>
         <p className="text-3xl sm:text-4xl font-black text-white tracking-tight animate-countUp">
           {formatPrice(priceResult.finalPrice)}

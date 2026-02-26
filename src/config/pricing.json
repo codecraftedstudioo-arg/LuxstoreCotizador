@@ -41,6 +41,14 @@
     { "model": "iPhone 15 Pro Max", "storage": "256", "price": 650 },
     { "model": "iPhone 15 Pro Max", "storage": "512", "price": 700 },
     { "model": "iPhone 15 Pro Max", "storage": "1024", "price": 750 },
+    { "model": "iPhone 16e", "storage": "128", "price": 400 },
+    { "model": "iPhone 16e", "storage": "256", "price": 450 },
+    { "model": "iPhone 16", "storage": "128", "price": 500 },
+    { "model": "iPhone 16", "storage": "256", "price": 550 },
+    { "model": "iPhone 16", "storage": "512", "price": 600 },
+    { "model": "iPhone 16 Plus", "storage": "128", "price": 550 },
+    { "model": "iPhone 16 Plus", "storage": "256", "price": 600 },
+    { "model": "iPhone 16 Plus", "storage": "512", "price": 650 },
     { "model": "iPhone 16 Pro", "storage": "128", "price": 700 },
     { "model": "iPhone 16 Pro", "storage": "256", "price": 750 },
     { "model": "iPhone 16 Pro", "storage": "512", "price": 800 },
@@ -64,5 +72,5 @@
     "chargingNotWorking": 0.30
   },
   "currency": "USD",
-  "lastUpdated": "2026-02-09"
+  "lastUpdated": "2026-02-26"
 }
