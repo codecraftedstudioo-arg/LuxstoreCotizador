@@ -45,7 +45,7 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    expect(result!.finalPrice).toBe(550) // Fixed price for iPhone 15 Pro 128GB
+    expect(result!.finalPrice).toBe(500) // Fixed price for iPhone 15 Pro 128GB
     expect(result!.totalDeductions).toBe(0)
     expect(result!.deductionBreakdown).toHaveLength(0)
   })
@@ -55,7 +55,7 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    expect(result!.finalPrice).toBe(600) // Fixed price for iPhone 15 Pro 256GB
+    expect(result!.finalPrice).toBe(550) // Fixed price for iPhone 15 Pro 256GB
   })
 
   it('applies battery low deduction (15%)', () => {
@@ -63,9 +63,9 @@ describe('calculatePrice', () => {
     const result = calculatePrice(state)
 
     expect(result).not.toBeNull()
-    // 550 × 0.15 = 82.5 → rounded to 85, final = 550-85 = 465 → 465
+    // 500 × 0.15 = 75, final = 500-75 = 425
     expect(result!.totalDeductions).toBe(0.15)
-    expect(result!.finalPrice).toBe(465)
+    expect(result!.finalPrice).toBe(425)
     expect(result!.deductionBreakdown).toHaveLength(1)
     expect(result!.deductionBreakdown[0].reason).toBe('deductBatteryLow')
   })
@@ -170,8 +170,8 @@ describe('calculatePrice', () => {
     expect(result).not.toBeNull()
     // Total deductions: 15 + 5 + 8 = 28%
     expect(result!.totalDeductions).toBe(0.28)
-    // 550 × (1 - 0.28) = 396 → rounded to 395
-    expect(result!.finalPrice).toBe(395)
+    // 500 × (1 - 0.28) = 360
+    expect(result!.finalPrice).toBe(360)
     expect(result!.deductionBreakdown).toHaveLength(3)
   })
 
@@ -207,7 +207,7 @@ describe('calculatePrice', () => {
     expect(result).not.toBeNull()
     // 50% + 25% = 75% deduction
     expect(result!.totalDeductions).toBe(0.75)
-    expect(result!.finalPrice).toBe(135) // 550 * 0.25 = 137.5 → rounded to 135
+    expect(result!.finalPrice).toBe(125) // 500 * 0.25 = 125
     expect(result!.deductionBreakdown).toHaveLength(2)
   })
 
@@ -235,11 +235,11 @@ describe('calculatePrice', () => {
 
   it('perfect condition for every model returns base price', () => {
     const models = [
-      { model: 'iPhone 13', storage: '128', expected: 220 },
-      { model: 'iPhone 13 mini', storage: '128', expected: 180 },
-      { model: 'iPhone 14 Pro Max', storage: '1024', expected: 600 },
-      { model: 'iPhone 15 Pro Max', storage: '1024', expected: 750 },
-      { model: 'iPhone 16 Pro Max', storage: '1024', expected: 980 },
+      { model: 'iPhone 13', storage: '128', expected: 200 },
+      { model: 'iPhone 13 mini', storage: '128', expected: 170 },
+      { model: 'iPhone 14 Pro Max', storage: '1024', expected: 550 },
+      { model: 'iPhone 15 Pro Max', storage: '1024', expected: 700 },
+      { model: 'iPhone 16 Pro Max', storage: '1024', expected: 930 },
     ]
 
     models.forEach(({ model, storage, expected }) => {
@@ -268,15 +268,15 @@ describe('calculatePrice', () => {
   it('user scenario: iPhone 13 256GB camera broken + screen not original', () => {
     const state = createWizardState({
       model: 'iPhone 13',
-      storage: '256', // base $260
+      storage: '256', // base $230
       functionalityIssues: { faceId: false, camera: true, audio: false, charging: false }, // 30%
       originalParts: { screen: false, battery: true }, // 25%
     })
     const result = calculatePrice(state)
 
     // 30% + 25% = 55% deduction
-    // 260 * 0.45 = 117 → rounded to 115
-    expect(result!.finalPrice).toBe(115)
+    // 230 * 0.45 = 103.5 → rounded to 105
+    expect(result!.finalPrice).toBe(105)
   })
 })
 
