@@ -110,7 +110,13 @@ export function StepResult() {
       )}
 
       {/* Main CTA - Vender mi iPhone */}
-      <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="block">
+      <a
+        href={whatsappLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+        onClick={() => window.fbq?.('track', 'Contact')}
+      >
         <button className="w-full px-6 py-4 bg-green-500 hover:bg-green-600 text-white font-semibold text-lg rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20">
           <WhatsAppIcon />
           {lang === 'es' ? '¡Vender mi iPhone!' : 'Sell my iPhone!'}
@@ -152,6 +158,7 @@ export function StepResult() {
             target="_blank"
             rel="noopener noreferrer"
             className="block"
+            onClick={() => window.fbq?.('track', 'Contact')}
           >
             <button className="w-full px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-medium text-sm rounded-xl transition-all flex items-center justify-center gap-2 border border-white/20">
               <WhatsAppIcon />
