@@ -69,7 +69,8 @@
     "faceIdNotWorking": 0.30,
     "cameraNotWorking": 0.30,
     "audioNotWorking": 0.15,
-    "chargingNotWorking": 0.30
+    "chargingNotWorking": 0.30,
+    "noOriginalBox": 20
   },
   "currency": "USD",
   "lastUpdated": "2026-02-27"

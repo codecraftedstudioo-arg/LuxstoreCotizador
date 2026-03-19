@@ -55,6 +55,7 @@ export interface WizardState {
   // Step 3: Battery & Original parts
   batteryHealth: 'good' | 'low' | null  // good = >=85%, low = <85%
   originalParts: OriginalParts
+  hasOriginalBox: boolean | null
 
   // Step 4: Functionality
   functionalityIssues: FunctionalityIssues
@@ -90,6 +91,7 @@ export interface PricingConfig {
     cameraNotWorking: number
     audioNotWorking: number
     chargingNotWorking: number
+    noOriginalBox: number
   }
   currency: string
   lastUpdated: string

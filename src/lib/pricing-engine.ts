@@ -143,19 +143,35 @@ export function calculatePrice(state: WizardState): PriceResult | null {
     })
   }
 
+  // Original box - fixed USD deduction (not percentage)
+  if (state.hasOriginalBox === false) {
+    deductionBreakdown.push({
+      reason: 'deductNoOriginalBox',
+      percentage: 0,
+      amount: deductions.noOriginalBox,
+    })
+  }
+
   // Calculate totals
   const totalDeductionPercentage = deductionBreakdown.reduce((sum, d) => sum + d.percentage, 0)
 
   // Round to nearest 5
   const roundTo5 = (n: number) => Math.round(n / 5) * 5
 
-  // Calculate amount for each deduction
+  // Calculate amount for each deduction (skip fixed-amount deductions like noOriginalBox)
   deductionBreakdown.forEach((d) => {
-    d.amount = roundTo5(basePrice * d.percentage)
+    if (d.percentage > 0) {
+      d.amount = roundTo5(basePrice * d.percentage)
+    }
   })
 
+  // Sum fixed deductions (amount already set, percentage = 0)
+  const fixedDeductions = deductionBreakdown
+    .filter((d) => d.percentage === 0 && d.amount > 0)
+    .reduce((sum, d) => sum + d.amount, 0)
+
   // Final price (never below 0)
-  const totalDeductionAmount = roundTo5(basePrice * totalDeductionPercentage)
+  const totalDeductionAmount = roundTo5(basePrice * totalDeductionPercentage) + fixedDeductions
   const finalPrice = Math.max(0, roundTo5(basePrice - totalDeductionAmount))
 
   return {

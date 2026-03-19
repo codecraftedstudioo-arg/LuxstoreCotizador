@@ -26,6 +26,7 @@ const initialState: WizardState = {
     screen: null,
     battery: null,
   },
+  hasOriginalBox: null,
   // Step 4 - Functionality
   functionalityIssues: {
     faceId: false,
@@ -47,6 +48,7 @@ type WizardAction =
   | { type: 'SET_LIQUID_DAMAGE'; payload: boolean }
   | { type: 'SET_BATTERY_HEALTH'; payload: 'good' | 'low' }
   | { type: 'SET_ORIGINAL_PARTS'; payload: Partial<OriginalParts> }
+  | { type: 'SET_ORIGINAL_BOX'; payload: boolean }
   | { type: 'SET_FUNCTIONALITY'; payload: Partial<FunctionalityIssues> }
   | { type: 'SET_ICLOUD'; payload: boolean }
   | { type: 'NEXT_STEP' }
@@ -75,6 +77,8 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, batteryHealth: action.payload }
     case 'SET_ORIGINAL_PARTS':
       return { ...state, originalParts: { ...state.originalParts, ...action.payload } }
+    case 'SET_ORIGINAL_BOX':
+      return { ...state, hasOriginalBox: action.payload }
     case 'SET_FUNCTIONALITY':
       return { ...state, functionalityIssues: { ...state.functionalityIssues, ...action.payload } }
     case 'SET_ICLOUD':
@@ -102,6 +106,7 @@ interface WizardContextValue {
   setLiquidDamage: (hasDamage: boolean) => void
   setBatteryHealth: (health: 'good' | 'low') => void
   setOriginalParts: (parts: Partial<OriginalParts>) => void
+  setOriginalBox: (hasBox: boolean) => void
   setFunctionality: (issues: Partial<FunctionalityIssues>) => void
   setICloud: (isOff: boolean) => void
   nextStep: () => void
@@ -167,6 +172,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setLiquidDamage: (hasDamage) => dispatch({ type: 'SET_LIQUID_DAMAGE', payload: hasDamage }),
     setBatteryHealth: (health) => dispatch({ type: 'SET_BATTERY_HEALTH', payload: health }),
     setOriginalParts: (parts) => dispatch({ type: 'SET_ORIGINAL_PARTS', payload: parts }),
+    setOriginalBox: (hasBox) => dispatch({ type: 'SET_ORIGINAL_BOX', payload: hasBox }),
     setFunctionality: (issues) => dispatch({ type: 'SET_FUNCTIONALITY', payload: issues }),
     setICloud: (isOff) => dispatch({ type: 'SET_ICLOUD', payload: isOff }),
     nextStep: () => {
@@ -194,7 +200,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
             state.hasLiquidDamage !== null
           )
         case 3:
-          return state.batteryHealth !== null
+          return state.batteryHealth !== null && state.hasOriginalBox !== null
         case 4:
           return true // Checkboxes always complete
         case 5:

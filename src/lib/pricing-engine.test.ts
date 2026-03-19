@@ -14,6 +14,7 @@ function createWizardState(overrides: Partial<WizardState> = {}): WizardState {
     hasLiquidDamage: false,
     batteryHealth: 'good',
     originalParts: { screen: true, battery: true },
+    hasOriginalBox: true,
     functionalityIssues: { faceId: false, camera: false, audio: false, charging: false },
     iCloudOff: true,
     ...overrides,
@@ -107,6 +108,27 @@ describe('calculatePrice', () => {
 
     expect(result!.totalDeductions).toBe(0.20)
     expect(result!.deductionBreakdown.some(d => d.reason === 'deductLiquidDamage')).toBe(true)
+  })
+
+  it('applies no original box deduction (fixed USD $20)', () => {
+    const state = createWizardState({ hasOriginalBox: false })
+    const result = calculatePrice(state)
+
+    expect(result).not.toBeNull()
+    // Fixed $20 deduction, not percentage-based
+    expect(result!.finalPrice).toBe(430) // 450 - 20 = 430
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductNoOriginalBox')).toBe(true)
+    expect(result!.deductionBreakdown.find(d => d.reason === 'deductNoOriginalBox')!.amount).toBe(20)
+    expect(result!.deductionBreakdown.find(d => d.reason === 'deductNoOriginalBox')!.percentage).toBe(0)
+  })
+
+  it('does not deduct for original box present', () => {
+    const state = createWizardState({ hasOriginalBox: true })
+    const result = calculatePrice(state)
+
+    expect(result).not.toBeNull()
+    expect(result!.finalPrice).toBe(450)
+    expect(result!.deductionBreakdown.some(d => d.reason === 'deductNoOriginalBox')).toBe(false)
   })
 
   it('applies non-original battery deduction (15%)', () => {

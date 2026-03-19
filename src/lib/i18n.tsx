@@ -102,6 +102,7 @@ const translations = {
     deductCamera: 'Problemas de cámara',
     deductAudio: 'Problemas de audio',
     deductCharging: 'Problemas de carga',
+    deductNoOriginalBox: 'Sin caja original',
   },
   en: {
     // Intro screen
@@ -202,6 +203,7 @@ const translations = {
     deductCamera: 'Camera issues',
     deductAudio: 'Audio issues',
     deductCharging: 'Charging issues',
+    deductNoOriginalBox: 'No original box',
   },
 } as const
 

@@ -56,6 +56,7 @@ const waTranslations = {
     charging: 'Carga',
     originalScreen: 'Pantalla original:',
     originalBattery: 'Batería original:',
+    originalBox: 'Caja original:',
     quote: 'Cotización:',
     coordinate: '¿Podemos coordinar?',
   },
@@ -89,6 +90,7 @@ const waTranslations = {
     charging: 'Charging',
     originalScreen: 'Original screen:',
     originalBattery: 'Original battery:',
+    originalBox: 'Original box:',
     quote: 'Quote:',
     coordinate: 'Can we coordinate?',
   },
@@ -172,6 +174,7 @@ export function buildMessage(
   // Original parts
   lines.push(`*${t.originalScreen}* ${state.originalParts.screen ? t.yes : t.no}`)
   lines.push(`*${t.originalBattery}* ${state.originalParts.battery ? t.yes : t.no}`)
+  lines.push(`*${t.originalBox}* ${state.hasOriginalBox ? t.yes : t.no}`)
 
   lines.push('')
   lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)
@@ -252,6 +255,7 @@ export function buildInquiryLink(
 
   lines.push(`*${t.originalScreen}* ${state.originalParts.screen ? t.yes : t.no}`)
   lines.push(`*${t.originalBattery}* ${state.originalParts.battery ? t.yes : t.no}`)
+  lines.push(`*${t.originalBox}* ${state.hasOriginalBox ? t.yes : t.no}`)
 
   lines.push('')
   lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Card, CardHeader, Button, ToggleCard } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
@@ -15,6 +16,108 @@ const CloudXIcon = () => (
   </svg>
 )
 
+const helpSteps = [
+  {
+    label: 'Abrí "Ajustes"',
+    detail: 'El icono ⚙️ en tu pantalla de inicio.',
+  },
+  {
+    label: 'Tocá tu nombre',
+    detail: 'Arriba de todo, donde dice tu cuenta de Apple.',
+  },
+  {
+    label: 'Tocá "Buscar"',
+    detail: 'Dentro de la configuración de tu cuenta.',
+  },
+  {
+    label: 'Desactivá "Buscar mi iPhone"',
+    detail: 'Apagá el interruptor y confirmá con tu contraseña.',
+  },
+]
+
+function WhyExplainer({ show }: { show: boolean }) {
+  if (!show) return null
+  return (
+    <div className="mt-2 p-3 bg-white/[0.04] rounded-lg text-[13px] text-white/45 leading-relaxed animate-fadeSlideIn">
+      Apple bloquea los iPhones que tienen "Buscar mi iPhone" activado. Si no se desactiva, el equipo no se puede usar con otra cuenta y no lo podemos comprar.
+    </div>
+  )
+}
+
+function HelpBottomSheet({ onClose }: { onClose: () => void }) {
+  const [showWhy, setShowWhy] = useState(false)
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
+        onClick={onClose}
+      />
+
+      {/* Bottom sheet */}
+      <div className="relative w-full sm:max-w-md bg-[#141414] sm:mb-8 sm:rounded-2xl rounded-t-2xl overflow-y-auto max-h-[88vh] animate-slideUp">
+        {/* Drag handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full bg-white/20" />
+        </div>
+
+        <div className="px-6 pt-3 pb-7">
+          {/* Header */}
+          <div className="mb-7">
+            <h3 className="text-[22px] font-bold text-white leading-tight">Para ver tu cotización, desactivá Buscar mi iPhone</h3>
+            <p className="text-[14px] text-white/40 mt-1.5 leading-snug">
+              Lleva menos de 1 minuto.
+              <button
+                onClick={() => setShowWhy(w => !w)}
+                className="ml-1.5 text-amber-400/70 hover:text-amber-400 underline underline-offset-2 cursor-pointer transition-colors"
+              >
+                ¿Por qué es necesario?
+              </button>
+            </p>
+            <WhyExplainer show={showWhy} />
+          </div>
+
+          {/* Steps */}
+          <div className="space-y-5 mb-8">
+            {helpSteps.map((step, i) => (
+              <div key={i} className="flex gap-3.5 items-start">
+                {/* Number */}
+                <div className="w-8 h-8 rounded-full bg-amber-500/12 border border-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-[13px] font-bold text-amber-400">{i + 1}</span>
+                </div>
+                {/* Text */}
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <p className="text-[15px] font-semibold text-white/90 leading-tight">{step.label}</p>
+                  <p className="text-[13px] text-white/40 mt-1 leading-snug">{step.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={onClose}
+            className="w-full py-3.5 rounded-xl bg-amber-500/12 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 font-semibold text-[15px] transition-colors cursor-pointer"
+          >
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /**
  * Step 5: iCloud / Find My iPhone check
  * If locked, quote is blocked
@@ -22,86 +125,95 @@ const CloudXIcon = () => (
 export function Step5ICloud() {
   const { state, setICloud, nextStep } = useWizard()
   const { lang } = useI18n()
+  const [showHelp, setShowHelp] = useState(false)
 
-  // Only allow to continue if iCloud is OFF (can sell)
   const canContinue = state.iCloudOff === true
 
   return (
-    <Card>
-      <CardHeader
-        title={lang === 'es' ? '¿iCloud está desactivado?' : 'Is iCloud off?'}
-        subtitle={lang === 'es'
-          ? 'Necesitamos que esté desactivado para comprarlo'
-          : 'It needs to be off for us to buy it'}
-      />
+    <>
+      <Card>
+        <CardHeader
+          title={lang === 'es' ? '¿Desactivaste Buscar mi iPhone?' : 'Did you turn off Find My iPhone?'}
+          subtitle={lang === 'es'
+            ? 'Es necesario para poder comprarlo'
+            : 'This is required for us to buy it'}
+        />
 
-      {/* Warning info box */}
-      <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl mb-6">
-        <div className="flex items-start gap-3">
-          <div className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+        {/* Help trigger */}
+        <button
+          onClick={() => setShowHelp(true)}
+          className="w-full p-3.5 bg-white/[0.04] border border-white/[0.08] rounded-xl mb-6 flex items-center gap-3 hover:bg-white/[0.06] transition-colors cursor-pointer text-left"
+        >
+          <div className="w-9 h-9 rounded-full bg-amber-500/12 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-[18px] h-[18px] text-amber-400">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8.94 6.94a.75.75 0 11-1.061-1.061 3.75 3.75 0 115.304 5.304l-.645.645a1.5 1.5 0 00-.439 1.061V13a.75.75 0 01-1.5 0v-.151a3 3 0 01.879-2.122l.645-.644a2.25 2.25 0 10-3.183-3.183zM10 16a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
             </svg>
           </div>
-          <div className="flex-1 text-sm">
-            <p className="font-medium text-amber-200 mb-1">
-              {lang === 'es' ? 'Cómo verificar:' : 'How to verify:'}
-            </p>
-            <p className="text-amber-200/80">
-              {lang === 'es'
-                ? 'Ajustes → Tu nombre → Buscar → Buscar mi iPhone debe estar APAGADO'
-                : 'Settings → Your Name → Find My → Find My iPhone must be OFF'}
-            </p>
+          <span className="text-sm text-white/50 font-medium flex-1">
+            {lang === 'es' ? '¿Cómo se desactiva?' : 'How do I turn it off?'}
+          </span>
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white/20 flex-shrink-0">
+            <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+          </svg>
+        </button>
+
+        {/* Toggle selection */}
+        <div className="space-y-3">
+          <p className="text-sm text-white/50 font-medium">
+            {lang === 'es' ? '¿Ya lo desactivaste?' : 'Have you turned it off?'}
+          </p>
+          <div className="flex gap-3">
+            <ToggleCard
+              selected={state.iCloudOff === true}
+              onClick={() => setICloud(true)}
+              icon={<CloudCheckIcon />}
+              label={lang === 'es' ? 'Sí, está desactivado' : 'Yes, it\'s off'}
+              isPositive={true}
+            />
+            <ToggleCard
+              selected={state.iCloudOff === false}
+              onClick={() => setICloud(false)}
+              icon={<CloudXIcon />}
+              label={lang === 'es' ? 'No' : 'No'}
+              isPositive={false}
+            />
           </div>
         </div>
-      </div>
 
-      {/* Toggle selection */}
-      <div className="space-y-3">
-        <p className="text-sm text-white/50 font-medium">
-          {lang === 'es' ? '¿Buscar mi iPhone está desactivado?' : 'Is Find My iPhone off?'}
-        </p>
-        <div className="flex gap-3">
-          <ToggleCard
-            selected={state.iCloudOff === true}
-            onClick={() => setICloud(true)}
-            icon={<CloudCheckIcon />}
-            label={lang === 'es' ? 'Sí' : 'Yes'}
-            isPositive={true}
-          />
-          <ToggleCard
-            selected={state.iCloudOff === false}
-            onClick={() => setICloud(false)}
-            icon={<CloudXIcon />}
-            label={lang === 'es' ? 'No' : 'No'}
-            isPositive={false}
-          />
-        </div>
-      </div>
+        {/* Status feedback */}
+        {state.iCloudOff !== null && (
+          <div className={`
+            mt-4 p-3 rounded-xl text-sm animate-fadeSlideIn
+            ${state.iCloudOff
+              ? 'bg-green-500/10 border border-green-500/30 text-green-200'
+              : 'bg-amber-500/10 border border-amber-500/30 text-amber-200'
+            }
+          `}>
+            {state.iCloudOff
+              ? (lang === 'es'
+                  ? '✓ Perfecto, tu iPhone puede ser cotizado'
+                  : '✓ Perfect, your iPhone can be quoted')
+              : (lang === 'es'
+                  ? 'Necesitás desactivarlo para poder vender tu iPhone.'
+                  : 'You need to turn it off to sell your iPhone.')
+            }
+            {state.iCloudOff === false && (
+              <button
+                onClick={() => setShowHelp(true)}
+                className="block mt-1 text-amber-300 underline underline-offset-2 hover:text-amber-200 transition-colors cursor-pointer"
+              >
+                Ver cómo hacerlo
+              </button>
+            )}
+          </div>
+        )}
 
-      {/* Status feedback */}
-      {state.iCloudOff !== null && (
-        <div className={`
-          mt-4 p-3 rounded-xl text-sm animate-fadeSlideIn
-          ${state.iCloudOff
-            ? 'bg-green-500/10 border border-green-500/30 text-green-200'
-            : 'bg-red-500/10 border border-red-500/30 text-red-200'
-          }
-        `}>
-          {state.iCloudOff
-            ? (lang === 'es'
-                ? '✓ Perfecto, tu iPhone puede ser cotizado'
-                : '✓ Perfect, your iPhone can be quoted')
-            : (lang === 'es'
-                ? '⚠️ iCloud debe estar desactivado para poder comprarlo. Desactivalo y volvé a intentar.'
-                : '⚠️ iCloud must be off for us to buy it. Turn it off and try again.')
-          }
-        </div>
-      )}
+        <Button onClick={nextStep} fullWidth disabled={!canContinue} className="mt-6">
+          {lang === 'es' ? 'Ver cotización' : 'Get quote'}
+        </Button>
+      </Card>
 
-      <Button onClick={nextStep} fullWidth disabled={!canContinue} className="mt-6">
-        {lang === 'es' ? 'Ver cotización' : 'Get quote'}
-      </Button>
-    </Card>
+      {showHelp && <HelpBottomSheet onClose={() => setShowHelp(false)} />}
+    </>
   )
 }
