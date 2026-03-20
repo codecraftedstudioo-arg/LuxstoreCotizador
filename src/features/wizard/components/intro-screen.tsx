@@ -252,26 +252,41 @@ function VideoPlayer() {
 function FAQItem({ question, children }: { question: string; children: ReactNode }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="border-b border-white/10">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-4 text-left cursor-pointer group"
-      >
-        <span className="text-sm sm:text-base text-white font-medium pr-4 group-hover:text-[#6B8AED] transition-colors">{question}</span>
-        <svg
-          className={`w-5 h-5 text-white/40 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
-      </button>
-      <div className={`overflow-hidden transition-all duration-200 ${open ? 'max-h-96 pb-4' : 'max-h-0'}`}>
+    <button
+      onClick={() => setOpen(!open)}
+      className={`w-full text-left rounded-xl transition-all duration-300 px-4 sm:px-5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B8AED]/50 group ${
+        open
+          ? 'bg-white/[0.04] border border-white/[0.08] py-4 sm:py-5'
+          : 'bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.05] hover:border-white/[0.08] py-4 sm:py-5'
+      }`}
+    >
+      {/* Question row */}
+      <div className="flex items-center justify-between gap-3">
+        <span className={`text-sm sm:text-[15px] font-medium transition-colors duration-200 ${
+          open ? 'text-[#6B8AED]' : 'text-white/80 group-hover:text-white'
+        }`}>{question}</span>
+        <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+          open ? 'bg-[#6B8AED]/15 rotate-180' : 'bg-white/[0.06] group-hover:bg-white/[0.10]'
+        }`}>
+          <svg
+            className={`w-3.5 h-3.5 transition-colors duration-200 ${open ? 'text-[#6B8AED]' : 'text-white/35'}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Answer content */}
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+        open ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'
+      }`}>
         {children}
       </div>
-    </div>
+    </button>
   )
 }
 
@@ -590,43 +605,54 @@ export function IntroScreen() {
       </section>
 
       {/* Preguntas frecuentes */}
-      <section id="preguntas-frecuentes" className="relative z-10 border-t border-white/10 bg-black py-14 scroll-mt-20">
-        <div className="max-w-2xl mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-10">
-            Preguntas frecuentes
-          </h2>
-          <div>
+      <section id="preguntas-frecuentes" className="relative z-10 border-t border-white/[0.06] bg-black py-16 sm:py-20 scroll-mt-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          {/* Section header */}
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              Preguntas frecuentes
+            </h2>
+            <p className="text-white/30 text-sm mt-2">Todo lo que necesitás saber antes de vender tu iPhone</p>
+          </div>
+
+          {/* FAQ items */}
+          <div className="space-y-2.5">
             <FAQItem question="¿Cómo desactivo mi cuenta de iCloud?">
-              <p className="text-white/50 text-sm leading-relaxed mb-3">
-                Si vas a vender tu iPhone, es recomendable desactivar "Buscar mi iPhone" y cerrar sesión de iCloud para que el comprador pueda usarlo con su propia cuenta.
+              <p className="text-white/45 text-[13px] sm:text-sm leading-relaxed mb-4">
+                Si vas a vender tu iPhone, te recomendamos desactivar <strong className="text-white/60">"Buscar mi iPhone"</strong> y cerrar sesión de iCloud para que el comprador pueda usarlo con su propia cuenta.
               </p>
-              <div className="space-y-2">
+              <div className="space-y-3.5 bg-white/[0.03] border border-white/[0.05] rounded-lg p-4">
                 {[
-                  'Abrí "Ajustes" en tu iPhone',
-                  'Tocá tu nombre (arriba de todo)',
-                  'Tocá "Buscar"',
-                  'Desactivá "Buscar mi iPhone" e ingresá tu contraseña',
+                  { action: 'Abrí', target: 'Ajustes', detail: 'en tu iPhone' },
+                  { action: 'Tocá', target: 'tu nombre', detail: '(arriba de todo)' },
+                  { action: 'Tocá', target: '"Buscar"', detail: '' },
+                  { action: 'Desactivá', target: '"Buscar mi iPhone"', detail: 'e ingresá tu contraseña' },
                 ].map((step, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <span className="text-xs font-bold text-white/30 mt-0.5 w-4 text-center flex-shrink-0">{i + 1}.</span>
-                    <span className="text-sm text-white/50">{step}</span>
+                  <div key={i} className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#6B8AED]/15 text-[#6B8AED] text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-px">{i + 1}</span>
+                    <p className="text-[13px] sm:text-sm text-white/50 leading-snug pt-0.5">
+                      {step.action} <strong className="text-white/70">{step.target}</strong>{step.detail ? ` ${step.detail}` : ''}
+                    </p>
                   </div>
                 ))}
               </div>
             </FAQItem>
+
             <FAQItem question="¿Cómo me pagan?">
-              <p className="text-white/50 text-sm leading-relaxed">
-                El pago es inmediato, en efectivo o transferencia bancaria. Podés elegir la forma que prefieras al momento de la venta en el local.
+              <p className="text-white/45 text-[13px] sm:text-sm leading-relaxed">
+                El pago es <strong className="text-white/60">inmediato</strong>, en efectivo o transferencia bancaria. Podés elegir la forma que prefieras al momento de la venta en el local.
               </p>
             </FAQItem>
-            <FAQItem question="¿Dónde queda el local?">
-              <p className="text-white/50 text-sm leading-relaxed">
-                Estamos en Costa Rica 5509, Palermo, CABA. Podés venir sin turno de lunes a sábados.
+
+            <FAQItem question="¿Dónde están ubicados?">
+              <p className="text-white/45 text-[13px] sm:text-sm leading-relaxed">
+                Estamos en <strong className="text-white/60">Costa Rica 5509, Palermo, CABA</strong>. Podés venir sin turno de lunes a sábados.
               </p>
             </FAQItem>
-            <FAQItem question="¿Cuánto tarda la cotización?">
-              <p className="text-white/50 text-sm leading-relaxed">
-                Menos de 1 minuto. Respondé 4 preguntas sobre tu iPhone y te damos un precio estimado al instante. El valor final está sujeto a revisión del equipo en el local.
+
+            <FAQItem question="¿Cuánto tarda cotizar mi iPhone?">
+              <p className="text-white/45 text-[13px] sm:text-sm leading-relaxed">
+                <strong className="text-white/60">Menos de 1 minuto.</strong> Respondé 4 preguntas sobre tu iPhone y te damos un precio estimado al instante. El valor final está sujeto a revisión del equipo en el local.
               </p>
             </FAQItem>
           </div>
