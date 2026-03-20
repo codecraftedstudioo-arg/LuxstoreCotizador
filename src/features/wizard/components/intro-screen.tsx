@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { type ReactNode, useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWizard } from '../hooks/use-wizard'
 
@@ -249,6 +249,32 @@ function VideoPlayer() {
   )
 }
 
+function FAQItem({ question, children }: { question: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="border-b border-white/10">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-4 text-left cursor-pointer group"
+      >
+        <span className="text-sm sm:text-base text-white font-medium pr-4 group-hover:text-[#6B8AED] transition-colors">{question}</span>
+        <svg
+          className={`w-5 h-5 text-white/40 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+      </button>
+      <div className={`overflow-hidden transition-all duration-200 ${open ? 'max-h-96 pb-4' : 'max-h-0'}`}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export function IntroScreen() {
   const navigate = useNavigate()
   const { reset } = useWizard()
@@ -288,6 +314,11 @@ export function IntroScreen() {
                className="text-white/80 hover:text-white transition-colors text-sm">
               ¿Cómo llegar?
             </a>
+            <button
+               onClick={() => document.getElementById('preguntas-frecuentes')?.scrollIntoView({ behavior: 'smooth' })}
+               className="text-white/80 hover:text-white transition-colors text-sm">
+              Preguntas frecuentes
+            </button>
           </div>
 
           {/* Hamburger button - Mobile */}
@@ -342,6 +373,15 @@ export function IntroScreen() {
                  className="text-white/70 hover:text-white transition-colors text-sm py-2">
                 ¿Cómo llegar?
               </a>
+              <button
+                onClick={() => {
+                  document.getElementById('preguntas-frecuentes')?.scrollIntoView({ behavior: 'smooth' })
+                  setMenuOpen(false)
+                }}
+                className="text-white/70 hover:text-white transition-colors text-sm text-left py-2"
+              >
+                Preguntas frecuentes
+              </button>
             </div>
           </div>
         )}
@@ -549,6 +589,50 @@ export function IntroScreen() {
         </div>
       </section>
 
+      {/* Preguntas frecuentes */}
+      <section id="preguntas-frecuentes" className="relative z-10 border-t border-white/10 bg-black py-14 scroll-mt-20">
+        <div className="max-w-2xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-10">
+            Preguntas frecuentes
+          </h2>
+          <div>
+            <FAQItem question="¿Cómo desactivo mi cuenta de iCloud?">
+              <p className="text-white/50 text-sm leading-relaxed mb-3">
+                Si vas a vender tu iPhone, es recomendable desactivar "Buscar mi iPhone" y cerrar sesión de iCloud para que el comprador pueda usarlo con su propia cuenta.
+              </p>
+              <div className="space-y-2">
+                {[
+                  'Abrí "Ajustes" en tu iPhone',
+                  'Tocá tu nombre (arriba de todo)',
+                  'Tocá "Buscar"',
+                  'Desactivá "Buscar mi iPhone" e ingresá tu contraseña',
+                ].map((step, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <span className="text-xs font-bold text-white/30 mt-0.5 w-4 text-center flex-shrink-0">{i + 1}.</span>
+                    <span className="text-sm text-white/50">{step}</span>
+                  </div>
+                ))}
+              </div>
+            </FAQItem>
+            <FAQItem question="¿Cómo me pagan?">
+              <p className="text-white/50 text-sm leading-relaxed">
+                El pago es inmediato, en efectivo o transferencia bancaria. Podés elegir la forma que prefieras al momento de la venta en el local.
+              </p>
+            </FAQItem>
+            <FAQItem question="¿Dónde queda el local?">
+              <p className="text-white/50 text-sm leading-relaxed">
+                Estamos en Costa Rica 5509, Palermo, CABA. Podés venir sin turno de lunes a sábados.
+              </p>
+            </FAQItem>
+            <FAQItem question="¿Cuánto tarda la cotización?">
+              <p className="text-white/50 text-sm leading-relaxed">
+                Menos de 1 minuto. Respondé 4 preguntas sobre tu iPhone y te damos un precio estimado al instante. El valor final está sujeto a revisión del equipo en el local.
+              </p>
+            </FAQItem>
+          </div>
+        </div>
+      </section>
+
       {/* Footer - Black */}
       <footer className="relative z-10 border-t border-white/10 py-8 bg-black">
         <div className="max-w-6xl mx-auto px-4">
@@ -562,7 +646,7 @@ export function IntroScreen() {
               />
             </a>
 
-            <p className="text-white/30 text-sm">© 2026 Electronic Point. Todos los derechos reservados.</p>
+            <p className="text-white/30 text-sm">© {new Date().getFullYear()} Electronic Point. Todos los derechos reservados.</p>
 
             <div className="flex items-center gap-6">
               <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
@@ -574,6 +658,14 @@ export function IntroScreen() {
                 Ver iPhones
               </a>
             </div>
+          </div>
+          <div className="border-t border-white/10 mt-6 pt-6 text-center">
+            <p className="text-xs text-white/30">
+              Built by{' '}
+              <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors">
+                Nicolás Kevorkian
+              </a>
+            </p>
           </div>
         </div>
       </footer>

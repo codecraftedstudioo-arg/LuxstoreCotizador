@@ -56,7 +56,7 @@ type WizardAction =
   | { type: 'GO_TO_STEP'; payload: number }
   | { type: 'RESET' }
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 4
 
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -176,7 +176,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setFunctionality: (issues) => dispatch({ type: 'SET_FUNCTIONALITY', payload: issues }),
     setICloud: (isOff) => dispatch({ type: 'SET_ICLOUD', payload: isOff }),
     nextStep: () => {
-      if (state.currentStep === 5 && celebrationRef.current) {
+      if (state.currentStep === 4 && celebrationRef.current) {
         celebrationRef.current.currentTime = 0
         celebrationRef.current.play().catch(() => {})
       }
@@ -203,8 +203,6 @@ export function WizardProvider({ children }: { children: ReactNode }) {
           return state.batteryHealth !== null && state.hasOriginalBox !== null
         case 4:
           return true // Checkboxes always complete
-        case 5:
-          return state.iCloudOff !== null
         default:
           return false
       }

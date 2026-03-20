@@ -9,11 +9,10 @@ import {
   Step2Condition,
   Step3Details,
   Step4Functionality,
-  Step5ICloud,
   StepResult,
 } from './steps'
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 4
 
 /**
  * iPhone 15 Pro Frame - Ultra realistic
@@ -252,8 +251,7 @@ export function WizardPage() {
       case 2: return <Step2Condition />
       case 3: return <Step3Details />
       case 4: return <Step4Functionality />
-      case 5: return <Step5ICloud />
-      case 6: return <StepResult />
+      case 5: return <StepResult />
       default: return <Step1Basics />
     }
   }
@@ -391,8 +389,9 @@ export function WizardPage() {
         </main>
 
         {/* Footer */}
-        <footer className="py-4 text-center">
+        <footer className="py-4 text-center space-y-1">
           <p className="text-white/30 text-xs">© 2026 Electronic Point · <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors underline">Costa Rica 5509, CABA</a></p>
+          <p className="text-white/15 text-[10px]">Built by <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="hover:text-white/30 transition-colors">NK</a></p>
         </footer>
       </div>
     </div>
