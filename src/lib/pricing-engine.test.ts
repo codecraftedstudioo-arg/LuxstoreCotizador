@@ -17,6 +17,10 @@ function createWizardState(overrides: Partial<WizardState> = {}): WizardState {
     hasOriginalBox: true,
     functionalityIssues: { faceId: false, camera: false, audio: false, charging: false },
     iCloudOff: true,
+    upgradeModel: null,
+    upgradeStorage: null,
+    upgradeColor: null,
+    upgradePrice: null,
     ...overrides,
   }
 }

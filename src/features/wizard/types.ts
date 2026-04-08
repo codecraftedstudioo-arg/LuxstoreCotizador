@@ -62,6 +62,22 @@ export interface WizardState {
 
   // Step 5: iCloud (blocker)
   iCloudOff: boolean | null  // true = desbloqueado, false = bloqueado (no cotiza)
+
+  // Upgrade selection (from market prices)
+  upgradeModel: string | null
+  upgradeStorage: string | null
+  upgradeColor: string | null
+  upgradePrice: number | null
+}
+
+/**
+ * Upgrade/trade-in selection for WhatsApp message
+ */
+export interface UpgradeInfo {
+  model: string
+  storage: string
+  color: string
+  price: number
 }
 
 /**

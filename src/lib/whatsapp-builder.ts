@@ -1,6 +1,8 @@
-import type { WizardState, PriceResult } from '@/features/wizard/types'
+import type { WizardState, PriceResult, UpgradeInfo } from '@/features/wizard/types'
 import type { Language } from './i18n'
-import { formatPrice } from './pricing-engine'
+import { formatPrice, formatStorage } from './pricing-engine'
+
+export type { UpgradeInfo }
 
 // Número de WhatsApp del negocio (sin +, sin espacios)
 // Formato Argentina: 54 + 9 + código área + número
@@ -27,29 +29,29 @@ export interface ContactInfo {
 // Translations for WhatsApp message
 const waTranslations = {
   es: {
-    greeting: '¡Hola! Quiero vender mi iPhone.',
+    greeting: 'Hola, quiero vender mi iPhone.',
     name: 'Nombre:',
     phone: 'Teléfono:',
     model: 'Modelo:',
     storage: 'Almacenamiento:',
     battery: 'Salud de batería:',
-    batteryLow: 'Menor a 85%',
+    batteryLow: 'menor a 85%',
     batteryOk: '85% o más',
     screen: 'Pantalla:',
-    screenPerfect: 'Perfecta',
-    screenScratches: 'Rayones visibles',
-    screenCracked: 'Rota/rajada',
+    screenPerfect: 'impecable',
+    screenScratches: 'rayones visibles',
+    screenCracked: 'rota/rajada',
     back: 'Tapa trasera:',
-    backPerfect: 'Perfecta',
-    backCracked: 'Rota/rajada',
+    backPerfect: 'impecable',
+    backCracked: 'rota/rajada',
     frame: 'Marco:',
-    framePerfect: 'Perfecto',
-    frameDamaged: 'Dañado',
+    framePerfect: 'impecable',
+    frameDamaged: 'dañado',
     liquidDamage: 'Daño por líquido:',
-    yes: 'Sí',
-    no: 'No',
+    yes: 'sí',
+    no: 'no',
     issues: 'Problemas:',
-    noIssues: 'Ninguno',
+    noIssues: 'ninguno',
     faceId: 'Face ID',
     camera: 'Cámara',
     audio: 'Audio',
@@ -57,33 +59,34 @@ const waTranslations = {
     originalScreen: 'Pantalla original:',
     originalBattery: 'Batería original:',
     originalBox: 'Caja original:',
-    quote: 'Cotización:',
+    quote: 'Cotización estimada:',
+    equivalent: 'Equivale a:',
     coordinate: '¿Podemos coordinar?',
   },
   en: {
-    greeting: 'Hi! I want to sell my iPhone.',
+    greeting: 'Hi, I want to sell my iPhone.',
     name: 'Name:',
     phone: 'Phone:',
     model: 'Model:',
     storage: 'Storage:',
     battery: 'Battery health:',
-    batteryLow: 'Below 85%',
+    batteryLow: 'below 85%',
     batteryOk: '85% or more',
     screen: 'Screen:',
-    screenPerfect: 'Perfect',
-    screenScratches: 'Visible scratches',
-    screenCracked: 'Cracked/broken',
+    screenPerfect: 'perfect',
+    screenScratches: 'visible scratches',
+    screenCracked: 'cracked/broken',
     back: 'Back glass:',
-    backPerfect: 'Perfect',
-    backCracked: 'Cracked/broken',
+    backPerfect: 'perfect',
+    backCracked: 'cracked/broken',
     frame: 'Frame:',
-    framePerfect: 'Perfect',
-    frameDamaged: 'Damaged',
+    framePerfect: 'perfect',
+    frameDamaged: 'damaged',
     liquidDamage: 'Liquid damage:',
-    yes: 'Yes',
-    no: 'No',
+    yes: 'yes',
+    no: 'no',
     issues: 'Issues:',
-    noIssues: 'None',
+    noIssues: 'none',
     faceId: 'Face ID',
     camera: 'Camera',
     audio: 'Audio',
@@ -91,20 +94,23 @@ const waTranslations = {
     originalScreen: 'Original screen:',
     originalBattery: 'Original battery:',
     originalBox: 'Original box:',
-    quote: 'Quote:',
+    quote: 'Estimated quote:',
+    equivalent: 'Equivalent to:',
     coordinate: 'Can we coordinate?',
   },
 }
 
 /**
  * Builds a WhatsApp message summarizing the phone condition
+ * Natural, readable format
  */
 export function buildMessage(
   state: WizardState,
   priceResult: PriceResult,
   contactInfo?: ContactInfo,
   lang: Language = 'es',
-  exchangeRate: number = 0
+  exchangeRate: number = 0,
+  upgradeInfo?: UpgradeInfo
 ): string {
   const t = waTranslations[lang]
   const lines: string[] = []
@@ -125,35 +131,25 @@ export function buildMessage(
 
   // Model and storage
   lines.push(`*${t.model}* ${state.model}`)
-  lines.push(`*${t.storage}* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
+  lines.push(`*${t.storage}* ${formatStorage(state.storage ?? '')}`)
 
   // Battery health
   lines.push(`*${t.battery}* ${state.batteryHealth === 'low' ? t.batteryLow : t.batteryOk}`)
 
   // Screen condition
-  const screenLabels = {
-    perfect: t.screenPerfect,
-    scratches: t.screenScratches,
-    cracked: t.screenCracked,
-  }
+  const screenLabels = { perfect: t.screenPerfect, scratches: t.screenScratches, cracked: t.screenCracked }
   if (state.screenCondition) {
     lines.push(`*${t.screen}* ${screenLabels[state.screenCondition]}`)
   }
 
   // Back condition
-  const backLabels = {
-    perfect: t.backPerfect,
-    cracked: t.backCracked,
-  }
+  const backLabels = { perfect: t.backPerfect, cracked: t.backCracked }
   if (state.backCondition) {
     lines.push(`*${t.back}* ${backLabels[state.backCondition]}`)
   }
 
   // Frame condition
-  const frameLabels = {
-    perfect: t.framePerfect,
-    damaged: t.frameDamaged,
-  }
+  const frameLabels = { perfect: t.framePerfect, damaged: t.frameDamaged }
   if (state.frameCondition) {
     lines.push(`*${t.frame}* ${frameLabels[state.frameCondition]}`)
   }
@@ -176,14 +172,38 @@ export function buildMessage(
   lines.push(`*${t.originalBattery}* ${state.originalParts.battery ? t.yes : t.no}`)
   lines.push(`*${t.originalBox}* ${state.hasOriginalBox ? t.yes : t.no}`)
 
+  // Quote
   lines.push('')
   lines.push(`*${t.quote}* ${formatPrice(priceResult.finalPrice)}`)
   if (exchangeRate > 0) {
     const arsEquivalent = (priceResult.finalPrice * exchangeRate).toLocaleString('es-AR')
     lines.push(lang === 'es'
-      ? `Equivale a $${arsEquivalent} ARS (dólar $${exchangeRate.toLocaleString('es-AR')})`
-      : `Equivalent to $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+      ? `*${t.equivalent}* $${arsEquivalent} ARS (tomando dólar a $${exchangeRate.toLocaleString('es-AR')})`
+      : `*${t.equivalent}* $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
   }
+
+  // Upgrade section - natural prose style
+  if (upgradeInfo) {
+    const storageLabel = formatStorage(upgradeInfo.storage)
+    const diff = upgradeInfo.price - priceResult.finalPrice
+    lines.push('')
+    if (lang === 'es') {
+      lines.push(`Quiero canjear mi iPhone por un *${upgradeInfo.model} ${storageLabel} ${upgradeInfo.color}*, que figura en *${formatPrice(upgradeInfo.price)}*.`)
+      if (diff > 0) {
+        lines.push(`La diferencia a pagar sería de *${formatPrice(diff)}*.`)
+      } else {
+        lines.push(`Me quedarían *${formatPrice(Math.abs(diff))}* a favor.`)
+      }
+    } else {
+      lines.push(`I want to trade in my iPhone for a *${upgradeInfo.model} ${storageLabel} ${upgradeInfo.color}*, listed at *${formatPrice(upgradeInfo.price)}*.`)
+      if (diff > 0) {
+        lines.push(`The difference to pay would be *${formatPrice(diff)}*.`)
+      } else {
+        lines.push(`I would have *${formatPrice(Math.abs(diff))}* in my favor.`)
+      }
+    }
+  }
+
   lines.push('')
   lines.push(t.coordinate)
 
@@ -192,39 +212,40 @@ export function buildMessage(
 
 /**
  * Generates wa.me link with pre-filled message
- *
- * @example
- * buildWhatsAppLink(state, result, { name: 'Juan', phone: '1155667788' })
- * // Returns: "https://wa.me/5491160050246?text=Hola%20quiero%20vender..."
  */
 export function buildWhatsAppLink(
   state: WizardState,
   priceResult: PriceResult,
   contactInfo?: ContactInfo,
   lang: Language = 'es',
-  exchangeRate: number = 0
+  exchangeRate: number = 0,
+  upgradeInfo?: UpgradeInfo
 ): string {
-  const message = buildMessage(state, priceResult, contactInfo, lang, exchangeRate).slice(0, MAX_MESSAGE_LENGTH)
+  const message = buildMessage(state, priceResult, contactInfo, lang, exchangeRate, upgradeInfo).slice(0, MAX_MESSAGE_LENGTH)
   return `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(message)}`
 }
 
 /**
  * Builds a WhatsApp link for inquiries (not selling yet)
- * Same full message as selling, but with inquiry greeting
  */
 export function buildInquiryLink(
   state: WizardState,
   priceResult: PriceResult,
   contactInfo?: ContactInfo,
   lang: Language = 'es',
-  exchangeRate: number = 0
+  exchangeRate: number = 0,
+  upgradeInfo?: UpgradeInfo
 ): string {
   const t = waTranslations[lang]
   const lines: string[] = []
 
   lines.push(lang === 'es'
-    ? 'Hola, tengo una consulta sobre la cotización de mi iPhone.'
-    : 'Hi, I have a question about my iPhone quote.')
+    ? (upgradeInfo
+      ? 'Hola, tengo una consulta sobre un canje de iPhone.'
+      : 'Hola, tengo una consulta sobre la cotización de mi iPhone.')
+    : (upgradeInfo
+      ? 'Hi, I have a question about an iPhone trade-in.'
+      : 'Hi, I have a question about my iPhone quote.'))
   lines.push('')
 
   if (contactInfo?.name) lines.push(`*${t.name}* ${sanitize(contactInfo.name, 50)}`)
@@ -232,7 +253,7 @@ export function buildInquiryLink(
   if (contactInfo?.name || contactInfo?.phone) lines.push('')
 
   lines.push(`*${t.model}* ${state.model}`)
-  lines.push(`*${t.storage}* ${state.storage === '1024' ? '1 TB' : state.storage + ' GB'}`)
+  lines.push(`*${t.storage}* ${formatStorage(state.storage ?? '')}`)
   lines.push(`*${t.battery}* ${state.batteryHealth === 'low' ? t.batteryLow : t.batteryOk}`)
 
   const screenLabels = { perfect: t.screenPerfect, scratches: t.screenScratches, cracked: t.screenCracked }
@@ -262,8 +283,29 @@ export function buildInquiryLink(
   if (exchangeRate > 0) {
     const arsEquivalent = (priceResult.finalPrice * exchangeRate).toLocaleString('es-AR')
     lines.push(lang === 'es'
-      ? `Equivale a $${arsEquivalent} ARS (dólar $${exchangeRate.toLocaleString('es-AR')})`
-      : `Equivalent to $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+      ? `*${t.equivalent}* $${arsEquivalent} ARS (tomando dólar a $${exchangeRate.toLocaleString('es-AR')})`
+      : `*${t.equivalent}* $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+  }
+
+  if (upgradeInfo) {
+    const storageLabel = formatStorage(upgradeInfo.storage)
+    const diff = upgradeInfo.price - priceResult.finalPrice
+    lines.push('')
+    if (lang === 'es') {
+      lines.push(`Quiero canjear mi iPhone por un *${upgradeInfo.model} ${storageLabel} ${upgradeInfo.color}*, que figura en *${formatPrice(upgradeInfo.price)}*.`)
+      if (diff > 0) {
+        lines.push(`La diferencia a pagar sería de *${formatPrice(diff)}*.`)
+      } else {
+        lines.push(`Me quedarían *${formatPrice(Math.abs(diff))}* a favor.`)
+      }
+    } else {
+      lines.push(`I want to trade in my iPhone for a *${upgradeInfo.model} ${storageLabel} ${upgradeInfo.color}*, listed at *${formatPrice(upgradeInfo.price)}*.`)
+      if (diff > 0) {
+        lines.push(`The difference to pay would be *${formatPrice(diff)}*.`)
+      } else {
+        lines.push(`I would have *${formatPrice(Math.abs(diff))}* in my favor.`)
+      }
+    }
   }
 
   const message = lines.join('\n').slice(0, MAX_MESSAGE_LENGTH)

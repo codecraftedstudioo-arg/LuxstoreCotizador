@@ -205,3 +205,12 @@ export function getStorageForModel(model: string): string[] {
 export function formatPrice(price: number): string {
   return `USD $${price.toLocaleString('es-AR')}`
 }
+
+/**
+ * Format storage value for display (e.g. "256" → "256 GB", "1024" → "1 TB")
+ */
+export function formatStorage(storage: string): string {
+  const num = parseInt(storage)
+  if (num >= 1024) return `${num / 1024} TB`
+  return `${storage} GB`
+}

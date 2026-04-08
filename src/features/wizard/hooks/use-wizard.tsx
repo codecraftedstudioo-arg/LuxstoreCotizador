@@ -36,6 +36,11 @@ const initialState: WizardState = {
   },
   // Step 5 - iCloud
   iCloudOff: null,
+  // Upgrade
+  upgradeModel: null,
+  upgradeStorage: null,
+  upgradeColor: null,
+  upgradePrice: null,
 }
 
 // Actions
@@ -51,12 +56,17 @@ type WizardAction =
   | { type: 'SET_ORIGINAL_BOX'; payload: boolean }
   | { type: 'SET_FUNCTIONALITY'; payload: Partial<FunctionalityIssues> }
   | { type: 'SET_ICLOUD'; payload: boolean }
+  | { type: 'SET_UPGRADE_MODEL'; payload: string }
+  | { type: 'SET_UPGRADE_STORAGE'; payload: string }
+  | { type: 'SET_UPGRADE_COLOR'; payload: string }
+  | { type: 'SET_UPGRADE_PRICE'; payload: number }
+  | { type: 'CLEAR_UPGRADE' }
   | { type: 'NEXT_STEP' }
   | { type: 'PREV_STEP' }
   | { type: 'GO_TO_STEP'; payload: number }
   | { type: 'RESET' }
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 5
 
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -83,6 +93,16 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, functionalityIssues: { ...state.functionalityIssues, ...action.payload } }
     case 'SET_ICLOUD':
       return { ...state, iCloudOff: action.payload }
+    case 'SET_UPGRADE_MODEL':
+      return { ...state, upgradeModel: action.payload, upgradeStorage: null, upgradeColor: null, upgradePrice: null }
+    case 'SET_UPGRADE_STORAGE':
+      return { ...state, upgradeStorage: action.payload, upgradeColor: null, upgradePrice: null }
+    case 'SET_UPGRADE_COLOR':
+      return { ...state, upgradeColor: action.payload }
+    case 'SET_UPGRADE_PRICE':
+      return { ...state, upgradePrice: action.payload }
+    case 'CLEAR_UPGRADE':
+      return { ...state, upgradeModel: null, upgradeStorage: null, upgradeColor: null, upgradePrice: null }
     case 'NEXT_STEP':
       return { ...state, currentStep: Math.min(state.currentStep + 1, TOTAL_STEPS + 1) }
     case 'PREV_STEP':
@@ -109,6 +129,11 @@ interface WizardContextValue {
   setOriginalBox: (hasBox: boolean) => void
   setFunctionality: (issues: Partial<FunctionalityIssues>) => void
   setICloud: (isOff: boolean) => void
+  setUpgradeModel: (model: string) => void
+  setUpgradeStorage: (storage: string) => void
+  setUpgradeColor: (color: string) => void
+  setUpgradePrice: (price: number) => void
+  clearUpgrade: () => void
   nextStep: () => void
   prevStep: () => void
   goToStep: (step: number) => void
@@ -175,8 +200,13 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setOriginalBox: (hasBox) => dispatch({ type: 'SET_ORIGINAL_BOX', payload: hasBox }),
     setFunctionality: (issues) => dispatch({ type: 'SET_FUNCTIONALITY', payload: issues }),
     setICloud: (isOff) => dispatch({ type: 'SET_ICLOUD', payload: isOff }),
+    setUpgradeModel: (model) => dispatch({ type: 'SET_UPGRADE_MODEL', payload: model }),
+    setUpgradeStorage: (storage) => dispatch({ type: 'SET_UPGRADE_STORAGE', payload: storage }),
+    setUpgradeColor: (color) => dispatch({ type: 'SET_UPGRADE_COLOR', payload: color }),
+    setUpgradePrice: (price) => dispatch({ type: 'SET_UPGRADE_PRICE', payload: price }),
+    clearUpgrade: () => dispatch({ type: 'CLEAR_UPGRADE' }),
     nextStep: () => {
-      if (state.currentStep === 4 && celebrationRef.current) {
+      if (state.currentStep === 5 && celebrationRef.current) {
         celebrationRef.current.currentTime = 0
         celebrationRef.current.play().catch(() => {})
       }
@@ -191,17 +221,19 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     isStepComplete: (step: number) => {
       switch (step) {
         case 1:
-          return state.model !== null && state.storage !== null
+          return true // Upgrade is optional, always complete
         case 2:
+          return state.model !== null && state.storage !== null
+        case 3:
           return (
             state.screenCondition !== null &&
             state.backCondition !== null &&
             state.frameCondition !== null &&
             state.hasLiquidDamage !== null
           )
-        case 3:
-          return state.batteryHealth !== null && state.hasOriginalBox !== null
         case 4:
+          return state.batteryHealth !== null && state.hasOriginalBox !== null
+        case 5:
           return true // Checkboxes always complete
         default:
           return false

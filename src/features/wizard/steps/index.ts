@@ -1,7 +1,7 @@
-// 5-step wizard flow
+// 6-step wizard flow (step 5 = upgrade is optional)
 export { Step1Basics } from './step-1-basics'
 export { Step2Condition } from './step-2-condition'
 export { Step3Details } from './step-3-details'
 export { Step4Functionality } from './step-4-functionality'
-export { Step5ICloud } from './step-5-icloud'
+export { Step5Upgrade } from './step-5-upgrade'
 export { StepResult } from './step-result'

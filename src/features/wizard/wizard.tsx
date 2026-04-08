@@ -9,10 +9,11 @@ import {
   Step2Condition,
   Step3Details,
   Step4Functionality,
+  Step5Upgrade,
   StepResult,
 } from './steps'
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 5
 
 /**
  * iPhone 15 Pro Frame - Ultra realistic
@@ -85,7 +86,7 @@ function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; cont
             </div>
 
             {/* Screen content - starts from top with padding */}
-            <div ref={contentRef} className="flex-1 overflow-y-auto overflow-x-hidden pl-3 pr-4 sm:pl-4 sm:pr-5 scrollbar-thin pt-2">
+            <div ref={contentRef} className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-5 scrollbar-thin pt-2">
               {children}
             </div>
 
@@ -247,12 +248,13 @@ export function WizardPage() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 1: return <Step1Basics />
-      case 2: return <Step2Condition />
-      case 3: return <Step3Details />
-      case 4: return <Step4Functionality />
-      case 5: return <StepResult />
-      default: return <Step1Basics />
+      case 1: return <Step5Upgrade />
+      case 2: return <Step1Basics />
+      case 3: return <Step2Condition />
+      case 4: return <Step3Details />
+      case 5: return <Step4Functionality />
+      case 6: return <StepResult />
+      default: return <Step5Upgrade />
     }
   }
 
@@ -316,7 +318,10 @@ export function WizardPage() {
           <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-center gap-3 text-sm text-white/60">
             <span>Cotizamos en USD</span>
             <span className="text-white/20">|</span>
-            <span>Dólar blue: <span className="text-white font-bold text-base">${rate.toLocaleString('es-AR')}</span></span>
+            <span>Dólar blue: {rate !== null
+              ? <span className="text-white font-bold text-base transition-all duration-500">${rate.toLocaleString('es-AR')}</span>
+              : <span className="text-white font-bold text-base blur-[3px] select-none">$1.500</span>
+            }</span>
           </div>
         </div>
 
@@ -344,20 +349,19 @@ export function WizardPage() {
                 {/* Navigation inside iPhone */}
                 {showProgress && (
                   <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between px-1">
-                    <button
-                      onClick={prevStep}
-                      disabled={currentStep <= 1}
-                      className={`flex items-center gap-1 text-sm transition-colors ${
-                        currentStep <= 1
-                          ? 'text-white/20 cursor-not-allowed'
-                          : 'text-white/60 hover:text-white'
-                      }`}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                      Atrás
-                    </button>
+                    {currentStep > 1 ? (
+                      <button
+                        onClick={prevStep}
+                        className="flex items-center gap-1 text-sm transition-colors text-white/60 hover:text-white"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Atrás
+                      </button>
+                    ) : (
+                      <div className="w-14" />
+                    )}
                     <span className="text-white/30 text-xs">
                       {currentStep} de {TOTAL_STEPS}
                     </span>

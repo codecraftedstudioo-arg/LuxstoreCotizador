@@ -103,6 +103,21 @@ const translations = {
     deductAudio: 'Problemas de audio',
     deductCharging: 'Problemas de carga',
     deductNoOriginalBox: 'Sin caja original',
+
+    // Upgrade section
+    upgradeTitle: '¿Qué iPhone querés?',
+    upgradeSubtitle: 'Elegí el modelo que te gustaría tener',
+    upgradeSelectModel: 'Elegí un modelo',
+    upgradeStorage: 'Capacidad',
+    upgradeColor: 'Color',
+    upgradePrice: 'Precio',
+    upgradeViewAll: 'Ver modelos y precios',
+    upgradeOptional: '(opcional)',
+    upgradeNewPhone: 'iPhone que querés',
+    upgradeYourQuote: 'Tu cotización',
+    upgradeDifference: 'Diferencia a pagar',
+    upgradeCovers: '¡Tu iPhone cubre el costo!',
+    upgradeLoading: 'Cargando precios...',
   },
   en: {
     // Intro screen
@@ -204,6 +219,21 @@ const translations = {
     deductAudio: 'Audio issues',
     deductCharging: 'Charging issues',
     deductNoOriginalBox: 'No original box',
+
+    // Upgrade section
+    upgradeTitle: 'Which iPhone do you want?',
+    upgradeSubtitle: 'Choose the model you\'d like to have',
+    upgradeSelectModel: 'Choose a model',
+    upgradeStorage: 'Storage',
+    upgradeColor: 'Color',
+    upgradePrice: 'Price',
+    upgradeViewAll: 'View models and prices',
+    upgradeOptional: '(optional)',
+    upgradeNewPhone: 'iPhone you want',
+    upgradeYourQuote: 'Your quote',
+    upgradeDifference: 'Difference to pay',
+    upgradeCovers: 'Your iPhone covers the cost!',
+    upgradeLoading: 'Loading prices...',
   },
 } as const
 

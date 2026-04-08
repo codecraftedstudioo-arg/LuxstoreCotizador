@@ -13,6 +13,6 @@ describe('App', () => {
     render(<App />)
     const startButton = screen.getByText('Cotizar ahora')
     fireEvent.click(startButton)
-    expect(screen.getByText('¿Qué iPhone tenés?')).toBeInTheDocument()
+    expect(screen.getByText('¿Qué querés hacer?')).toBeInTheDocument()
   })
 })

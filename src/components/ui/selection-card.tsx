@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { formatStorage } from '@/lib/pricing-engine'
 
 interface SelectionCardProps {
   selected: boolean
@@ -84,7 +85,7 @@ interface StoragePillProps {
  * Pill button for storage selection
  */
 export function StoragePill({ value, selected, onClick, disabled }: StoragePillProps) {
-  const label = value === '1024' ? '1 TB' : `${value} GB`
+  const label = formatStorage(value)
 
   return (
     <button

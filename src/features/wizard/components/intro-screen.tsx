@@ -317,9 +317,9 @@ export function IntroScreen() {
                className="text-white/80 hover:text-white transition-colors text-sm">
               ¿Cómo funciona?
             </button>
-            <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer"
-               className="text-white/80 hover:text-white transition-colors text-sm">
-              Ver iPhones
+            <a href="https://electronicpoint-iphonemarket.com.ar/" target="_blank" rel="noopener noreferrer"
+               className="text-sm font-medium text-[#6B8AED] border border-[#6B8AED]/40 hover:border-[#6B8AED] hover:bg-[#6B8AED]/10 px-4 py-2 rounded-full transition-all">
+              Precios y modelos
             </a>
             <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
                className="text-white/80 hover:text-white transition-colors text-sm">
@@ -336,20 +336,15 @@ export function IntroScreen() {
             </button>
           </div>
 
-          {/* Hamburger button - Mobile */}
+          {/* Hamburger button - Mobile (animated bars, market style) */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-white/70 hover:text-white p-2 transition-colors"
+            className="md:hidden w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-[5px] hover:bg-white/10 transition-all cursor-pointer group"
+            aria-label="Menú"
           >
-            {menuOpen ? (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
-            )}
+            <span className={`block h-[2px] rounded-full bg-[#6B8AED] transition-all duration-300 ${menuOpen ? 'w-5 rotate-45 translate-y-[7px]' : 'w-5 group-hover:w-4'}`} />
+            <span className={`block h-[2px] rounded-full bg-[#6B8AED] transition-all duration-300 ${menuOpen ? 'w-0 opacity-0' : 'w-3.5'}`} />
+            <span className={`block h-[2px] rounded-full bg-[#6B8AED] transition-all duration-300 ${menuOpen ? 'w-5 -rotate-45 -translate-y-[7px]' : 'w-5 group-hover:w-4'}`} />
           </button>
 
           {/* CTA button - Desktop */}
@@ -363,40 +358,72 @@ export function IntroScreen() {
           </a>
         </div>
 
-        {/* Mobile menu dropdown */}
+        {/* Mobile menu dropdown — market style */}
         {menuOpen && (
-          <div className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl">
-            <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-4">
+          <div className="md:hidden border-t border-white/10 bg-gradient-to-b from-black/95 to-[#05070B] backdrop-blur-xl">
+            <div className="px-5 py-5 flex flex-col gap-1">
               <button
-                onClick={() => {
-                  document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' })
-                  setMenuOpen(false)
-                }}
-                className="text-white/70 hover:text-white transition-colors text-sm text-left py-2"
+                onClick={() => { document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' }); setMenuOpen(false) }}
+                className="flex items-center gap-3 text-white/70 hover:text-white hover:bg-white/5 text-sm text-left py-3 px-3 rounded-xl transition-all cursor-pointer"
               >
+                <span className="w-8 h-8 rounded-lg bg-[#4A6BDB]/10 flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-[#6B8AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                  </svg>
+                </span>
                 ¿Cómo funciona?
               </button>
+              <button
+                onClick={() => { document.getElementById('preguntas-frecuentes')?.scrollIntoView({ behavior: 'smooth' }); setMenuOpen(false) }}
+                className="flex items-center gap-3 text-white/70 hover:text-white hover:bg-white/5 text-sm text-left py-3 px-3 rounded-xl transition-all cursor-pointer"
+              >
+                <span className="w-8 h-8 rounded-lg bg-[#4A6BDB]/10 flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-[#6B8AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+                  </svg>
+                </span>
+                Preguntas frecuentes
+              </button>
+
+              <div className="h-px bg-white/5 my-2 mx-3" />
+
+              <a href="https://electronicpoint-iphonemarket.com.ar/" target="_blank" rel="noopener noreferrer"
+                 className="flex items-center gap-3 text-white/70 hover:text-white hover:bg-white/5 text-sm py-3 px-3 rounded-xl transition-all">
+                <span className="w-8 h-8 rounded-lg bg-[#4A6BDB]/10 flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-[#6B8AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />
+                  </svg>
+                </span>
+                Ver modelos y precios
+              </a>
               <a href="https://electronicpoint.com.ar" target="_blank" rel="noopener noreferrer"
-                 className="text-white/70 hover:text-white transition-colors text-sm py-2">
+                 className="flex items-center gap-3 text-white/70 hover:text-white hover:bg-white/5 text-sm py-3 px-3 rounded-xl transition-all">
+                <span className="w-8 h-8 rounded-lg bg-[#4A6BDB]/10 flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-[#6B8AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0021 9.349m-18 0a2.998 2.998 0 00.615-1.524L4.26 4.265A1.5 1.5 0 015.745 3h12.51a1.5 1.5 0 011.485 1.265l.645 3.56a2.998 2.998 0 00.615 1.524" />
+                  </svg>
+                </span>
                 Tienda online
               </a>
               <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
-                 className="text-white/70 hover:text-white transition-colors text-sm py-2">
+                 className="flex items-center gap-3 text-white/70 hover:text-white hover:bg-white/5 text-sm py-3 px-3 rounded-xl transition-all">
+                <span className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-pink-400" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                  </svg>
+                </span>
                 Instagram
               </a>
-              <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer"
-                 className="text-white/70 hover:text-white transition-colors text-sm py-2">
+              <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z" target="_blank" rel="noopener noreferrer"
+                 className="flex items-center gap-3 text-white/70 hover:text-white hover:bg-white/5 text-sm py-3 px-3 rounded-xl transition-all">
+                <span className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                </span>
                 ¿Cómo llegar?
               </a>
-              <button
-                onClick={() => {
-                  document.getElementById('preguntas-frecuentes')?.scrollIntoView({ behavior: 'smooth' })
-                  setMenuOpen(false)
-                }}
-                className="text-white/70 hover:text-white transition-colors text-sm text-left py-2"
-              >
-                Preguntas frecuentes
-              </button>
             </div>
           </div>
         )}
@@ -447,6 +474,7 @@ export function IntroScreen() {
                 >
                   Cotizar ahora
                 </button>
+
               </div>
 
               <div
@@ -490,6 +518,142 @@ export function IntroScreen() {
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Market Section — Ver precios y modelos (calco del market trade-in) */}
+      <section className="relative py-16 sm:py-20 px-4 sm:px-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#05070B] via-[#070A10] to-[#05070B]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(74,107,219,0.07)_0%,transparent_65%)] blur-3xl pointer-events-none" />
+
+        <div className="max-w-3xl mx-auto relative z-10">
+          {/* Header */}
+          <div className="text-center mb-12 sm:mb-14">
+            <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-[#6B8AED]/80 font-semibold tracking-widest uppercase mb-5 animate-fadeSlideIn">
+              <span className="w-5 h-px bg-[#6B8AED]/40" />
+              iPhone Market
+              <span className="w-5 h-px bg-[#6B8AED]/40" />
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-white leading-[1.15] tracking-tight mb-4 animate-fadeSlideIn" style={{ animationDelay: '0.1s' }}>
+              Encontrá tu próximo<br /> iPhone
+            </h2>
+            <p className="text-white/50 text-[15px] sm:text-base max-w-lg mx-auto leading-relaxed animate-fadeSlideIn" style={{ animationDelay: '0.2s' }}>
+              Todos los modelos disponibles con precios actualizados en tiempo real.
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 mb-12 sm:mb-14">
+            {/* Step 1 */}
+            <div className="relative group sm:pr-4 animate-fadeSlideIn" style={{ animationDelay: '0.3s' }}>
+              <div className="rounded-2xl sm:rounded-r-none border border-[#1A2230] sm:border-r-[#1A2230]/40 bg-gradient-to-b from-[#0A0E16] to-[#080B10] p-6 h-full">
+                <div className="flex items-start gap-4 sm:flex-col sm:items-center sm:text-center">
+                  <div className="relative shrink-0">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-[#0D1220] border border-[#1A2230] flex items-center justify-center sm:mb-1">
+                      <img src="/iphones/iphone-15-blue.png" alt="" className="w-22 h-22 sm:w-24 sm:h-24 object-contain" />
+                    </div>
+                    <span className="absolute -top-1.5 -left-1.5 sm:-top-2 sm:-left-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#4A6BDB] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-[0_0_12px_rgba(74,107,219,0.5)]">
+                      1
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[15px] font-semibold text-white mb-1">Nuestros modelos</h3>
+                    <p className="text-xs sm:text-[13px] text-white/45 leading-relaxed">Precios en dólares actualizados en tiempo real</p>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-8 h-8 rounded-full bg-[#0A0E16] border border-[#1A2230] items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#6B8AED]/60">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative group sm:px-4 animate-fadeSlideIn" style={{ animationDelay: '0.4s' }}>
+              <div className="rounded-2xl sm:rounded-none border border-[#1A2230] sm:border-x-[#1A2230]/40 bg-gradient-to-b from-[#0A0E16] to-[#080B10] p-6 h-full">
+                <div className="flex items-start gap-4 sm:flex-col sm:items-center sm:text-center">
+                  <div className="relative shrink-0">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-[#0D1220] border border-[#1A2230] flex items-center justify-center sm:mb-1">
+                      <img src="/iphones/iphone-17-pro-orange.png" alt="" className="w-22 h-22 sm:w-24 sm:h-24 object-contain" />
+                    </div>
+                    <span className="absolute -top-1.5 -left-1.5 sm:-top-2 sm:-left-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#4A6BDB] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-[0_0_12px_rgba(74,107,219,0.5)]">
+                      2
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[15px] font-semibold text-white mb-1">Compará precios</h3>
+                    <p className="text-xs sm:text-[13px] text-white/45 leading-relaxed">Filtrá por modelo, color y almacenamiento</p>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-8 h-8 rounded-full bg-[#0A0E16] border border-[#1A2230] items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#6B8AED]/60">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative group sm:pl-4 animate-fadeSlideIn" style={{ animationDelay: '0.5s' }}>
+              <div className="rounded-2xl sm:rounded-l-none border border-[#4A6BDB]/25 bg-gradient-to-b from-[#0C1024] to-[#0A0E18] p-6 h-full ring-1 ring-[#4A6BDB]/[0.08] shadow-[inset_0_1px_0_rgba(107,138,237,0.06)]">
+                <div className="flex items-start gap-4 sm:flex-col sm:items-center sm:text-center">
+                  <div className="relative shrink-0">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-[#4A6BDB]/10 border border-[#4A6BDB]/20 flex items-center justify-center sm:mb-1">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#6B8AED] sm:w-12 sm:h-12">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                    </div>
+                    <span className="absolute -top-1.5 -left-1.5 sm:-top-2 sm:-left-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#4A6BDB] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-[0_0_12px_rgba(74,107,219,0.5)]">
+                      3
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[15px] font-semibold text-white mb-1">Canjeá o comprá</h3>
+                    <p className="text-xs sm:text-[13px] text-white/45 leading-relaxed">Usá tu iPhone como parte de pago o comprá directo</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-4 sm:gap-6 mb-6 text-white/40">
+              <span className="flex items-center gap-1.5 text-xs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#6B8AED]/60">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                En tiempo real
+              </span>
+              <span className="w-1 h-1 rounded-full bg-white/15" />
+              <span className="flex items-center gap-1.5 text-xs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#6B8AED]/60">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+                Mejor precio
+              </span>
+              <span className="w-1 h-1 rounded-full bg-white/15" />
+              <span className="flex items-center gap-1.5 text-xs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#6B8AED]/60">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                +2.000 equipos
+              </span>
+            </div>
+
+            <a
+              href="https://electronicpoint-iphonemarket.com.ar/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 border border-[#6B8AED]/40 hover:border-[#6B8AED] text-[#6B8AED] hover:bg-[#6B8AED]/10 font-semibold rounded-full pl-6 pr-5 py-3 text-sm sm:text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Ver precios y modelos
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
