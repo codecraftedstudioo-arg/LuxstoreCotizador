@@ -446,18 +446,17 @@ export function IntroScreen() {
             {/* Left - Text */}
             <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-12 md:py-20 md:w-1/2">
               <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
-                Vendé tu
+                Cambia tu
                 <span className="block">iPhone</span>
                 <span className="block">al mejor</span>
                 <span className="block">precio</span>
-                <span className="block text-3xl md:text-4xl lg:text-5xl text-white/70 mt-1">en Buenos Aires</span>
               </h1>
 
               <p
                 className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed animate-fadeSlideIn"
                 style={{ animationDelay: '0.1s' }}
               >
-                <Typewriter text="Cotización en 1 minuto. Pago en efectivo o transferencia. Sin vueltas." delay={800} speed={30} />
+                <Typewriter text="Cotizá en 1 minuto, elegí tu nuevo iPhone y pagás solo la diferencia." delay={800} speed={30} />
               </p>
 
               <div
@@ -472,7 +471,7 @@ export function IntroScreen() {
                   className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-[#4A6BDB]
                              hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#4A6BDB]/30 hover:shadow-[#4A6BDB]/50"
                 >
-                  Cotizar ahora
+                  Cotizar mi iPhone
                 </button>
 
               </div>

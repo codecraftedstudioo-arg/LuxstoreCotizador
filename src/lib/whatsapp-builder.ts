@@ -178,8 +178,8 @@ export function buildMessage(
   if (exchangeRate > 0) {
     const arsEquivalent = (priceResult.finalPrice * exchangeRate).toLocaleString('es-AR')
     lines.push(lang === 'es'
-      ? `*${t.equivalent}* $${arsEquivalent} ARS (tomando dólar a $${exchangeRate.toLocaleString('es-AR')})`
-      : `*${t.equivalent}* $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+      ? `*${t.equivalent}* ${arsEquivalent} ARS (tomando dólar a ${exchangeRate.toLocaleString('es-AR')})`
+      : `*${t.equivalent}* ${arsEquivalent} ARS (rate ${exchangeRate.toLocaleString('en-US')})`)
   }
 
   // Upgrade section - natural prose style
@@ -283,8 +283,8 @@ export function buildInquiryLink(
   if (exchangeRate > 0) {
     const arsEquivalent = (priceResult.finalPrice * exchangeRate).toLocaleString('es-AR')
     lines.push(lang === 'es'
-      ? `*${t.equivalent}* $${arsEquivalent} ARS (tomando dólar a $${exchangeRate.toLocaleString('es-AR')})`
-      : `*${t.equivalent}* $${arsEquivalent} ARS (rate $${exchangeRate.toLocaleString('en-US')})`)
+      ? `*${t.equivalent}* ${arsEquivalent} ARS (tomando dólar a ${exchangeRate.toLocaleString('es-AR')})`
+      : `*${t.equivalent}* ${arsEquivalent} ARS (rate ${exchangeRate.toLocaleString('en-US')})`)
   }
 
   if (upgradeInfo) {

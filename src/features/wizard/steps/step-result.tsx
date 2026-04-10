@@ -117,8 +117,8 @@ export function StepResult() {
                 {formatPrice(Math.abs(diff))}
               </p>
               {rate !== null && Math.abs(diff) > 0 && (
-                <p className="text-white/30 text-xs mt-1">
-                  ${(Math.abs(diff) * rate).toLocaleString('es-AR')} ARS
+                <p className="text-lg font-bold text-white/70 mt-1">
+                  {(Math.abs(diff) * rate).toLocaleString('es-AR')} ARS
                 </p>
               )}
             </div>
@@ -137,10 +137,8 @@ export function StepResult() {
               {formatPrice(priceResult.finalPrice)}
             </p>
             {rate !== null && (
-              <p className="text-white/50 text-sm mt-1">
-                {lang === 'es'
-                  ? `Equivale a $${(priceResult.finalPrice * rate).toLocaleString('es-AR')} ARS`
-                  : `Equivalent to $${(priceResult.finalPrice * rate).toLocaleString('en-US')} ARS`}
+              <p className="text-xl sm:text-2xl font-bold text-white/80 mt-1">
+                {(priceResult.finalPrice * rate).toLocaleString('es-AR')} ARS
               </p>
             )}
             <p className="text-white/40 text-xs mt-1">{t('resultDisclaimer')}</p>
