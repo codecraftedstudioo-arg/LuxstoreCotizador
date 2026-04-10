@@ -50,20 +50,17 @@ export function Step5Upgrade() {
         subtitle={lang === 'es' ? 'Podés vender tu iPhone o canjearlo por uno nuevo' : 'You can sell your iPhone or trade it in for a new one'}
       />
 
-      {/* Initial choice — Plan Canje destacado + sell secundario */}
+      {/* Initial choice — Plan Canje destacado + sell estándar */}
       {!wantsUpgrade && (
         <div className="space-y-3">
-          {/* Plan Canje — primary */}
+          {/* Plan Canje — primary, destacado */}
           <button
             type="button"
             onClick={handleWantsUpgrade}
-            className="relative w-full p-5 rounded-xl border-2 border-[#4A6BDB]/50 bg-gradient-to-br from-[#4A6BDB]/15 to-[#4A6BDB]/5 hover:border-[#6B8AED] hover:from-[#4A6BDB]/25 hover:to-[#4A6BDB]/10 transition-all text-left group shadow-[0_0_30px_-8px_rgba(74,107,219,0.4)]"
+            className="relative w-full p-5 rounded-xl border-2 border-[#4A6BDB] bg-gradient-to-br from-[#4A6BDB]/20 to-[#4A6BDB]/5 hover:border-[#6B8AED] hover:from-[#4A6BDB]/30 hover:to-[#4A6BDB]/10 transition-all text-left group shadow-[0_0_40px_-8px_rgba(74,107,219,0.6)]"
           >
-            <span className="absolute -top-2 left-4 text-[10px] font-bold uppercase tracking-wider bg-[#4A6BDB] text-white px-2 py-0.5 rounded-full">
-              {lang === 'es' ? 'Recomendado' : 'Recommended'}
-            </span>
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#4A6BDB]/25 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-[#4A6BDB]/30 flex items-center justify-center flex-shrink-0">
                 <svg className="w-7 h-7 text-[#6B8AED]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M21 12a9 9 0 0 0-15-6.7L3 8" />
                   <path d="M3 3v5h5" />
@@ -75,7 +72,7 @@ export function Step5Upgrade() {
                 <p className="text-lg font-bold text-white group-hover:text-[#6B8AED] transition-colors">
                   {lang === 'es' ? 'Plan Canje' : 'Trade-in Plan'}
                 </p>
-                <p className="text-xs text-white/50 mt-0.5">
+                <p className="text-xs text-white/60 mt-0.5">
                   {lang === 'es' ? 'Usá tu iPhone como parte de pago por uno nuevo' : 'Use your iPhone as part payment for a new one'}
                 </p>
               </div>
@@ -85,13 +82,27 @@ export function Step5Upgrade() {
             </div>
           </button>
 
-          {/* Solo vender — secondary */}
+          {/* Solo vender — estándar */}
           <button
             type="button"
             onClick={handleJustSell}
-            className="w-full py-3 px-4 rounded-lg text-sm text-white/50 hover:text-white/80 hover:bg-white/5 transition-all"
+            className="w-full p-4 h-20 rounded-xl border-2 border-white/10 bg-white/5 hover:border-green-500/50 hover:bg-green-500/5 transition-all text-left group"
           >
-            {lang === 'es' ? 'Solo quiero vender mi iPhone →' : 'I just want to sell my iPhone →'}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-white group-hover:text-green-300 transition-colors">
+                  {lang === 'es' ? 'Solo quiero vender' : 'I just want to sell'}
+                </p>
+                <p className="text-xs text-white/40 mt-0.5">
+                  {lang === 'es' ? 'Ver mi cotización directamente' : 'See my quote directly'}
+                </p>
+              </div>
+            </div>
           </button>
 
           {/* Market link button */}
