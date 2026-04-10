@@ -468,8 +468,8 @@ export function IntroScreen() {
                     reset()
                     navigate('/cotizar')
                   }}
-                  className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-[#4A6BDB]
-                             hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#4A6BDB]/30 hover:shadow-[#4A6BDB]/50"
+                  className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-[#7CB518]
+                             hover:bg-[#8BC220] hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#7CB518]/30 hover:shadow-[#7CB518]/50"
                 >
                   Cotizar mi iPhone
                 </button>
