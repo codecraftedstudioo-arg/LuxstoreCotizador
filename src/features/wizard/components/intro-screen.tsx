@@ -482,7 +482,7 @@ export function IntroScreen() {
                 style={{ animationDelay: '0.3s' }}
               >
                 {[
-                  { value: '+2000', label: 'iPhones comprados' },
+                  { value: '+8.000', label: 'Clientes' },
                   { value: <>4.9<span className="text-amber-400 animate-star-twinkle">★</span></>, label: 'Google Reviews' },
                   { value: '24hs', label: 'Pago inmediato' },
                   { value: '+20', label: 'Años de experiencia' },
@@ -639,7 +639,7 @@ export function IntroScreen() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#6B8AED]/60">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
-                +2.000 equipos
+                +8.000 Clientes
               </span>
             </div>
 
