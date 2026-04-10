@@ -57,28 +57,25 @@ export function Step5Upgrade() {
           <button
             type="button"
             onClick={handleWantsUpgrade}
-            className="relative w-full p-5 rounded-xl border-2 border-[#4A6BDB] bg-gradient-to-br from-[#4A6BDB]/20 to-[#4A6BDB]/5 hover:border-[#6B8AED] hover:from-[#4A6BDB]/30 hover:to-[#4A6BDB]/10 transition-all text-left group shadow-[0_0_40px_-8px_rgba(74,107,219,0.6)]"
+            className="relative w-full p-4 h-20 rounded-xl border-2 border-[#4A6BDB] bg-gradient-to-br from-[#4A6BDB]/20 to-[#4A6BDB]/5 hover:border-[#6B8AED] hover:from-[#4A6BDB]/30 hover:to-[#4A6BDB]/10 transition-all text-left group shadow-[0_0_25px_-8px_rgba(74,107,219,0.5)]"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#4A6BDB]/30 flex items-center justify-center flex-shrink-0">
-                <svg className="w-7 h-7 text-[#6B8AED]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-[#4A6BDB]/30 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-[#6B8AED]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M21 12a9 9 0 0 0-15-6.7L3 8" />
                   <path d="M3 3v5h5" />
                   <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
                   <path d="M16 16h5v5" />
                 </svg>
               </div>
-              <div className="flex-1">
-                <p className="text-lg font-bold text-white group-hover:text-[#6B8AED] transition-colors">
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-white group-hover:text-[#6B8AED] transition-colors">
                   {lang === 'es' ? 'Plan Canje' : 'Trade-in Plan'}
                 </p>
-                <p className="text-xs text-white/60 mt-0.5">
-                  {lang === 'es' ? 'Usá tu iPhone como parte de pago por uno nuevo' : 'Use your iPhone as part payment for a new one'}
+                <p className="text-xs text-white/50 mt-0.5">
+                  {lang === 'es' ? 'Usá tu iPhone como parte de pago' : 'Use your iPhone as part payment'}
                 </p>
               </div>
-              <svg className="w-5 h-5 text-[#6B8AED] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
             </div>
           </button>
 
