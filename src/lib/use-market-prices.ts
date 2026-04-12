@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { fetchMarketPrices } from './market-api'
-import type { Model } from '@/types/market'
+import fallbackData from '@/config/market-pricing.json'
+import type { Model, MarketPricing } from '@/types/market'
 
 interface MarketPricesState {
   models: Model[]
@@ -9,7 +10,7 @@ interface MarketPricesState {
 
 export function useMarketPrices(): MarketPricesState {
   const [state, setState] = useState<MarketPricesState>({
-    models: [],
+    models: (fallbackData as MarketPricing).models,
     loading: true,
   })
 

@@ -19,6 +19,7 @@ const TOTAL_STEPS = 5
  * iPhone 15 Pro Frame - Ultra realistic
  */
 function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; contentRef?: React.RefObject<HTMLDivElement | null> }) {
+  const { rate } = useExchangeRate()
   return (
     <div className="relative mx-auto w-[300px] sm:w-[350px] md:w-[390px]">
       {/* Phone shadow */}
@@ -40,9 +41,9 @@ function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; cont
           >
             {/* Status bar area with Dynamic Island */}
             <div className="flex-shrink-0 relative h-12 sm:h-14">
-              {/* Time - left */}
+              {/* Time - left (hora real para capturas) */}
               <div className="absolute left-5 top-3 text-white text-[11px] sm:text-xs font-semibold">
-                9:41
+                {new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
               </div>
 
               {/* Dynamic Island - center */}
@@ -59,9 +60,12 @@ function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; cont
               </div>
 
               {/* Status icons - right */}
-              <div className="absolute right-5 top-3 flex items-center gap-1">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 20.5c4.14 0 7.5-3.36 7.5-7.5S16.14 5.5 12 5.5 4.5 8.86 4.5 13s3.36 7.5 7.5 7.5zm0-13c3.03 0 5.5 2.47 5.5 5.5s-2.47 5.5-5.5 5.5S6.5 16.03 6.5 13 8.97 7.5 12 7.5z"/>
+              <div className="absolute right-5 top-3 flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <rect x="1" y="14" width="3" height="5" rx="0.5" />
+                  <rect x="6" y="10" width="3" height="9" rx="0.5" />
+                  <rect x="11" y="6" width="3" height="13" rx="0.5" />
+                  <rect x="16" y="2" width="3" height="17" rx="0.5" />
                 </svg>
                 <div className="w-5 h-2.5 rounded-sm border border-white flex items-center p-[1px]">
                   <div className="w-3/4 h-full bg-white rounded-[1px]" />
@@ -72,17 +76,23 @@ function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; cont
             {/* App header */}
             <div className="flex-shrink-0 px-3 py-2 flex items-center gap-2 border-b border-white/10">
               {/* App icon estilo iOS */}
-              <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-lg">
+              <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-lg flex-shrink-0">
                 <img
                   src="/ep-logo.jpg"
                   alt="Electronic Point"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <p className="text-white text-xs font-semibold">Electronic Point</p>
                 <p className="text-white/40 text-[10px]">Cotizador iPhone</p>
               </div>
+              {rate !== null && (
+                <div className="text-right flex-shrink-0">
+                  <p className="text-white/50 text-[10px]">Dólar blue: <span className="text-white/70 font-medium">${rate.toLocaleString('es-AR')}</span></p>
+                  <p className="text-white/30 text-[9px]">{new Date().toLocaleDateString('es-AR')}</p>
+                </div>
+              )}
             </div>
 
             {/* Screen content - starts from top with padding */}
@@ -315,13 +325,8 @@ export function WizardPage() {
 
         {/* Exchange rate banner */}
         <div className="bg-white/5 border-b border-white/10">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-center gap-3 text-sm text-white/60">
-            <span>Cotizamos en USD</span>
-            <span className="text-white/20">|</span>
-            <span>Dólar blue: {rate !== null
-              ? <span className="text-white font-bold text-base transition-all duration-500">${rate.toLocaleString('es-AR')}</span>
-              : <span className="text-white font-bold text-base blur-[3px] select-none">$1.500</span>
-            }</span>
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-center text-sm text-white/60">
+            <span>Cotizamos en ARS y USD</span>
           </div>
         </div>
 

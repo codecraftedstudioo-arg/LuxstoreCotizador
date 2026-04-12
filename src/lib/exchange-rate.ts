@@ -8,7 +8,7 @@
 
 const APPS_SCRIPT_URL = import.meta.env.VITE_EXCHANGE_RATE_URL || ''
 
-const FALLBACK_RATE = 1500
+export const FALLBACK_RATE = 1500
 
 // Cache: 5 minutes
 const CACHE_DURATION_MS = 5 * 60 * 1000

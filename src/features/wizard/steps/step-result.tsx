@@ -18,6 +18,7 @@ export function StepResult() {
   const [showInquiry, setShowInquiry] = useState(false)
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
+  const [quoteTime] = useState(() => new Date())
 
   // Build upgrade info from wizard state
   const upgradeInfo: UpgradeInfo | undefined =
@@ -93,7 +94,7 @@ export function StepResult() {
           {/* Upgrade flow */}
           <div className="mb-4 space-y-3 text-center">
             {/* Your iPhone value */}
-            <div className="p-3 bg-green-500/10 rounded-xl border border-green-500/20">
+            <div className="p-4 min-h-[5rem] flex flex-col justify-center bg-green-500/10 rounded-xl border border-green-500/20">
               <p className="text-green-300/60 text-xs">
                 {lang === 'es' ? `Tu ${state.model} ${formatStorage(state.storage ?? '')} vale` : `Your ${state.model} ${formatStorage(state.storage ?? '')} is worth`}
               </p>
@@ -101,13 +102,13 @@ export function StepResult() {
             </div>
 
             {/* New iPhone price */}
-            <div className="p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
+            <div className="p-4 min-h-[5rem] flex flex-col justify-center bg-blue-500/10 rounded-xl border border-blue-500/20">
               <p className="text-blue-300/60 text-xs">{upgradeInfo.model} {formatStorage(upgradeInfo.storage)}</p>
               <p className="text-lg font-bold text-blue-300 mt-0.5">{formatPrice(upgradeInfo.price)}</p>
             </div>
 
             {/* Difference */}
-            <div className="p-4 bg-gradient-to-br from-white/10 to-white/5 rounded-xl border border-white/15">
+            <div className="p-4 min-h-[5rem] flex flex-col justify-center bg-gradient-to-br from-white/10 to-white/5 rounded-xl border border-white/15">
               <p className="text-white/50 text-xs">
                 {upgradeCovers
                   ? (lang === 'es' ? 'Te queda a favor' : 'In your favor')
@@ -145,6 +146,7 @@ export function StepResult() {
           </div>
         </>
       )}
+
 
       {/* Deductions breakdown */}
       {priceResult.deductionBreakdown.length > 0 && (
@@ -191,12 +193,12 @@ export function StepResult() {
       {!showInquiry ? (
         <button
           onClick={() => setShowInquiry(true)}
-          className="mt-6 mb-2 text-sm text-white/40 hover:text-white/60 transition-colors"
+          className="mt-3 w-full px-4 py-3 text-sm font-semibold text-white/60 hover:text-white/80 border border-white/15 hover:border-white/25 rounded-xl transition-all"
         >
-          {lang === 'es' ? '¿Tenés dudas? Dejanos tus datos' : 'Questions? Leave your info'}
+          {lang === 'es' ? '¿Tenés dudas? Consultanos' : 'Questions? Ask us'}
         </button>
       ) : (
-        <div className="mt-6 mb-2 p-4 bg-white/5 rounded-xl text-left border border-white/10 animate-fadeSlideIn">
+        <div className="mt-3 p-4 bg-white/5 rounded-xl text-left border border-white/10 animate-fadeSlideIn">
           <div className="space-y-3">
             <input
               type="text"
@@ -225,7 +227,7 @@ export function StepResult() {
                 setTimeout(() => window.open(link, '_blank', 'noopener,noreferrer'), 300)
               }}
             >
-              <button className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white/70 text-xs rounded-xl transition-all border border-white/10">
+              <button className="w-full px-4 py-3 bg-white/10 hover:bg-white/15 text-white/70 text-sm font-semibold rounded-xl transition-all border border-white/10">
                 {lang === 'es' ? 'Consultar por WhatsApp' : 'Ask via WhatsApp'}
               </button>
             </a>
@@ -235,10 +237,13 @@ export function StepResult() {
 
       <button
         onClick={reset}
-        className="mt-3 w-full py-3 text-sm font-medium text-white bg-green-500 hover:bg-green-600 rounded-xl transition-all"
+        className="mt-4 flex items-center justify-center gap-1.5 text-white/40 hover:text-white/60 text-xs transition-colors mx-auto underline underline-offset-2 decoration-white/20 hover:decoration-white/40"
       >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
         {upgradeInfo
-          ? (lang === 'es' ? 'Canjear otro iPhone' : 'Trade in another iPhone')
+          ? (lang === 'es' ? 'Cotizar otro iPhone' : 'Quote another iPhone')
           : t('quoteAnother')}
       </button>
 

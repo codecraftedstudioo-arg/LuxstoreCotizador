@@ -57,11 +57,11 @@ export function Step5Upgrade() {
           <button
             type="button"
             onClick={handleWantsUpgrade}
-            className="relative w-full p-4 h-20 rounded-xl border-2 border-[#4A6BDB] bg-gradient-to-br from-[#4A6BDB]/20 to-[#4A6BDB]/5 hover:border-[#6B8AED] hover:from-[#4A6BDB]/30 hover:to-[#4A6BDB]/10 transition-all text-left group shadow-[0_0_25px_-8px_rgba(74,107,219,0.5)]"
+            className="relative w-full p-4 h-20 rounded-xl border-2 border-green-500 bg-gradient-to-br from-green-500/20 to-green-500/5 hover:border-green-400 hover:from-green-500/30 hover:to-green-500/10 transition-all text-left group shadow-[0_0_25px_-8px_rgba(34,197,94,0.5)]"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#4A6BDB]/30 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-[#6B8AED]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <div className="w-10 h-10 rounded-lg bg-green-500/30 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M21 12a9 9 0 0 0-15-6.7L3 8" />
                   <path d="M3 3v5h5" />
                   <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
@@ -69,7 +69,7 @@ export function Step5Upgrade() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-white group-hover:text-[#6B8AED] transition-colors">
+                <p className="font-semibold text-white group-hover:text-green-400 transition-colors">
                   {lang === 'es' ? 'Plan Canje' : 'Trade-in Plan'}
                 </p>
                 <p className="text-xs text-white/50 mt-0.5">
@@ -87,11 +87,11 @@ export function Step5Upgrade() {
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="font-semibold text-white group-hover:text-green-300 transition-colors">
                   {lang === 'es' ? 'Solo quiero vender' : 'I just want to sell'}
                 </p>
