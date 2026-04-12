@@ -235,7 +235,7 @@ export function StepResult() {
 
       <button
         onClick={reset}
-        className="mt-3 w-full py-3 text-sm font-medium text-white bg-[#4A6BDB] hover:bg-[#3A5BCB] rounded-xl transition-all"
+        className="mt-3 w-full py-3 text-sm font-medium text-white bg-green-500 hover:bg-green-600 rounded-xl transition-all"
       >
         {upgradeInfo
           ? (lang === 'es' ? 'Canjear otro iPhone' : 'Trade in another iPhone')

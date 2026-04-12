@@ -203,7 +203,7 @@ export function getStorageForModel(model: string): string[] {
  * Format price as US Dollars
  */
 export function formatPrice(price: number): string {
-  return `USD $${price.toLocaleString('es-AR')}`
+  return `USD ${price.toLocaleString('es-AR')}`
 }
 
 /**

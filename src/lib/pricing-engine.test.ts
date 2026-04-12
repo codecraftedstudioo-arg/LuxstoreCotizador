@@ -332,7 +332,7 @@ describe('getStorageForModel', () => {
 describe('formatPrice', () => {
   it('formats price as US Dollars', () => {
     const formatted = formatPrice(550)
-    expect(formatted).toBe('USD $550')
+    expect(formatted).toBe('USD 550')
   })
 
   it('handles zero price', () => {

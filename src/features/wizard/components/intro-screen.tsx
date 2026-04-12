@@ -318,7 +318,7 @@ export function IntroScreen() {
               ¿Cómo funciona?
             </button>
             <a href="https://electronicpoint-iphonemarket.com.ar/" target="_blank" rel="noopener noreferrer"
-               className="text-sm font-medium text-[#6B8AED] border border-[#6B8AED]/40 hover:border-[#6B8AED] hover:bg-[#6B8AED]/10 px-4 py-2 rounded-full transition-all">
+               className="text-sm font-medium text-green-400 border border-green-500/40 hover:border-green-500 hover:bg-green-500/10 px-4 py-2 rounded-full transition-all">
               Precios y modelos
             </a>
             <a href="https://instagram.com/electronicpoint.ar" target="_blank" rel="noopener noreferrer"
@@ -352,7 +352,7 @@ export function IntroScreen() {
             href="https://electronicpoint.com.ar"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:block px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-[#6B8AED] hover:bg-[#5A7AE0] transition-all"
+            className="hidden md:block px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-green-500 hover:bg-green-600 transition-all"
           >
             Tienda online
           </a>
@@ -468,8 +468,8 @@ export function IntroScreen() {
                     reset()
                     navigate('/cotizar')
                   }}
-                  className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-[#7CB518]
-                             hover:bg-[#8BC220] hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#7CB518]/30 hover:shadow-[#7CB518]/50"
+                  className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-green-500
+                             hover:bg-green-600 hover:scale-105 transition-all duration-300 shadow-2xl shadow-green-500/30 hover:shadow-green-500/50"
                 >
                   Cotizar mi iPhone
                 </button>
@@ -646,7 +646,7 @@ export function IntroScreen() {
               href="https://electronicpoint-iphonemarket.com.ar/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 border border-[#6B8AED]/40 hover:border-[#6B8AED] text-[#6B8AED] hover:bg-[#6B8AED]/10 font-semibold rounded-full pl-6 pr-5 py-3 text-sm sm:text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center gap-2 border border-green-500/40 hover:border-green-500 text-green-400 hover:bg-green-500/10 font-semibold rounded-full pl-6 pr-5 py-3 text-sm sm:text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
             >
               Ver precios y modelos
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
