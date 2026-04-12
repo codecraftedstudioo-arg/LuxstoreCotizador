@@ -18,7 +18,6 @@ export function StepResult() {
   const [showInquiry, setShowInquiry] = useState(false)
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
-  const [quoteTime] = useState(() => new Date())
 
   // Build upgrade info from wizard state
   const upgradeInfo: UpgradeInfo | undefined =

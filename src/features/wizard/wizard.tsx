@@ -246,7 +246,6 @@ export function WizardPage() {
   const navigate = useNavigate()
   const { state, prevStep } = useWizard()
   useI18n() // Keep provider active
-  const { rate } = useExchangeRate()
   const { currentStep } = state
   const contentRef = useRef<HTMLDivElement>(null)
   // Scroll to top when step changes
