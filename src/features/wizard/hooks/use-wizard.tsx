@@ -148,6 +148,14 @@ const STORAGE_KEY = 'wizard-state-v2' // New version key to avoid conflicts
 
 function loadState(): WizardState {
   try {
+    // Fresh start when coming from market or external link
+    const params = new URLSearchParams(window.location.search)
+    if (params.has('new')) {
+      localStorage.removeItem(STORAGE_KEY)
+      // Clean the URL without reloading
+      window.history.replaceState({}, '', window.location.pathname)
+      return initialState
+    }
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) {
       const parsed = JSON.parse(saved)
