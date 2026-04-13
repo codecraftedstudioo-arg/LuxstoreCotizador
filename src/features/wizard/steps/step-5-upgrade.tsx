@@ -135,6 +135,7 @@ export function Step5Upgrade() {
           {/* Market Model Select */}
           <CardHeader title={lang === 'es' ? '¿Qué iPhone querés?' : 'Which iPhone do you want?'} />
           <Select
+            label={lang === 'es' ? 'Modelo' : 'Model'}
             placeholder={t('upgradeSelectModel')}
             options={marketModelOptions}
             value={state.upgradeModel ?? undefined}
