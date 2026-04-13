@@ -45,13 +45,12 @@ export function Step5Upgrade() {
 
   return (
     <Card>
-      <CardHeader
-        title={lang === 'es' ? '¿Qué querés hacer?' : 'What do you want to do?'}
-        subtitle={lang === 'es' ? 'Podés vender tu iPhone o canjearlo por uno nuevo' : 'You can sell your iPhone or trade it in for a new one'}
-      />
-
       {/* Initial choice — Plan Canje destacado + sell estándar */}
       {!wantsUpgrade && (
+        <>
+        <CardHeader
+          title={lang === 'es' ? '¿Qué querés hacer?' : 'What do you want to do?'}
+        />
         <div className="space-y-3">
           {/* Plan Canje — primary, destacado */}
           <button
@@ -115,6 +114,7 @@ export function Step5Upgrade() {
             {t('upgradeViewAll')}
           </a>
         </div>
+        </>
       )}
 
       {/* Upgrade selection form */}
@@ -134,7 +134,7 @@ export function Step5Upgrade() {
 
           {/* Market Model Select */}
           <Select
-            label={lang === 'es' ? '¿Qué modelo querés?' : 'Which model do you want?'}
+            label={lang === 'es' ? '¿Qué iPhone querés?' : 'Which iPhone do you want?'}
             placeholder={t('upgradeSelectModel')}
             options={marketModelOptions}
             value={state.upgradeModel ?? undefined}

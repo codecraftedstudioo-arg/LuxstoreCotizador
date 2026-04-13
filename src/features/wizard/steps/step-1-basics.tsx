@@ -24,7 +24,6 @@ export function Step1Basics() {
     <Card>
       <CardHeader
         title={t('step1Title')}
-        subtitle={lang === 'es' ? 'Seleccioná tu iPhone' : 'Select your iPhone'}
       />
 
       <div className="space-y-4">

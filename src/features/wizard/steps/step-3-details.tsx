@@ -61,7 +61,6 @@ export function Step3Details() {
     <Card>
       <CardHeader
         title={t('step3Title')}
-        subtitle={lang === 'es' ? 'Información de batería y piezas' : 'Battery and parts info'}
       />
 
       <div className="space-y-6">

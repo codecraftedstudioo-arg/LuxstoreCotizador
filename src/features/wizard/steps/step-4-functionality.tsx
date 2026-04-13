@@ -115,7 +115,6 @@ export function Step4Functionality() {
     <Card>
       <CardHeader
         title={lang === 'es' ? '¿Funciona todo?' : 'Does everything work?'}
-        subtitle={lang === 'es' ? 'Tocá los items con problemas' : 'Tap items with issues'}
       />
 
       <div className="space-y-2">

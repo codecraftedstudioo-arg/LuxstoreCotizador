@@ -74,7 +74,6 @@ export function Step2Condition() {
     <Card>
       <CardHeader
         title={t('step2Title')}
-        subtitle={lang === 'es' ? 'Seleccioná el estado físico' : 'Select physical condition'}
       />
 
       <div className="space-y-6">

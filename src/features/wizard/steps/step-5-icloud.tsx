@@ -134,9 +134,6 @@ export function Step5ICloud() {
       <Card>
         <CardHeader
           title={lang === 'es' ? '¿Desactivaste Buscar mi iPhone?' : 'Did you turn off Find My iPhone?'}
-          subtitle={lang === 'es'
-            ? 'Es necesario para poder comprarlo'
-            : 'This is required for us to buy it'}
         />
 
         {/* Help trigger */}

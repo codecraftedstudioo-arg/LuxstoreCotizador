@@ -27,8 +27,12 @@ export function useExchangeRate(): ExchangeRateState {
 
   useEffect(() => {
     fetchExchangeRate().then((rate) => {
-      setState({ rate, loading: false })
-      try { localStorage.setItem(LS_KEY, String(rate)) } catch {}
+      if (rate !== null) {
+        setState({ rate, loading: false })
+        try { localStorage.setItem(LS_KEY, String(rate)) } catch {}
+      } else {
+        setState(prev => ({ rate: prev.rate, loading: false }))
+      }
     })
   }, [])
 

@@ -18,7 +18,7 @@ const TOTAL_STEPS = 5
 /**
  * iPhone 15 Pro Frame - Ultra realistic
  */
-function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; contentRef?: React.RefObject<HTMLDivElement | null> }) {
+function IPhoneFrame({ children, contentRef, showRate }: { children: React.ReactNode; contentRef?: React.RefObject<HTMLDivElement | null>; showRate?: boolean }) {
   const { rate } = useExchangeRate()
   return (
     <div className="relative mx-auto w-[300px] sm:w-[350px] md:w-[390px]">
@@ -87,10 +87,15 @@ function IPhoneFrame({ children, contentRef }: { children: React.ReactNode; cont
                 <p className="text-white text-xs font-semibold">Electronic Point</p>
                 <p className="text-white/40 text-[10px]">Cotizador iPhone</p>
               </div>
-              {rate !== null && (
-                <div className="text-right flex-shrink-0">
-                  <p className="text-white/50 text-[10px]">Dólar blue: <span className="text-white/70 font-medium">${rate.toLocaleString('es-AR')}</span></p>
-                  <p className="text-white/30 text-[9px]">{new Date().toLocaleDateString('es-AR')}</p>
+              {showRate && rate !== null && (
+                <div className="flex-shrink-0 rounded-lg bg-white/[0.04] border border-white/[0.08] px-2.5 py-1.5 text-right">
+                  <p className="text-[8px] uppercase tracking-wider text-white/30 leading-none">Dólar blue</p>
+                  <p className="text-[11px] font-semibold text-green-400 tracking-tight mt-0.5">${rate.toLocaleString('es-AR')}</p>
+                  <p className="text-[9px] text-white/40 mt-0.5 leading-none">
+                    {new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+                    {' · '}
+                    {new Date().toLocaleDateString('es-AR')}
+                  </p>
                 </div>
               )}
             </div>
@@ -337,7 +342,7 @@ export function WizardPage() {
 
             {/* iPhone Frame */}
             <div className="flex-shrink-0">
-              <IPhoneFrame contentRef={contentRef}>
+              <IPhoneFrame contentRef={contentRef} showRate={currentStep === 6}>
                 {/* Progress bar */}
                 {showProgress && (
                   <div className="mb-2">
