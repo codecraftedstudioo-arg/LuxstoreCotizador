@@ -6,7 +6,7 @@ interface Option {
 }
 
 interface SelectProps {
-  label: string
+  label?: string
   placeholder?: string
   options: Option[]
   value?: string
@@ -45,7 +45,7 @@ export function Select({
   return (
     <div ref={ref} className="relative">
       {/* Label */}
-      <label className="block text-sm text-white font-medium mb-1.5">{label}</label>
+      {label && <label className="block text-sm text-white font-medium mb-1.5">{label}</label>}
 
       {/* Trigger button */}
       <button
