@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://electronicpoint-cotizador.com.ar/sitemap.xml

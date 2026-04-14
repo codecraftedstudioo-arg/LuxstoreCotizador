@@ -150,8 +150,13 @@ function loadState(): WizardState {
   try {
     // Fresh start when coming from market or external link
     const params = new URLSearchParams(window.location.search)
-    if (params.has('new')) {
+    if (params.has('new') || params.has('canje')) {
       localStorage.removeItem(STORAGE_KEY)
+      sessionStorage.removeItem('in-canje')
+      if (params.has('canje')) {
+        sessionStorage.setItem('auto-canje', '1')
+        sessionStorage.setItem('in-canje', '1')
+      }
       // Clean the URL without reloading
       window.history.replaceState({}, '', window.location.pathname)
       return initialState

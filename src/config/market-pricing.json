@@ -25,7 +25,9 @@
         { "storage": "256", "color": "Silver", "priceUSD": 1300, "direction": "up", "priceDiff": 10 },
         { "storage": "512", "color": "Orange", "priceUSD": 1470, "direction": "down", "priceDiff": -30 },
         { "storage": "512", "color": "Blue", "priceUSD": 1480, "direction": "up", "priceDiff": 25 },
-        { "storage": "512", "color": "Silver", "priceUSD": 1480, "direction": "down", "priceDiff": -5 }
+        { "storage": "512", "color": "Silver", "priceUSD": 1480, "direction": "down", "priceDiff": -5 },
+        { "storage": "1024", "color": "Orange", "priceUSD": 1750, "direction": "up", "priceDiff": 40 },
+        { "storage": "1024", "color": "Blue", "priceUSD": 1750, "direction": "up", "priceDiff": 40 }
       ]
     },
     {

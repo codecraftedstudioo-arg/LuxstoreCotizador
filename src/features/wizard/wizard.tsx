@@ -272,7 +272,10 @@ export function WizardPage() {
     }
   }
 
-  const showProgress = currentStep <= TOTAL_STEPS
+  const isCanje = sessionStorage.getItem('in-canje') === '1'
+  const showProgress = (currentStep > 1 || (currentStep === 1 && isCanje)) && currentStep <= TOTAL_STEPS
+  const displayStep = isCanje ? currentStep : currentStep - 1
+  const displayTotal = isCanje ? TOTAL_STEPS : TOTAL_STEPS - 1
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">
@@ -320,7 +323,7 @@ export function WizardPage() {
               </button>
               {showProgress && (
                 <span className="text-white/40 text-sm font-medium">
-                  Paso {currentStep}/{TOTAL_STEPS}
+                  Paso {displayStep}/{displayTotal}
                 </span>
               )}
             </div>
@@ -346,7 +349,7 @@ export function WizardPage() {
                 {/* Progress bar */}
                 {showProgress && (
                   <div className="mb-2">
-                    <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+                    <ProgressBar currentStep={displayStep} totalSteps={displayTotal} />
                   </div>
                 )}
 
@@ -372,7 +375,7 @@ export function WizardPage() {
                       <div className="w-14" />
                     )}
                     <span className="text-white/30 text-xs">
-                      {currentStep} de {TOTAL_STEPS}
+                      {displayStep} de {displayTotal}
                     </span>
                     <div className="w-14" /> {/* Spacer for alignment */}
                   </div>

@@ -12,9 +12,15 @@ export function Step5Upgrade() {
   const { state, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice, clearUpgrade, nextStep } = useWizard()
   const { t, lang } = useI18n()
   const { models: marketModels } = useMarketPrices()
-  const [wantsUpgrade, setWantsUpgrade] = useState<boolean>(
-    state.upgradeModel !== null
-  )
+  const [wantsUpgrade, setWantsUpgrade] = useState<boolean>(() => {
+    if (state.upgradeModel !== null) return true
+    const auto = sessionStorage.getItem('auto-canje')
+    if (auto) {
+      sessionStorage.removeItem('auto-canje')
+      return true
+    }
+    return false
+  })
 
   const selectedMarketModel: Model | undefined = marketModels.find((m) => m.name === state.upgradeModel)
 
@@ -37,11 +43,15 @@ export function Step5Upgrade() {
     : []
 
   const handleJustSell = () => {
+    sessionStorage.removeItem('in-canje')
     clearUpgrade()
     nextStep()
   }
 
-  const handleWantsUpgrade = () => setWantsUpgrade(true)
+  const handleWantsUpgrade = () => {
+    sessionStorage.setItem('in-canje', '1')
+    setWantsUpgrade(true)
+  }
 
   return (
     <Card>
