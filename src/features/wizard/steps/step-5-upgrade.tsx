@@ -9,7 +9,7 @@ import type { Model } from '@/types/market'
 
 const MARKET_URL = 'https://electronicpoint-iphonemarket.com.ar/'
 export function Step5Upgrade() {
-  const { state, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice, clearUpgrade, nextStep } = useWizard()
+  const { state, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice, clearUpgrade, nextStep, setCanjeMode } = useWizard()
   const { t, lang } = useI18n()
   const { models: marketModels } = useMarketPrices()
   const [wantsUpgrade, setWantsUpgrade] = useState<boolean>(() => {
@@ -43,13 +43,13 @@ export function Step5Upgrade() {
     : []
 
   const handleJustSell = () => {
-    sessionStorage.removeItem('in-canje')
+    setCanjeMode(false)
     clearUpgrade()
     nextStep()
   }
 
   const handleWantsUpgrade = () => {
-    sessionStorage.setItem('in-canje', '1')
+    setCanjeMode(true)
     setWantsUpgrade(true)
   }
 
@@ -133,7 +133,7 @@ export function Step5Upgrade() {
           {/* Back to choice */}
           <button
             type="button"
-            onClick={() => { sessionStorage.removeItem('in-canje'); setWantsUpgrade(false); clearUpgrade() }}
+            onClick={() => { setCanjeMode(false); setWantsUpgrade(false); clearUpgrade() }}
             className="flex items-center gap-1 text-sm text-white/40 hover:text-white/60 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

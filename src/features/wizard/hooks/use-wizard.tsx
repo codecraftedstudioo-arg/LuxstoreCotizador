@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect, useRef, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, useRef, useState, type ReactNode } from 'react'
 import type {
   WizardState,
   StorageCapacity,
@@ -134,6 +134,8 @@ interface WizardContextValue {
   setUpgradeColor: (color: string) => void
   setUpgradePrice: (price: number) => void
   clearUpgrade: () => void
+  canjeMode: boolean
+  setCanjeMode: (value: boolean) => void
   nextStep: () => void
   prevStep: () => void
   goToStep: (step: number) => void
@@ -180,7 +182,13 @@ function loadState(): WizardState {
 
 export function WizardProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(wizardReducer, initialState, loadState)
+  const [canjeMode, setCanjeMode] = useState<boolean>(() => sessionStorage.getItem('in-canje') === '1')
   const celebrationRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    if (canjeMode) sessionStorage.setItem('in-canje', '1')
+    else sessionStorage.removeItem('in-canje')
+  }, [canjeMode])
 
   // Preload celebration audio once on mount
   useEffect(() => {
@@ -218,6 +226,8 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setUpgradeColor: (color) => dispatch({ type: 'SET_UPGRADE_COLOR', payload: color }),
     setUpgradePrice: (price) => dispatch({ type: 'SET_UPGRADE_PRICE', payload: price }),
     clearUpgrade: () => dispatch({ type: 'CLEAR_UPGRADE' }),
+    canjeMode,
+    setCanjeMode,
     nextStep: () => {
       if (state.currentStep === 5 && celebrationRef.current) {
         celebrationRef.current.currentTime = 0

@@ -249,7 +249,7 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
  */
 export function WizardPage() {
   const navigate = useNavigate()
-  const { state, prevStep } = useWizard()
+  const { state, prevStep, canjeMode } = useWizard()
   useI18n() // Keep provider active
   const { currentStep } = state
   const contentRef = useRef<HTMLDivElement>(null)
@@ -272,10 +272,9 @@ export function WizardPage() {
     }
   }
 
-  const isCanje = sessionStorage.getItem('in-canje') === '1'
-  const showProgress = (currentStep > 1 || (currentStep === 1 && isCanje)) && currentStep <= TOTAL_STEPS
-  const displayStep = isCanje ? currentStep : currentStep - 1
-  const displayTotal = isCanje ? TOTAL_STEPS : TOTAL_STEPS - 1
+  const showProgress = (currentStep > 1 || (currentStep === 1 && canjeMode)) && currentStep <= TOTAL_STEPS
+  const displayStep = canjeMode ? currentStep : currentStep - 1
+  const displayTotal = canjeMode ? TOTAL_STEPS : TOTAL_STEPS - 1
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">
