@@ -176,6 +176,8 @@ function loadState(): WizardState {
     if (params.has('new') || params.has('canje')) {
       localStorage.removeItem(STORAGE_KEY)
       sessionStorage.removeItem('in-canje')
+      // Limpiar flags de sesión anterior (evita que quede un "volver al original" viejo)
+      sessionStorage.removeItem('original-upgrade')
       if (params.has('canje')) {
         sessionStorage.setItem('auto-canje', '1')
         sessionStorage.setItem('in-canje', '1')
