@@ -5,15 +5,19 @@ import { calculatePrice, formatPrice, formatStorage } from '@/lib/pricing-engine
 import { buildWhatsAppLink, buildInquiryLink } from '@/lib/whatsapp-builder'
 import type { UpgradeInfo } from '@/features/wizard/types'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
+import { useMarketPrices } from '@/lib/use-market-prices'
+import { getAlternatives, shouldShowAlternatives, type Alternative } from '@/lib/alternatives'
+import { getColorName } from '@/config/colors'
 
 /**
  * Final step: Show price or blocked message
  */
 export function StepResult() {
-  const { state, reset } = useWizard()
+  const { state, reset, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice } = useWizard()
   const { t, lang } = useI18n()
   const priceResult = calculatePrice(state)
   const { rate } = useExchangeRate()
+  const { models: marketModels } = useMarketPrices()
   const contactName = state.contactName ?? ''
   // El state guarda los 10 dígitos locales; agrego prefijo +54 9 para mostrar
   const rawPhone = state.contactPhone ?? ''
@@ -77,6 +81,26 @@ export function StepResult() {
   const diff = upgradeInfo ? upgradeInfo.price - priceResult.finalPrice : 0
   const upgradeCovers = upgradeInfo && diff <= 0
 
+  // Calcular alternativas si es canje y la diferencia es alta
+  const alternatives: Alternative[] = upgradeInfo && state.model && !upgradeCovers && shouldShowAlternatives(diff)
+    ? getAlternatives({
+        marketModels,
+        currentModel: state.model,
+        selectedModel: upgradeInfo.model,
+        selectedPrice: upgradeInfo.price,
+        tradeInValue: priceResult.finalPrice,
+      })
+    : []
+
+  const handleSelectAlternative = (alt: Alternative) => {
+    setUpgradeModel(alt.model)
+    setUpgradeStorage(alt.storage)
+    setUpgradeColor(alt.color)
+    setUpgradePrice(alt.price)
+    // Scroll arriba para que vea el nuevo precio
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <Card className="text-center">
       <Confetti />
@@ -118,6 +142,54 @@ export function StepResult() {
 
             <p className="text-white/30 text-xs">{t('resultDisclaimer')}</p>
           </div>
+
+          {/* Recomendador de alternativas — solo si la diferencia es alta */}
+          {alternatives.length > 0 && (
+            <div className="mb-4 space-y-3 animate-fadeSlideIn">
+              <div className="text-left">
+                <p className="text-sm font-semibold text-white">
+                  {lang === 'es' ? '¿Diferencia muy alta?' : 'Difference too high?'}
+                </p>
+                <p className="text-xs text-white/50 mt-0.5">
+                  {lang === 'es'
+                    ? 'Mirá estas alternativas con menor diferencia a pagar:'
+                    : 'Check these alternatives with lower difference:'}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                {alternatives.map((alt) => {
+                  const colorName = alt.color ? getColorName(alt.color, lang) : ''
+                  return (
+                    <button
+                      key={`${alt.model}-${alt.storage}-${alt.color}`}
+                      onClick={() => handleSelectAlternative(alt)}
+                      className="w-full p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-green-500/10 hover:border-green-500/40 transition-all text-left group"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-white truncate">
+                            {alt.model} {formatStorage(alt.storage)}
+                          </p>
+                          {colorName && (
+                            <p className="text-xs text-white/40 mt-0.5">{colorName}</p>
+                          )}
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-xs text-white/50">
+                            {lang === 'es' ? 'Diferencia' : 'Difference'}
+                          </p>
+                          <p className="text-sm font-bold text-green-400 group-hover:text-green-300">
+                            {formatPrice(alt.newDiff)}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </>
       ) : (
         <>

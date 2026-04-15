@@ -112,6 +112,12 @@ export async function sendLeadToCrm(lead: CrmLead): Promise<boolean> {
 
   recordSend()
 
+  // En desarrollo local no se manda al CRM real (evita ensuciar datos con tests)
+  if (import.meta.env.DEV) {
+    console.log('[DEV] CRM webhook (NO enviado):', payload)
+    return true
+  }
+
   try {
     // application/json es requerido por GHL para parsear los datos correctamente.
     // El webhook de GHL soporta CORS desde frontend.
