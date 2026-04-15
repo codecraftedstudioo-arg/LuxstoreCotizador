@@ -23,6 +23,18 @@ interface ModelInfo {
 }
 
 function parseModelInfo(name: string): ModelInfo | null {
+  // iPhone SE tiene generación especial (tratamos como generación 10, tier bajo)
+  // Así siempre es "peor" que iPhone 11+
+  if (/iPhone SE/i.test(name)) {
+    return { generation: 10, tier: 0 }
+  }
+
+  // iPhone X / XR / XS (generación ~10, single digit equivalente)
+  if (/iPhone X[RS]? Max/i.test(name)) return { generation: 10, tier: 4 }
+  if (/iPhone XR/i.test(name)) return { generation: 10, tier: 2 }
+  if (/iPhone XS/i.test(name)) return { generation: 10, tier: 3 }
+  if (/iPhone X\b/i.test(name)) return { generation: 10, tier: 3 }
+
   const match = name.match(/iPhone (\d{2})\s*(mini|e|Plus|Air|Pro Max|Pro)?/i)
   if (!match) return null
   const generation = parseInt(match[1], 10)
@@ -75,6 +87,8 @@ export function getAlternatives({
   marketModels,
   currentModel,
   selectedModel,
+  selectedStorage,
+  selectedColor,
   selectedPrice,
   tradeInValue,
   limit = 3,
@@ -82,40 +96,85 @@ export function getAlternatives({
   marketModels: Model[]
   currentModel: string
   selectedModel: string
+  selectedStorage?: string
+  selectedColor?: string
   selectedPrice: number
   tradeInValue: number
   limit?: number
 }): Alternative[] {
   const results: Alternative[] = []
 
-  for (const m of marketModels) {
-    // Skip el modelo que ya eligió
-    if (m.name === selectedModel) continue
-    // Solo modelos que sean upgrade respecto al que tiene
-    if (!isUpgradeFrom(currentModel, m.name)) continue
+  const pickBestVariant = (variants: typeof marketModels[0]['variants']) => {
+    // Si hay una variante del color que eligió el cliente, preferirla (coherencia con su elección)
+    if (selectedColor) {
+      const sameColor = variants.filter(v => v.color === selectedColor)
+      if (sameColor.length > 0) {
+        return sameColor.reduce((min, v) => v.priceUSD < min.priceUSD ? v : min)
+      }
+    }
+    // Si no, tomar la más barata
+    return variants.reduce((min, v) => v.priceUSD < min.priceUSD ? v : min)
+  }
 
-    // Encontrar la variante más barata disponible en stock
+  for (const m of marketModels) {
+    const isSameModel = m.name === selectedModel
+    const isUpgrade = isUpgradeFrom(currentModel, m.name)
+
+    // Incluimos:
+    // (a) el MISMO modelo con storage menor (más barato) — para ofrecer "la misma línea pero más accesible"
+    // (b) modelos de menor gama/generación pero que siguen siendo upgrade del que tiene el cliente
+    if (!isSameModel && !isUpgrade) continue
+
     const inStockVariants = m.variants.filter(v => v.inStock !== false && v.priceUSD > 0)
     if (inStockVariants.length === 0) continue
 
-    const cheapest = inStockVariants.reduce((min, v) =>
-      v.priceUSD < min.priceUSD ? v : min
-    )
-
-    // Solo si es más barato que el elegido
-    if (cheapest.priceUSD >= selectedPrice) continue
-
-    results.push({
-      model: m.name,
-      storage: cheapest.storage,
-      color: cheapest.color ?? '',
-      price: cheapest.priceUSD,
-      newDiff: cheapest.priceUSD - tradeInValue,
-    })
+    if (isSameModel) {
+      // Mismo modelo: tomar la variante más barata que sea < precio elegido
+      const cheaper = inStockVariants.filter(v => v.priceUSD < selectedPrice)
+      if (cheaper.length === 0) continue
+      const best = pickBestVariant(cheaper)
+      if (best.storage === selectedStorage) continue
+      results.push({
+        model: m.name,
+        storage: best.storage,
+        color: best.color ?? '',
+        price: best.priceUSD,
+        newDiff: best.priceUSD - tradeInValue,
+      })
+    } else {
+      // Modelo distinto: tomar la variante más barata (con preferencia por color neutro si empata)
+      const cheapest = pickBestVariant(inStockVariants)
+      if (cheapest.priceUSD >= selectedPrice) continue
+      results.push({
+        model: m.name,
+        storage: cheapest.storage,
+        color: cheapest.color ?? '',
+        price: cheapest.priceUSD,
+        newDiff: cheapest.priceUSD - tradeInValue,
+      })
+    }
   }
 
-  // Ordenar por diferencia a pagar ascendente (más baratas primero)
-  results.sort((a, b) => a.newDiff - b.newDiff)
+  // Ordenar priorizando:
+  // 1. Mismo modelo con storage menor (downgrade mínimo, cliente se queda en su gama)
+  // 2. Tier cercano al elegido (luego por cercanía descendente)
+  // 3. Diferencia a pagar ascendente
+  const selectedInfo = parseModelInfo(selectedModel)
+  results.sort((a, b) => {
+    const aIsSame = a.model === selectedModel ? 0 : 1
+    const bIsSame = b.model === selectedModel ? 0 : 1
+    if (aIsSame !== bIsSame) return aIsSame - bIsSame
+
+    if (selectedInfo) {
+      const aInfo = parseModelInfo(a.model)
+      const bInfo = parseModelInfo(b.model)
+      const aTierDiff = aInfo ? Math.abs(aInfo.tier - selectedInfo.tier) : 99
+      const bTierDiff = bInfo ? Math.abs(bInfo.tier - selectedInfo.tier) : 99
+      if (aTierDiff !== bTierDiff) return aTierDiff - bTierDiff
+    }
+
+    return a.newDiff - b.newDiff
+  })
 
   return results.slice(0, limit)
 }

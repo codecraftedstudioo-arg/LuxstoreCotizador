@@ -224,6 +224,19 @@ html, body {
   animation: float 6s ease-in-out infinite;
 }
 
+@keyframes pulseSubtle {
+  0%, 100% {
+    box-shadow: 0 0 20px -4px rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px -2px rgba(34, 197, 94, 0.55);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2.2s ease-in-out infinite;
+}
+
 .animate-float-delayed {
   animation: floatDelayed 7s ease-in-out infinite;
   animation-delay: 1s;

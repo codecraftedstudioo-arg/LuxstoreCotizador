@@ -66,18 +66,21 @@ describe('getAlternatives — recomendador', () => {
     alts.forEach(a => expect(a.price).toBeLessThan(1460))
   })
 
-  it('ordena por diferencia a pagar ascendente', () => {
+  it('prioriza mismo modelo con storage menor, luego tier cercano, luego diff ascendente', () => {
+    // Cliente eligió 17 Pro Max 512GB. Debería sugerir primero 17 Pro Max 256GB (mismo modelo),
+    // después 17 Pro (tier cercano), después modelos de tier inferior
     const alts = getAlternatives({
       marketModels: mockMarket,
       currentModel: 'iPhone 13',
       selectedModel: 'iPhone 17 Pro Max',
-      selectedPrice: 1460,
+      selectedStorage: '512',
+      selectedPrice: 1670,
       tradeInValue: 200,
     })
 
-    for (let i = 1; i < alts.length; i++) {
-      expect(alts[i].newDiff).toBeGreaterThanOrEqual(alts[i - 1].newDiff)
-    }
+    expect(alts.length).toBeGreaterThan(0)
+    // El primero debe ser el mismo modelo (17 Pro Max con storage menor)
+    expect(alts[0].model).toBe('iPhone 17 Pro Max')
   })
 
   it('respeta el limit', () => {
@@ -147,15 +150,35 @@ describe('getAlternatives — recomendador', () => {
     expect(alts.some(a => a.model === 'iPhone 17 Pro')).toBe(true)
   })
 
-  it('no sugiere el mismo modelo que eligió', () => {
+  it('sugiere el mismo modelo con storage menor (mismo modelo más barato)', () => {
+    // Cliente tiene iPhone 13, eligió iPhone 17 Pro Max 512GB (1670)
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '512',
+      selectedPrice: 1670,
+      tradeInValue: 200,
+    })
+    // Debería sugerir 17 Pro Max 256GB (1460) como alternativa
+    const samemodel = alts.find(a => a.model === 'iPhone 17 Pro Max')
+    expect(samemodel).toBeDefined()
+    expect(samemodel!.storage).toBe('256')
+    expect(samemodel!.price).toBe(1460)
+  })
+
+  it('no sugiere el mismo modelo con el MISMO storage', () => {
+    // Si eligió 17 Pro 256GB (1310), no debe sugerir 17 Pro 256GB
     const alts = getAlternatives({
       marketModels: mockMarket,
       currentModel: 'iPhone 13',
       selectedModel: 'iPhone 17 Pro',
+      selectedStorage: '256',
       selectedPrice: 1310,
       tradeInValue: 200,
     })
-    expect(alts.some(a => a.model === 'iPhone 17 Pro')).toBe(false)
+    const dup = alts.find(a => a.model === 'iPhone 17 Pro' && a.storage === '256')
+    expect(dup).toBeUndefined()
   })
 
   it('devuelve array vacío si no hay upgrades disponibles', () => {
@@ -193,5 +216,158 @@ describe('shouldShowAlternatives', () => {
   it('false cuando diferencia es baja', () => {
     expect(shouldShowAlternatives(100)).toBe(false)
     expect(shouldShowAlternatives(HIGH_DIFF_THRESHOLD_USD - 1)).toBe(false)
+  })
+
+  it('false cuando diferencia es 0 (trade-in cubre)', () => {
+    expect(shouldShowAlternatives(0)).toBe(false)
+    expect(shouldShowAlternatives(-100)).toBe(false)
+  })
+})
+
+describe('getAlternatives — NO debe mostrar recomendaciones en estos casos', () => {
+  it('cliente tiene el iPhone más nuevo (nada es upgrade)', () => {
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 17 Pro Max',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '512',
+      selectedPrice: 1670,
+      tradeInValue: 1000,
+    })
+    // Solo podría haber variantes del mismo modelo con menos storage
+    alts.forEach(a => {
+      expect(a.model).toBe('iPhone 17 Pro Max')
+      expect(a.price).toBeLessThan(1670)
+    })
+  })
+
+  it('cliente eligió el modelo más barato (no hay alternativas más baratas aún siendo upgrade)', () => {
+    // Cliente iPhone 13, eligió iPhone 17e (el más barato del market)
+    // Pero 17e no está en mock como upgrade... usemos iPhone 15 que es $650
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 15',
+      selectedStorage: '128',
+      selectedPrice: 650,
+      tradeInValue: 150,
+    })
+    // iPhone 15 es el más barato y es upgrade de 13, no debería haber nada más barato
+    // Como 13 no tiene mismo modelo para storage menor aquí, resultado vacío
+    alts.forEach(a => {
+      expect(a.price).toBeLessThan(650)
+    })
+  })
+
+  it('cliente tiene el modelo más viejo, pero todo es upgrade', () => {
+    // iPhone 13 es el más viejo. iPhone 15 ($650) es el más barato disponible.
+    // Si elige iPhone 15 128GB ($650), no hay alternativas más baratas.
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 15',
+      selectedStorage: '128',
+      selectedPrice: 650,
+      tradeInValue: 100,
+    })
+    // Array vacío porque no hay nada más barato
+    expect(alts.length).toBe(0)
+  })
+
+  it('market vacío devuelve array vacío', () => {
+    const alts = getAlternatives({
+      marketModels: [],
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    expect(alts.length).toBe(0)
+  })
+
+  it('market solo con variantes sin stock devuelve array vacío', () => {
+    const outOfStockMarket: Model[] = [
+      {
+        id: 'iphone-17-pro', name: 'iPhone 17 Pro', featured: true,
+        variants: [
+          { storage: '256', priceUSD: 0, direction: 'same', color: 'Orange', inStock: false },
+          { storage: '512', priceUSD: 0, direction: 'same', color: 'Blue', inStock: false },
+        ],
+      },
+    ]
+    const alts = getAlternatives({
+      marketModels: outOfStockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    expect(alts.length).toBe(0)
+  })
+})
+
+describe('getAlternatives — casos del requerimiento original', () => {
+  it('cliente iPhone 13 eligió 17 Pro Max: muestra 17 Pro, 17, Air', () => {
+    // Este es el ejemplo específico que dio el cliente en el requerimiento
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '256',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    const modelNames = alts.map(a => a.model)
+    // Debe incluir alguna combinación de los modelos del ejemplo
+    const expectedSome = ['iPhone 17 Pro', 'iPhone 17', 'iPhone 17 Air']
+    const matches = expectedSome.filter(m => modelNames.includes(m))
+    expect(matches.length).toBeGreaterThan(0)
+  })
+
+  it('todas las alternativas sugeridas son upgrade del modelo actual del cliente', () => {
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '256',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    // Ninguna alternativa debería ser iPhone 13 o anterior
+    alts.forEach(a => {
+      expect(a.model).not.toMatch(/iPhone (12|11|X|SE)/)
+    })
+  })
+
+  it('todas las alternativas tienen precio menor al modelo elegido', () => {
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '256',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    alts.forEach(a => {
+      expect(a.price).toBeLessThan(1460)
+    })
+  })
+
+  it('todas las alternativas tienen diferencia a pagar menor a la original', () => {
+    const originalPrice = 1460
+    const tradeIn = 200
+    const originalDiff = originalPrice - tradeIn
+
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '256',
+      selectedPrice: originalPrice,
+      tradeInValue: tradeIn,
+    })
+    alts.forEach(a => {
+      expect(a.newDiff).toBeLessThan(originalDiff)
+    })
   })
 })

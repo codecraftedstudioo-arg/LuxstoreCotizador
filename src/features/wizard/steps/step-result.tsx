@@ -5,15 +5,17 @@ import { calculatePrice, formatPrice, formatStorage } from '@/lib/pricing-engine
 import { buildWhatsAppLink, buildInquiryLink } from '@/lib/whatsapp-builder'
 import type { UpgradeInfo } from '@/features/wizard/types'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
+import { useState } from 'react'
 import { useMarketPrices } from '@/lib/use-market-prices'
 import { getAlternatives, shouldShowAlternatives, type Alternative } from '@/lib/alternatives'
 import { getColorName } from '@/config/colors'
+import { getIphoneImage, modelNameToId } from '@/lib/iphone-images'
 
 /**
  * Final step: Show price or blocked message
  */
 export function StepResult() {
-  const { state, reset, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice } = useWizard()
+  const { state, reset, setUpgradeAll } = useWizard()
   const { t, lang } = useI18n()
   const priceResult = calculatePrice(state)
   const { rate } = useExchangeRate()
@@ -81,25 +83,72 @@ export function StepResult() {
   const diff = upgradeInfo ? upgradeInfo.price - priceResult.finalPrice : 0
   const upgradeCovers = upgradeInfo && diff <= 0
 
-  // Calcular alternativas si es canje y la diferencia es alta
-  const alternatives: Alternative[] = upgradeInfo && state.model && !upgradeCovers && shouldShowAlternatives(diff)
+  // Guardar el upgrade original para poder volver si cambia de opinión.
+  // Persiste en sessionStorage para que sobreviva a refresh de la página.
+  const [originalUpgrade, setOriginalUpgradeState] = useState<UpgradeInfo | null>(() => {
+    try {
+      const raw = sessionStorage.getItem('original-upgrade')
+      return raw ? JSON.parse(raw) as UpgradeInfo : null
+    } catch { return null }
+  })
+  const setOriginalUpgrade = (value: UpgradeInfo | null) => {
+    setOriginalUpgradeState(value)
+    try {
+      if (value) sessionStorage.setItem('original-upgrade', JSON.stringify(value))
+      else sessionStorage.removeItem('original-upgrade')
+    } catch { /* ignore */ }
+  }
+  const [altsExpanded, setAltsExpanded] = useState(false)
+
+  // Calcular alternativas si es canje, la diferencia es alta, y el usuario NO eligió una alternativa todavía.
+  // Una vez que elige una, dejamos de mostrar más alternativas (solo queda el botón "Volver al original").
+  const alternatives: Alternative[] = upgradeInfo && state.model && !upgradeCovers && shouldShowAlternatives(diff) && !originalUpgrade
     ? getAlternatives({
         marketModels,
         currentModel: state.model,
         selectedModel: upgradeInfo.model,
+        selectedStorage: upgradeInfo.storage,
+        selectedColor: upgradeInfo.color,
         selectedPrice: upgradeInfo.price,
         tradeInValue: priceResult.finalPrice,
       })
     : []
 
   const handleSelectAlternative = (alt: Alternative) => {
-    setUpgradeModel(alt.model)
-    setUpgradeStorage(alt.storage)
-    setUpgradeColor(alt.color)
-    setUpgradePrice(alt.price)
-    // Scroll arriba para que vea el nuevo precio
+    // Guardar el upgrade actual como "original" solo la primera vez
+    if (!originalUpgrade && upgradeInfo) {
+      setOriginalUpgrade(upgradeInfo)
+    }
+    // Update atómico: evita que por un frame queden campos null y se renderice el flujo de venta
+    setUpgradeAll({ model: alt.model, storage: alt.storage, color: alt.color, price: alt.price })
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  const handleRestoreOriginal = () => {
+    if (!originalUpgrade) return
+    setUpgradeAll({
+      model: originalUpgrade.model,
+      storage: originalUpgrade.storage,
+      color: originalUpgrade.color,
+      price: originalUpgrade.price,
+    })
+    setOriginalUpgrade(null)
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const deductionsBlock = priceResult.deductionBreakdown.length > 0 ? (
+    <div className="mb-4 p-4 bg-white/5 rounded-xl text-left border border-white/10">
+      <p className="text-sm font-medium text-white mb-3">{t('adjustments')}</p>
+      <ul className="space-y-2">
+        {priceResult.deductionBreakdown.map((d, i) => (
+          <li key={i} className="text-sm flex justify-between items-center">
+            <span className="text-white/80">{t(d.reason as any)}</span>
+            <span className="text-white font-medium">-{formatPrice(d.amount)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : null
 
   return (
     <Card className="text-center">
@@ -143,44 +192,96 @@ export function StepResult() {
             <p className="text-white/30 text-xs">{t('resultDisclaimer')}</p>
           </div>
 
+          {deductionsBlock}
+
+          {/* Botón para volver al modelo original si ya eligió una alternativa */}
+          {originalUpgrade && (
+            <button
+              onClick={handleRestoreOriginal}
+              className="mb-4 inline-flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80 transition-colors animate-fadeSlideIn"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              {lang === 'es'
+                ? `Volver a ${originalUpgrade.model} ${formatStorage(originalUpgrade.storage)}`
+                : `Back to ${originalUpgrade.model} ${formatStorage(originalUpgrade.storage)}`}
+            </button>
+          )}
+
           {/* Recomendador de alternativas — solo si la diferencia es alta */}
           {alternatives.length > 0 && (
             <div className="mb-4 space-y-3 animate-fadeSlideIn">
-              <div className="text-left">
-                <p className="text-sm font-semibold text-white">
-                  {lang === 'es' ? '¿Diferencia muy alta?' : 'Difference too high?'}
-                </p>
-                <p className="text-xs text-white/50 mt-0.5">
-                  {lang === 'es'
-                    ? 'Mirá estas alternativas con menor diferencia a pagar:'
-                    : 'Check these alternatives with lower difference:'}
-                </p>
-              </div>
+              <button
+                onClick={() => setAltsExpanded(v => !v)}
+                className="w-full text-left group"
+                aria-expanded={altsExpanded}
+              >
+                <div className={`relative flex items-center justify-between gap-3 p-3.5 rounded-xl border bg-green-500/[0.08] hover:bg-green-500/[0.15] transition-all ${
+                  altsExpanded ? 'border-green-500/50' : 'border-green-500/40 shadow-[0_0_20px_-4px_rgba(34,197,94,0.3)] animate-pulse-subtle'
+                }`}>
+                  <div className="flex items-start gap-2.5 flex-1">
+                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white">
+                        {lang === 'es' ? '¿Querés pagar menos diferencia?' : 'Want to pay less difference?'}
+                      </p>
+                      <p className="text-xs text-white/50 mt-0.5">
+                        {lang === 'es'
+                          ? `Mirá ${alternatives.length} ${alternatives.length === 1 ? 'alternativa' : 'alternativas'} más accesibles`
+                          : `See ${alternatives.length} more accessible ${alternatives.length === 1 ? 'alternative' : 'alternatives'}`}
+                      </p>
+                    </div>
+                  </div>
+                  <svg
+                    className={`w-5 h-5 text-green-400 transition-transform flex-shrink-0 ${altsExpanded ? 'rotate-180' : ''}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </button>
 
-              <div className="space-y-2">
+              {altsExpanded && (
+              <div className="space-y-2 animate-fadeSlideIn">
                 {alternatives.map((alt) => {
                   const colorName = alt.color ? getColorName(alt.color, lang) : ''
+                  const imgSrc = getIphoneImage(modelNameToId(alt.model), alt.color || null)
                   return (
                     <button
                       key={`${alt.model}-${alt.storage}-${alt.color}`}
                       onClick={() => handleSelectAlternative(alt)}
-                      className="w-full p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-green-500/10 hover:border-green-500/40 transition-all text-left group"
+                      className="w-full p-3.5 sm:p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-green-500/10 hover:border-green-500/40 transition-all text-left group"
                     >
-                      <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          <img
+                            src={imgSrc}
+                            alt={alt.model}
+                            className="w-full h-full object-contain p-1"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                          />
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-white truncate">
-                            {alt.model} {formatStorage(alt.storage)}
+                          <p className="text-sm sm:text-base font-semibold text-white leading-tight">
+                            {alt.model}
                           </p>
-                          {colorName && (
-                            <p className="text-xs text-white/40 mt-0.5">{colorName}</p>
-                          )}
+                          <p className="text-xs text-white/50 mt-1 leading-tight">
+                            {formatStorage(alt.storage)}{colorName ? ` · ${colorName}` : ''}
+                          </p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="text-xs text-white/50">
-                            {lang === 'es' ? 'Diferencia' : 'Difference'}
+                          <p className="text-[10px] sm:text-xs text-white/50 leading-tight">
+                            {alt.newDiff <= 0
+                              ? (lang === 'es' ? 'Te queda a favor' : 'In your favor')
+                              : (lang === 'es' ? 'Diferencia a pagar' : 'Difference to pay')}
                           </p>
-                          <p className="text-sm font-bold text-green-400 group-hover:text-green-300">
-                            {formatPrice(alt.newDiff)}
+                          <p className="text-base sm:text-lg font-bold text-green-400 group-hover:text-green-300 leading-tight mt-0.5">
+                            {formatPrice(Math.abs(alt.newDiff))}
                           </p>
                         </div>
                       </div>
@@ -188,6 +289,7 @@ export function StepResult() {
                   )
                 })}
               </div>
+              )}
             </div>
           )}
         </>
@@ -212,20 +314,8 @@ export function StepResult() {
       )}
 
 
-      {/* Deductions breakdown */}
-      {priceResult.deductionBreakdown.length > 0 && (
-        <div className="mb-4 p-4 bg-white/5 rounded-xl text-left border border-white/10">
-          <p className="text-sm font-medium text-white mb-3">{t('adjustments')}</p>
-          <ul className="space-y-2">
-            {priceResult.deductionBreakdown.map((d, i) => (
-              <li key={i} className="text-sm flex justify-between items-center">
-                <span className="text-white/80">{t(d.reason as any)}</span>
-                <span className="text-white font-medium">-{formatPrice(d.amount)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Deductions breakdown — solo para venta (en canje ya se muestra arriba del recomendador) */}
+      {!upgradeInfo && deductionsBlock}
 
       {/* Main CTA — changes text based on upgrade */}
       <a

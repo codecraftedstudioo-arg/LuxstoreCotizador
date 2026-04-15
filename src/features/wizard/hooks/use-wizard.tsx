@@ -63,6 +63,7 @@ type WizardAction =
   | { type: 'SET_UPGRADE_STORAGE'; payload: string }
   | { type: 'SET_UPGRADE_COLOR'; payload: string }
   | { type: 'SET_UPGRADE_PRICE'; payload: number }
+  | { type: 'SET_UPGRADE_ALL'; payload: { model: string; storage: string; color: string; price: number } }
   | { type: 'CLEAR_UPGRADE' }
   | { type: 'SET_CONTACT_NAME'; payload: string }
   | { type: 'SET_CONTACT_PHONE'; payload: string }
@@ -106,6 +107,14 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, upgradeColor: action.payload }
     case 'SET_UPGRADE_PRICE':
       return { ...state, upgradePrice: action.payload }
+    case 'SET_UPGRADE_ALL':
+      return {
+        ...state,
+        upgradeModel: action.payload.model,
+        upgradeStorage: action.payload.storage,
+        upgradeColor: action.payload.color,
+        upgradePrice: action.payload.price,
+      }
     case 'CLEAR_UPGRADE':
       return { ...state, upgradeModel: null, upgradeStorage: null, upgradeColor: null, upgradePrice: null }
     case 'SET_CONTACT_NAME':
@@ -142,6 +151,7 @@ interface WizardContextValue {
   setUpgradeStorage: (storage: string) => void
   setUpgradeColor: (color: string) => void
   setUpgradePrice: (price: number) => void
+  setUpgradeAll: (upgrade: { model: string; storage: string; color: string; price: number }) => void
   clearUpgrade: () => void
   setContactName: (name: string) => void
   setContactPhone: (phone: string) => void
@@ -238,6 +248,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setUpgradeStorage: (storage) => dispatch({ type: 'SET_UPGRADE_STORAGE', payload: storage }),
     setUpgradeColor: (color) => dispatch({ type: 'SET_UPGRADE_COLOR', payload: color }),
     setUpgradePrice: (price) => dispatch({ type: 'SET_UPGRADE_PRICE', payload: price }),
+    setUpgradeAll: (upgrade) => dispatch({ type: 'SET_UPGRADE_ALL', payload: upgrade }),
     clearUpgrade: () => dispatch({ type: 'CLEAR_UPGRADE' }),
     setContactName: (name) => dispatch({ type: 'SET_CONTACT_NAME', payload: name }),
     setContactPhone: (phone) => dispatch({ type: 'SET_CONTACT_PHONE', payload: phone }),
