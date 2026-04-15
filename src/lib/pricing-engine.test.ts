@@ -21,6 +21,8 @@ function createWizardState(overrides: Partial<WizardState> = {}): WizardState {
     upgradeStorage: null,
     upgradeColor: null,
     upgradePrice: null,
+    contactName: null,
+    contactPhone: null,
     ...overrides,
   }
 }
