@@ -80,6 +80,11 @@ export function Step6Contact() {
     // Antes de enviar, prefijo con 549 (Argentina + WhatsApp)
     const fullPhone = `549${phone.trim()}`
 
+    // Track lead capture en Facebook Pixel
+    if (typeof window !== 'undefined') {
+      window.fbq?.('track', 'Lead')
+    }
+
     await sendLeadToCrm({
       nombre: name.trim(),
       telefono: fullPhone,
