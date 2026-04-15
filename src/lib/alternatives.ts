@@ -156,9 +156,10 @@ export function getAlternatives({
   }
 
   // Ordenar priorizando:
-  // 1. Mismo modelo con storage menor (downgrade mínimo, cliente se queda en su gama)
-  // 2. Tier cercano al elegido (luego por cercanía descendente)
-  // 3. Diferencia a pagar ascendente
+  // 1. Mismo modelo con storage menor (downgrade mínimo)
+  // 2. Tier cercano al elegido
+  // 3. Generación cercana al elegido
+  // 4. Diferencia a pagar ascendente
   const selectedInfo = parseModelInfo(selectedModel)
   results.sort((a, b) => {
     const aIsSame = a.model === selectedModel ? 0 : 1
@@ -171,6 +172,10 @@ export function getAlternatives({
       const aTierDiff = aInfo ? Math.abs(aInfo.tier - selectedInfo.tier) : 99
       const bTierDiff = bInfo ? Math.abs(bInfo.tier - selectedInfo.tier) : 99
       if (aTierDiff !== bTierDiff) return aTierDiff - bTierDiff
+
+      const aGenDiff = aInfo ? Math.abs(aInfo.generation - selectedInfo.generation) : 99
+      const bGenDiff = bInfo ? Math.abs(bInfo.generation - selectedInfo.generation) : 99
+      if (aGenDiff !== bGenDiff) return aGenDiff - bGenDiff
     }
 
     return a.newDiff - b.newDiff
