@@ -113,12 +113,11 @@ export async function sendLeadToCrm(lead: CrmLead): Promise<boolean> {
   recordSend()
 
   try {
-    // Usamos no-cors para evitar bloqueo del browser por preflight CORS.
-    // No podemos leer la respuesta pero el POST llega igual al CRM.
+    // application/json es requerido por GHL para parsear los datos correctamente.
+    // El webhook de GHL soporta CORS desde frontend.
     await fetch(WEBHOOK_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       keepalive: true,
     })
