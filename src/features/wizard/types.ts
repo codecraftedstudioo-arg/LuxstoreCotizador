@@ -68,6 +68,10 @@ export interface WizardState {
   upgradeStorage: string | null
   upgradeColor: string | null
   upgradePrice: number | null
+
+  // Contact info (mandatory before result)
+  contactName: string | null
+  contactPhone: string | null
 }
 
 /**

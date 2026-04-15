@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Card, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
@@ -15,25 +14,16 @@ export function StepResult() {
   const { t, lang } = useI18n()
   const priceResult = calculatePrice(state)
   const { rate } = useExchangeRate()
-  const [showInquiry, setShowInquiry] = useState(false)
-  const [contactName, setContactName] = useState('')
-  const [contactPhone, setContactPhone] = useState('')
+  const contactName = state.contactName ?? ''
+  // El state guarda los 10 dígitos locales; agrego prefijo +54 9 para mostrar
+  const rawPhone = state.contactPhone ?? ''
+  const contactPhone = rawPhone.length === 10 ? `+54 9 ${rawPhone}` : rawPhone
 
   // Build upgrade info from wizard state
   const upgradeInfo: UpgradeInfo | undefined =
     state.upgradeModel && state.upgradeStorage && state.upgradeColor && state.upgradePrice
       ? { model: state.upgradeModel, storage: state.upgradeStorage, color: state.upgradeColor, price: state.upgradePrice }
       : undefined
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 15)
-    setContactPhone(value)
-  }
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s.-]/g, '').slice(0, 50)
-    setContactName(value)
-  }
 
   // Blocked by iCloud
   if (priceResult?.blocked) {
@@ -80,7 +70,10 @@ export function StepResult() {
     )
   }
 
-  const whatsappLink = buildWhatsAppLink(state, priceResult, undefined, lang, rate ?? 0, upgradeInfo)
+  const contactInfo = (contactName || contactPhone)
+    ? { name: contactName || undefined, phone: contactPhone || undefined }
+    : undefined
+  const whatsappLink = buildWhatsAppLink(state, priceResult, contactInfo, lang, rate ?? 0, upgradeInfo)
   const diff = upgradeInfo ? upgradeInfo.price - priceResult.finalPrice : 0
   const upgradeCovers = upgradeInfo && diff <= 0
 
@@ -188,51 +181,16 @@ export function StepResult() {
           : 'We\'ll reply within minutes on WhatsApp'}
       </p>
 
-      {/* Inquiry — collapsible */}
-      {!showInquiry ? (
-        <button
-          onClick={() => setShowInquiry(true)}
-          className="mt-3 w-full px-4 py-3 text-sm font-semibold text-white/60 hover:text-white/80 border border-white/15 hover:border-white/25 rounded-xl transition-all"
-        >
-          {lang === 'es' ? '¿Tenés dudas? Consultanos' : 'Questions? Ask us'}
-        </button>
-      ) : (
-        <div className="mt-3 p-4 bg-white/5 rounded-xl text-left border border-white/10 animate-fadeSlideIn">
-          <div className="space-y-3">
-            <input
-              type="text"
-              placeholder={t('yourName')}
-              value={contactName}
-              onChange={handleNameChange}
-              className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white text-sm"
-            />
-            <input
-              type="tel"
-              inputMode="numeric"
-              placeholder={t('yourPhone')}
-              value={contactPhone}
-              onChange={handlePhoneChange}
-              className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-white text-sm"
-            />
-            <a
-              href={buildInquiryLink(state, priceResult, { name: contactName || undefined, phone: contactPhone || undefined }, lang, rate ?? 0, upgradeInfo)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-              onClick={(e) => {
-                e.preventDefault()
-                const link = buildInquiryLink(state, priceResult, { name: contactName || undefined, phone: contactPhone || undefined }, lang, rate ?? 0, upgradeInfo)
-                window.fbq?.('track', 'Contact')
-                setTimeout(() => window.open(link, '_blank', 'noopener,noreferrer'), 300)
-              }}
-            >
-              <button className="w-full px-4 py-3 bg-white/10 hover:bg-white/15 text-white/70 text-sm font-semibold rounded-xl transition-all border border-white/10">
-                {lang === 'es' ? 'Consultar por WhatsApp' : 'Ask via WhatsApp'}
-              </button>
-            </a>
-          </div>
-        </div>
-      )}
+      {/* Inquiry — usa contacto del paso anterior */}
+      <a
+        href={buildInquiryLink(state, priceResult, { name: contactName || undefined, phone: contactPhone || undefined }, lang, rate ?? 0, upgradeInfo)}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => { window.fbq?.('track', 'Contact') }}
+        className="mt-3 block w-full text-center px-4 py-3 text-sm font-semibold text-white/60 hover:text-white/80 border border-white/15 hover:border-white/25 rounded-xl transition-all"
+      >
+        {lang === 'es' ? '¿Tenés dudas? Consultanos' : 'Questions? Ask us'}
+      </a>
 
       <button
         onClick={reset}

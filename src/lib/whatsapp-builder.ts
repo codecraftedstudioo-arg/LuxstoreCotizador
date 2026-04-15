@@ -115,7 +115,14 @@ export function buildMessage(
   const t = waTranslations[lang]
   const lines: string[] = []
 
-  lines.push(t.greeting)
+  // Saludo distinto si es canje o venta
+  if (upgradeInfo) {
+    lines.push(lang === 'es'
+      ? 'Hola, quiero canjear mi iPhone por uno nuevo.'
+      : 'Hi, I want to trade in my iPhone for a new one.')
+  } else {
+    lines.push(t.greeting)
+  }
   lines.push('')
 
   // Contact info at the top if provided

@@ -10,10 +10,11 @@ import {
   Step3Details,
   Step4Functionality,
   Step5Upgrade,
+  Step6Contact,
   StepResult,
 } from './steps'
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 6
 
 /**
  * iPhone 15 Pro Frame - Ultra realistic
@@ -267,7 +268,8 @@ export function WizardPage() {
       case 3: return <Step2Condition />
       case 4: return <Step3Details />
       case 5: return <Step4Functionality />
-      case 6: return <StepResult />
+      case 6: return <Step6Contact />
+      case 7: return <StepResult />
       default: return <Step5Upgrade />
     }
   }
@@ -344,7 +346,7 @@ export function WizardPage() {
 
             {/* iPhone Frame */}
             <div className="flex-shrink-0">
-              <IPhoneFrame contentRef={contentRef} showRate={currentStep === 6}>
+              <IPhoneFrame contentRef={contentRef} showRate={currentStep === 7}>
                 {/* Progress bar */}
                 {showProgress && (
                   <div className="mb-2">

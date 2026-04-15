@@ -41,6 +41,9 @@ const initialState: WizardState = {
   upgradeStorage: null,
   upgradeColor: null,
   upgradePrice: null,
+  // Contact (mandatory before result)
+  contactName: null,
+  contactPhone: null,
 }
 
 // Actions
@@ -61,12 +64,14 @@ type WizardAction =
   | { type: 'SET_UPGRADE_COLOR'; payload: string }
   | { type: 'SET_UPGRADE_PRICE'; payload: number }
   | { type: 'CLEAR_UPGRADE' }
+  | { type: 'SET_CONTACT_NAME'; payload: string }
+  | { type: 'SET_CONTACT_PHONE'; payload: string }
   | { type: 'NEXT_STEP' }
   | { type: 'PREV_STEP' }
   | { type: 'GO_TO_STEP'; payload: number }
   | { type: 'RESET' }
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 6
 
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -103,6 +108,10 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, upgradePrice: action.payload }
     case 'CLEAR_UPGRADE':
       return { ...state, upgradeModel: null, upgradeStorage: null, upgradeColor: null, upgradePrice: null }
+    case 'SET_CONTACT_NAME':
+      return { ...state, contactName: action.payload }
+    case 'SET_CONTACT_PHONE':
+      return { ...state, contactPhone: action.payload }
     case 'NEXT_STEP':
       return { ...state, currentStep: Math.min(state.currentStep + 1, TOTAL_STEPS + 1) }
     case 'PREV_STEP':
@@ -134,6 +143,8 @@ interface WizardContextValue {
   setUpgradeColor: (color: string) => void
   setUpgradePrice: (price: number) => void
   clearUpgrade: () => void
+  setContactName: (name: string) => void
+  setContactPhone: (phone: string) => void
   canjeMode: boolean
   setCanjeMode: (value: boolean) => void
   nextStep: () => void
@@ -202,7 +213,9 @@ export function WizardProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+      // Excluir info personal de localStorage (no debe persistirse)
+      const { contactName: _n, contactPhone: _p, ...persistable } = state
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(persistable))
     } catch (e) {
       console.error('Error saving wizard state:', e)
     }
@@ -226,10 +239,12 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     setUpgradeColor: (color) => dispatch({ type: 'SET_UPGRADE_COLOR', payload: color }),
     setUpgradePrice: (price) => dispatch({ type: 'SET_UPGRADE_PRICE', payload: price }),
     clearUpgrade: () => dispatch({ type: 'CLEAR_UPGRADE' }),
+    setContactName: (name) => dispatch({ type: 'SET_CONTACT_NAME', payload: name }),
+    setContactPhone: (phone) => dispatch({ type: 'SET_CONTACT_PHONE', payload: phone }),
     canjeMode,
     setCanjeMode,
     nextStep: () => {
-      if (state.currentStep === 5 && celebrationRef.current) {
+      if (state.currentStep === 6 && celebrationRef.current) {
         celebrationRef.current.currentTime = 0
         celebrationRef.current.play().catch(() => {})
       }
