@@ -263,7 +263,16 @@ export function StepResult() {
                             src={imgSrc}
                             alt={alt.model}
                             className="w-full h-full object-contain p-1"
-                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                            onError={(e) => {
+                              const img = e.target as HTMLImageElement
+                              // Fallback: si falla la imagen con color, probar imagen genérica del modelo
+                              const fallback = getIphoneImage(modelNameToId(alt.model))
+                              if (img.src !== new URL(fallback, window.location.origin).href) {
+                                img.src = fallback
+                              } else {
+                                img.style.display = 'none'
+                              }
+                            }}
                           />
                         </div>
                         <div className="flex-1 min-w-0">
