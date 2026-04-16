@@ -38,6 +38,26 @@ describe('isValidArgPhone', () => {
   it('rechaza más de 13 dígitos', () => {
     expect(isValidArgPhone('12345678901234')).toBe(false)
   })
+
+  it('rechaza "0000000000" aunque tenga formato válido', () => {
+    expect(isValidArgPhone('0000000000')).toBe(false)
+    expect(isValidArgPhone('5490000000000')).toBe(false)
+  })
+
+  it('rechaza secuencias "1234567890"', () => {
+    expect(isValidArgPhone('1234567890')).toBe(false)
+    expect(isValidArgPhone('5491234567890')).toBe(false)
+  })
+
+  it('rechaza números con muy poca variedad de dígitos (ej: 1212121212)', () => {
+    expect(isValidArgPhone('1212121212')).toBe(false)
+    expect(isValidArgPhone('5491212121212')).toBe(false)
+  })
+
+  it('acepta números normales con variedad de dígitos', () => {
+    expect(isValidArgPhone('1156789012')).toBe(true)
+    expect(isValidArgPhone('5491156789012')).toBe(true)
+  })
 })
 
 describe('sendLeadToCrm — anti-spam', () => {

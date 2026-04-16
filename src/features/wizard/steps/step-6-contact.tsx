@@ -20,14 +20,18 @@ export function Step6Contact() {
   const [nameOverflow, setNameOverflow] = useState(false)
   const phoneTimeoutRef = useRef<number | null>(null)
   const nameTimeoutRef = useRef<number | null>(null)
+  // Guard síncrono contra doble-click (más confiable que el state submitting)
+  const submittingRef = useRef(false)
 
   const name = state.contactName ?? ''
   const phone = state.contactPhone ?? ''
 
   // Validaciones
   const trimmedName = name.trim()
-  const nameTooShort = trimmedName.length > 0 && trimmedName.length < 3
-  const nameValid = trimmedName.length >= 3
+  // Contar solo letras reales (sin espacios ni apóstrofes) para evitar inputs tipo "   " o "'''"
+  const letterCount = (trimmedName.match(/[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]/g) || []).length
+  const nameTooShort = trimmedName.length > 0 && letterCount < 3
+  const nameValid = letterCount >= 3
   // El input solo tiene los 10 dígitos locales (área + número).
   // Validamos con prefijo "549" para reusar isValidArgPhone.
   const phoneDigitsLen = phone.replace(/\D/g, '').length
@@ -72,7 +76,8 @@ export function Step6Contact() {
   const handleContinue = async () => {
     setNameTouched(true)
     setPhoneTouched(true)
-    if (!canContinue || submitting) return
+    if (!canContinue || submittingRef.current) return
+    submittingRef.current = true
     setSubmitting(true)
 
     const priceResult = calculatePrice(state)

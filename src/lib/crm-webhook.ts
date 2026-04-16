@@ -29,11 +29,21 @@ export interface CrmLead {
   honeypot?: string
 }
 
-// Patrones obvios de spam (números repetidos o secuencias)
+// Patrones obvios de spam (chequeamos tanto el número completo como los últimos 10 dígitos locales)
 const SPAM_PATTERNS: RegExp[] = [
   /^(\d)\1{9,}$/, // todos iguales: 1111111111
   /^0123456789$/, /^1234567890$/, /^9876543210$/, // secuencias
+  /0123456789$/, /1234567890$/, /9876543210$/, // secuencias al final (con prefijo 549)
 ]
+
+/**
+ * Detecta números con muy poca variedad (ej: 1212121212).
+ * Si solo hay 2 o menos dígitos únicos, es sospechoso de spam.
+ */
+function hasLowDigitVariety(localDigits: string): boolean {
+  const unique = new Set(localDigits)
+  return unique.size <= 2
+}
 
 /**
  * Validates Argentine phone format and rejects obvious spam patterns.
@@ -53,6 +63,10 @@ export function isValidArgPhone(phone: string): boolean {
 
   // Rechazar patrones obvios de spam
   if (SPAM_PATTERNS.some(p => p.test(cleaned))) return false
+
+  // Obtener los últimos 10 dígitos locales (área + número) y validar variedad
+  const localDigits = cleaned.slice(-10)
+  if (hasLowDigitVariety(localDigits)) return false
 
   return true
 }
