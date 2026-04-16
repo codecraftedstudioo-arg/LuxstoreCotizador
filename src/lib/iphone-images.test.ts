@@ -1,11 +1,16 @@
 import { describe, it, expect } from 'vitest'
-import { readdirSync } from 'fs'
-import { resolve } from 'path'
 import { getIphoneImage, modelNameToId } from './iphone-images'
 import fallbackData from '@/config/market-pricing.json'
 import type { MarketPricing } from '@/types/market'
 
-const IPHONES_DIR = resolve(__dirname, '../../public/iphones')
+// Usamos import.meta.glob de Vite para listar los archivos en build-time
+// sin depender de APIs de Node (fs/path)
+const imageModules = import.meta.glob('/public/iphones/*.png', { eager: true, query: '?url' })
+const files = new Set(
+  Object.keys(imageModules)
+    .map(p => p.split('/').pop() ?? '')
+    .filter(Boolean)
+)
 
 describe('modelNameToId', () => {
   it('convierte nombre simple', () => {
@@ -44,7 +49,6 @@ describe('getIphoneImage', () => {
 })
 
 describe('Integridad de imágenes — cada color del fallback JSON debe tener imagen', () => {
-  const files = new Set(readdirSync(IPHONES_DIR))
   const data = fallbackData as MarketPricing
 
   for (const model of data.models) {
@@ -76,8 +80,6 @@ describe('Integridad de imágenes — cada color del fallback JSON debe tener im
 })
 
 describe('Casos de colores con inconsistencia API vs archivo', () => {
-  const files = new Set(readdirSync(IPHONES_DIR))
-
   it('iPhone 17 Blue tiene imagen (nombre corto de la API live)', () => {
     // La API live devuelve "Blue" pero el archivo original se llamaba "mist blue"
     expect(files.has('iphone-17-blue.png')).toBe(true)
