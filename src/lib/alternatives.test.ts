@@ -14,6 +14,8 @@ const mockMarket: Model[] = [
     id: 'iphone-17-pro', name: 'iPhone 17 Pro', featured: true,
     variants: [
       { storage: '256', priceUSD: 1310, direction: 'up', color: 'Orange' },
+      { storage: '256', priceUSD: 1330, direction: 'up', color: 'Blue' },
+      { storage: '256', priceUSD: 1330, direction: 'up', color: 'Silver' },
       { storage: '1024', priceUSD: 1750, direction: 'up', color: 'Blue' },
     ],
   },
@@ -204,6 +206,38 @@ describe('getAlternatives — recomendador', () => {
     alts.forEach(a => {
       expect(a.newDiff).toBe(a.price - 200)
     })
+  })
+
+  it('marca priceVariesByColor=true para modelos con distinto precio por color', () => {
+    // iPhone 17 Pro 256GB tiene Orange 1310, Blue/Silver 1330 → varía
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '256',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    const pro = alts.find(a => a.model === 'iPhone 17 Pro')
+    if (pro) {
+      expect(pro.priceVariesByColor).toBe(true)
+    }
+  })
+
+  it('marca priceVariesByColor=false para modelos con mismo precio en todos los colores', () => {
+    // iPhone 17 256GB: todos los colores a 880 → no varía
+    const alts = getAlternatives({
+      marketModels: mockMarket,
+      currentModel: 'iPhone 13',
+      selectedModel: 'iPhone 17 Pro Max',
+      selectedStorage: '256',
+      selectedPrice: 1460,
+      tradeInValue: 200,
+    })
+    const base17 = alts.find(a => a.model === 'iPhone 17')
+    if (base17) {
+      expect(base17.priceVariesByColor).toBe(false)
+    }
   })
 })
 

@@ -8,7 +8,6 @@ import { useExchangeRate } from '@/lib/use-exchange-rate'
 import { useState } from 'react'
 import { useMarketPrices } from '@/lib/use-market-prices'
 import { getAlternatives, shouldShowAlternatives, type Alternative } from '@/lib/alternatives'
-import { getColorName } from '@/config/colors'
 import { getIphoneImage, modelNameToId } from '@/lib/iphone-images'
 
 /**
@@ -249,8 +248,12 @@ export function StepResult() {
               {altsExpanded && (
               <div className="space-y-2 animate-fadeSlideIn">
                 {alternatives.map((alt) => {
-                  const colorName = alt.color ? getColorName(alt.color, lang) : ''
                   const imgSrc = getIphoneImage(modelNameToId(alt.model), alt.color || null)
+                  const diffLabel = alt.newDiff <= 0
+                    ? (lang === 'es' ? 'Te queda a favor' : 'In your favor')
+                    : alt.priceVariesByColor
+                      ? (lang === 'es' ? 'Diferencia desde' : 'Difference from')
+                      : (lang === 'es' ? 'Diferencia a pagar' : 'Difference to pay')
                   return (
                     <button
                       key={`${alt.model}-${alt.storage}-${alt.color}`}
@@ -265,7 +268,6 @@ export function StepResult() {
                             className="w-full h-full object-contain p-1"
                             onError={(e) => {
                               const img = e.target as HTMLImageElement
-                              // Fallback: si falla la imagen con color, probar imagen genérica del modelo
                               const fallback = getIphoneImage(modelNameToId(alt.model))
                               if (img.src !== new URL(fallback, window.location.origin).href) {
                                 img.src = fallback
@@ -280,14 +282,12 @@ export function StepResult() {
                             {alt.model}
                           </p>
                           <p className="text-xs text-white/50 mt-1 leading-tight">
-                            {formatStorage(alt.storage)}{colorName ? ` · ${colorName}` : ''}
+                            {formatStorage(alt.storage)}
                           </p>
                         </div>
                         <div className="text-right flex-shrink-0">
                           <p className="text-[10px] sm:text-xs text-white/50 leading-tight">
-                            {alt.newDiff <= 0
-                              ? (lang === 'es' ? 'Te queda a favor' : 'In your favor')
-                              : (lang === 'es' ? 'Diferencia a pagar' : 'Difference to pay')}
+                            {diffLabel}
                           </p>
                           <p className="text-base sm:text-lg font-bold text-green-400 group-hover:text-green-300 leading-tight mt-0.5">
                             {formatPrice(Math.abs(alt.newDiff))}

@@ -13,6 +13,9 @@ export interface Alternative {
   color: string
   price: number
   newDiff: number
+  // true si el precio varía según color para ese storage (ej: 17 Pro, 17 Pro Max).
+  // En ese caso la UI muestra "Desde USD X" para indicar que puede variar.
+  priceVariesByColor: boolean
 }
 
 // Jerarquía de modelos: mayor número = más nuevo/mejor.
@@ -116,6 +119,15 @@ export function getAlternatives({
     return variants.reduce((min, v) => v.priceUSD < min.priceUSD ? v : min)
   }
 
+  // Dado un modelo y un storage, ¿los precios varían entre colores?
+  // Esto nos permite mostrar "Desde USD X" solo cuando tiene sentido (17 Pro, Pro Max).
+  const priceVariesForStorage = (m: Model, storage: string): boolean => {
+    const variants = m.variants.filter(v => v.storage === storage && v.inStock !== false && v.priceUSD > 0)
+    if (variants.length <= 1) return false
+    const prices = new Set(variants.map(v => v.priceUSD))
+    return prices.size > 1
+  }
+
   for (const m of marketModels) {
     const isSameModel = m.name === selectedModel
     const isUpgrade = isUpgradeFrom(currentModel, m.name)
@@ -140,6 +152,7 @@ export function getAlternatives({
         color: best.color ?? '',
         price: best.priceUSD,
         newDiff: best.priceUSD - tradeInValue,
+        priceVariesByColor: priceVariesForStorage(m, best.storage),
       })
     } else {
       // Modelo distinto: tomar la variante más barata (con preferencia por color neutro si empata)
@@ -151,6 +164,7 @@ export function getAlternatives({
         color: cheapest.color ?? '',
         price: cheapest.priceUSD,
         newDiff: cheapest.priceUSD - tradeInValue,
+        priceVariesByColor: priceVariesForStorage(m, cheapest.storage),
       })
     }
   }
