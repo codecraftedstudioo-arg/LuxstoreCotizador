@@ -237,6 +237,23 @@ html, body {
   animation: pulseSubtle 2.2s ease-in-out infinite;
 }
 
+/* Skeleton shimmer - barra gris con brillo que pasa de izquierda a derecha */
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.10) 50%,
+    rgba(255,255,255,0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+}
+
 .animate-float-delayed {
   animation: floatDelayed 7s ease-in-out infinite;
   animation-delay: 1s;

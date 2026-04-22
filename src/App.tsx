@@ -8,7 +8,7 @@ import { fetchMarketPrices } from '@/lib/market-api'
 
 // Prefetch data while user is on the landing page
 fetchExchangeRate()
-fetchMarketPrices()
+fetchMarketPrices().catch(() => { /* hook se encarga de reintentar */ })
 
 function App() {
   return (

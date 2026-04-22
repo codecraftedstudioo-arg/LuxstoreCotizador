@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardHeader, Button, Select, StoragePill } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
@@ -11,7 +11,15 @@ const MARKET_URL = 'https://electronicpoint-iphonemarket.com.ar/'
 export function Step5Upgrade() {
   const { state, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice, clearUpgrade, nextStep, setCanjeMode } = useWizard()
   const { t, lang } = useI18n()
-  const { models: marketModels } = useMarketPrices()
+  const { models: marketModels, refresh: refreshMarket } = useMarketPrices()
+  const marketReady = marketModels.length > 0
+  // Evitar el flash del loader si el fetch llega rápido (común con pre-fetch ya en marcha)
+  const [showLoader, setShowLoader] = useState(false)
+  useEffect(() => {
+    if (marketReady) { setShowLoader(false); return }
+    const t = setTimeout(() => setShowLoader(true), 400)
+    return () => clearTimeout(t)
+  }, [marketReady])
   const [wantsUpgrade, setWantsUpgrade] = useState<boolean>(() => {
     if (state.upgradeModel !== null) return true
     const auto = sessionStorage.getItem('auto-canje')
@@ -144,13 +152,30 @@ export function Step5Upgrade() {
 
           {/* Market Model Select */}
           <CardHeader title={lang === 'es' ? '¿Qué iPhone querés?' : 'Which iPhone do you want?'} />
-          <Select
-            label={lang === 'es' ? 'Modelo' : 'Model'}
-            placeholder={t('upgradeSelectModel')}
-            options={marketModelOptions}
-            value={state.upgradeModel ?? undefined}
-            onChange={setUpgradeModel}
-          />
+          {!marketReady ? (
+            <div
+              onClick={showLoader ? refreshMarket : undefined}
+              className={`space-y-2 ${showLoader ? 'cursor-pointer' : ''}`}
+              aria-busy="true"
+              aria-label={lang === 'es' ? 'Cargando modelos' : 'Loading models'}
+            >
+              <div className="h-4 w-16 rounded skeleton-shimmer" />
+              <div className="h-[52px] w-full rounded-xl skeleton-shimmer" />
+              {showLoader && (
+                <p className="text-xs text-white/40 text-center pt-1">
+                  {lang === 'es' ? 'Cargando modelos…' : 'Loading models…'}
+                </p>
+              )}
+            </div>
+          ) : (
+            <Select
+              label={lang === 'es' ? 'Modelo' : 'Model'}
+              placeholder={t('upgradeSelectModel')}
+              options={marketModelOptions}
+              value={state.upgradeModel ?? undefined}
+              onChange={setUpgradeModel}
+            />
+          )}
 
           {/* Storage Pills */}
           {state.upgradeModel && upgradeStorageOptions.length > 0 && (
