@@ -85,8 +85,17 @@ export function Step6Contact() {
     // Antes de enviar, prefijo con 549 (Argentina + WhatsApp)
     const fullPhone = `549${phone.trim()}`
 
-    // Track lead capture en Facebook Pixel
+    // Track lead capture en Facebook Pixel con advanced matching.
+    // El SDK hashea los datos con SHA-256 antes de enviarlos a Meta.
+    // https://developers.facebook.com/docs/meta-pixel/advanced/advanced-matching/
     if (typeof window !== 'undefined') {
+      const trimmedName = name.trim()
+      const [firstName, ...rest] = trimmedName.split(/\s+/)
+      const lastName = rest.join(' ')
+      const matchData: Record<string, string> = { ph: fullPhone, country: 'ar' }
+      if (firstName) matchData.fn = firstName.toLowerCase()
+      if (lastName) matchData.ln = lastName.toLowerCase()
+      window.fbq?.('init', '26082625018069319', matchData)
       window.fbq?.('track', 'Lead')
     }
 
