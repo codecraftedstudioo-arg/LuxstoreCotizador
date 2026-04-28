@@ -97,6 +97,7 @@ export function Step6Contact() {
       if (lastName) matchData.ln = lastName.toLowerCase()
       window.fbq?.('init', '1012925768171559', matchData)
       window.fbq?.('track', 'Lead')
+      window.fbq?.('track', 'SubmitApplication')
     }
 
     await sendLeadToCrm({
