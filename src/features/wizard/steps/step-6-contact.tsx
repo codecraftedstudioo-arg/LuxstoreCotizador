@@ -95,7 +95,7 @@ export function Step6Contact() {
       const matchData: Record<string, string> = { ph: fullPhone, country: 'ar' }
       if (firstName) matchData.fn = firstName.toLowerCase()
       if (lastName) matchData.ln = lastName.toLowerCase()
-      window.fbq?.('init', '26082625018069319', matchData)
+      window.fbq?.('init', '1012925768171559', matchData)
       window.fbq?.('track', 'Lead')
     }
 
