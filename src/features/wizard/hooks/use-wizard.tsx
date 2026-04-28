@@ -174,7 +174,7 @@ function loadState(): WizardState {
     // Fresh start when coming from market or external link
     const params = new URLSearchParams(window.location.search)
     if (params.has('new') || params.has('canje')) {
-      localStorage.removeItem(STORAGE_KEY)
+      sessionStorage.removeItem(STORAGE_KEY)
       sessionStorage.removeItem('in-canje')
       // Limpiar flags de sesión anterior (evita que quede un "volver al original" viejo)
       sessionStorage.removeItem('original-upgrade')
@@ -186,7 +186,7 @@ function loadState(): WizardState {
       window.history.replaceState({}, '', window.location.pathname)
       return initialState
     }
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = sessionStorage.getItem(STORAGE_KEY)
     if (saved) {
       const parsed = JSON.parse(saved)
       // Ensure all new fields exist with defaults
@@ -225,9 +225,9 @@ export function WizardProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      // Excluir info personal de localStorage (no debe persistirse)
+      // Excluir info personal del storage (no debe persistirse)
       const { contactName: _n, contactPhone: _p, ...persistable } = state
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(persistable))
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(persistable))
     } catch (e) {
       console.error('Error saving wizard state:', e)
     }
@@ -266,7 +266,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     prevStep: () => dispatch({ type: 'PREV_STEP' }),
     goToStep: (step) => dispatch({ type: 'GO_TO_STEP', payload: step }),
     reset: () => {
-      localStorage.removeItem(STORAGE_KEY)
+      sessionStorage.removeItem(STORAGE_KEY)
       dispatch({ type: 'RESET' })
     },
     isStepComplete: (step: number) => {
