@@ -521,6 +521,116 @@ export function IntroScreen() {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section
+        className="relative z-10 border-t border-white/10 bg-neutral-950"
+      >
+        <div className="max-w-6xl mx-auto px-4 py-20">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+            ¿Por qué elegirnos?
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { icon: <ClockIcon />, title: 'Cotización express', desc: 'En menos de 1 minuto' },
+              { icon: <CurrencyIcon />, title: 'Mejor precio', desc: 'Garantizado del mercado' },
+              { icon: <ShieldCheckIcon />, title: '100% seguro', desc: 'Transacción protegida' },
+              { icon: <HandshakeIcon />, title: 'Pago inmediato', desc: 'Efectivo o transferencia' },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="text-center group"
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
+                <div className="w-14 h-14 rounded-full bg-white/5 border-2 border-[#263A99]/60 flex items-center justify-center mx-auto mb-4 group-hover:border-[#263A99] group-hover:scale-110 transition-all duration-300">
+                  <div className="text-[#4A6BDB]">{item.icon}</div>
+                </div>
+                <h3 className="text-white font-semibold mb-1">{item.title}</h3>
+                <p className="text-white/40 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section - How it works */}
+      <section id="como-funciona" className="relative z-10 border-t border-white/10 bg-black py-16 scroll-mt-20">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+            ¿Cómo funciona?
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { step: '1', title: 'Revisamos el equipo', desc: 'En el local verificamos el estado de tu iPhone' },
+              { step: '2', title: 'Confirmamos el precio', desc: 'Te damos el precio final sin sorpresas' },
+              { step: '3', title: 'Te pagamos en el momento', desc: 'Efectivo o transferencia, como prefieras' },
+            ].map((item, i) => (
+              <div key={i} className="text-center group">
+                <div className="w-14 h-14 rounded-full bg-white/5 border-2 border-[#263A99]/60 flex items-center justify-center mx-auto mb-4 group-hover:border-[#263A99] group-hover:scale-110 transition-all duration-300">
+                  <span className="text-2xl font-bold text-[#4A6BDB]">{item.step}</span>
+                </div>
+                <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
+                <p className="text-white/50 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-white/40 text-sm mt-10">
+            Simple, directo, sin letra chica.
+          </p>
+          {/* Separator */}
+          <div className="flex items-center justify-center gap-3 mt-12 mb-2">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-white/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/50" />
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-white/40" />
+          </div>
+          {/* Video */}
+          <div className="mt-8 flex flex-col items-center">
+            <p className="text-sm uppercase tracking-widest text-[#4A6BDB] font-semibold mb-2">Miralo en acción</p>
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-8">Así de fácil es vender tu iPhone</h3>
+            <div className="relative group">
+              <div className="absolute -inset-3 bg-[#4A6BDB]/15 rounded-3xl blur-2xl group-hover:bg-[#4A6BDB]/25 transition-all duration-500" />
+              <VideoPlayer />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section
+        className="relative z-10 border-t border-white/10 bg-black py-12 overflow-hidden"
+      >
+        <div className="max-w-6xl mx-auto px-4 mb-6">
+          <div className="flex items-center justify-center gap-3">
+            <GoogleIcon />
+            <div className="flex items-center gap-1">
+              {[1,2,3,4,5].map((star) => (
+                <StarIcon key={star} filled />
+              ))}
+            </div>
+            <span className="text-white/60 text-sm">4.9 en Google Reviews</span>
+          </div>
+        </div>
+
+        {/* Scrolling reviews */}
+        <div className="relative">
+          <div className="flex animate-scroll gap-6">
+            {[...reviewsData, ...reviewsData].map((review, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-80 bg-neutral-900 border border-white/10 rounded-2xl p-5"
+              >
+                <div className="flex items-center gap-1 mb-3">
+                  {[1,2,3,4,5].map((star) => (
+                    <StarIcon key={star} filled={star <= review.stars} small />
+                  ))}
+                </div>
+                <p className="text-white/70 text-sm mb-3 line-clamp-3">"{review.text}"</p>
+                <p className="text-white/40 text-xs">— {review.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Market Section — Ver precios y modelos (calco del market trade-in) */}
       <section className="relative py-16 sm:py-20 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#05070B] via-[#070A10] to-[#05070B]" />
@@ -653,116 +763,6 @@ export function IntroScreen() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section
-        className="relative z-10 border-t border-white/10 bg-neutral-950"
-      >
-        <div className="max-w-6xl mx-auto px-4 py-20">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
-            ¿Por qué elegirnos?
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: <ClockIcon />, title: 'Cotización express', desc: 'En menos de 1 minuto' },
-              { icon: <CurrencyIcon />, title: 'Mejor precio', desc: 'Garantizado del mercado' },
-              { icon: <ShieldCheckIcon />, title: '100% seguro', desc: 'Transacción protegida' },
-              { icon: <HandshakeIcon />, title: 'Pago inmediato', desc: 'Efectivo o transferencia' },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="text-center group"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className="w-14 h-14 rounded-full bg-white/5 border-2 border-[#263A99]/60 flex items-center justify-center mx-auto mb-4 group-hover:border-[#263A99] group-hover:scale-110 transition-all duration-300">
-                  <div className="text-[#4A6BDB]">{item.icon}</div>
-                </div>
-                <h3 className="text-white font-semibold mb-1">{item.title}</h3>
-                <p className="text-white/40 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section - How it works */}
-      <section id="como-funciona" className="relative z-10 border-t border-white/10 bg-black py-16 scroll-mt-20">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
-            ¿Cómo funciona?
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { step: '1', title: 'Revisamos el equipo', desc: 'En el local verificamos el estado de tu iPhone' },
-              { step: '2', title: 'Confirmamos el precio', desc: 'Te damos el precio final sin sorpresas' },
-              { step: '3', title: 'Te pagamos en el momento', desc: 'Efectivo o transferencia, como prefieras' },
-            ].map((item, i) => (
-              <div key={i} className="text-center group">
-                <div className="w-14 h-14 rounded-full bg-white/5 border-2 border-[#263A99]/60 flex items-center justify-center mx-auto mb-4 group-hover:border-[#263A99] group-hover:scale-110 transition-all duration-300">
-                  <span className="text-2xl font-bold text-[#4A6BDB]">{item.step}</span>
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-white/50 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-          <p className="text-center text-white/40 text-sm mt-10">
-            Simple, directo, sin letra chica.
-          </p>
-          {/* Separator */}
-          <div className="flex items-center justify-center gap-3 mt-12 mb-2">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-white/40" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/50" />
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-white/40" />
-          </div>
-          {/* Video */}
-          <div className="mt-8 flex flex-col items-center">
-            <p className="text-sm uppercase tracking-widest text-[#4A6BDB] font-semibold mb-2">Miralo en acción</p>
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-8">Así de fácil es vender tu iPhone</h3>
-            <div className="relative group">
-              <div className="absolute -inset-3 bg-[#4A6BDB]/15 rounded-3xl blur-2xl group-hover:bg-[#4A6BDB]/25 transition-all duration-500" />
-              <VideoPlayer />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Reviews Section */}
-      <section
-        className="relative z-10 border-t border-white/10 bg-black py-12 overflow-hidden"
-      >
-        <div className="max-w-6xl mx-auto px-4 mb-6">
-          <div className="flex items-center justify-center gap-3">
-            <GoogleIcon />
-            <div className="flex items-center gap-1">
-              {[1,2,3,4,5].map((star) => (
-                <StarIcon key={star} filled />
-              ))}
-            </div>
-            <span className="text-white/60 text-sm">4.9 en Google Reviews</span>
-          </div>
-        </div>
-
-        {/* Scrolling reviews */}
-        <div className="relative">
-          <div className="flex animate-scroll gap-6">
-            {[...reviewsData, ...reviewsData].map((review, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 w-80 bg-neutral-900 border border-white/10 rounded-2xl p-5"
-              >
-                <div className="flex items-center gap-1 mb-3">
-                  {[1,2,3,4,5].map((star) => (
-                    <StarIcon key={star} filled={star <= review.stars} small />
-                  ))}
-                </div>
-                <p className="text-white/70 text-sm mb-3 line-clamp-3">"{review.text}"</p>
-                <p className="text-white/40 text-xs">— {review.name}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
