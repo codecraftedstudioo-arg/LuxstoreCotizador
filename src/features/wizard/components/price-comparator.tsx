@@ -75,7 +75,7 @@ const COMPETITORS: Competitor[] = [
   {
     name: 'Facebook Marketplace',
     priceFactor: 0.6,
-    payTime: 'Semanas',
+    payTime: '1-4 semanas',
     cons: ['Sin garantía'],
     badge: <FbBadge />,
   },
