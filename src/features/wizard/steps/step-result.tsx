@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useMarketPrices } from '@/lib/use-market-prices'
 import { getAlternatives, shouldShowAlternatives, type Alternative } from '@/lib/alternatives'
 import { getIphoneImage, modelNameToId } from '@/lib/iphone-images'
+import { PriceComparator } from '../components/price-comparator'
 
 /**
  * Final step: Show price or blocked message
@@ -322,6 +323,11 @@ export function StepResult() {
         </>
       )}
 
+
+      {/* Comparador de precios — venta y canje */}
+      <div className="mb-4 -mx-3">
+        <PriceComparator ourPrice={priceResult.finalPrice} />
+      </div>
 
       {/* Deductions breakdown — solo para venta (en canje ya se muestra arriba del recomendador) */}
       {!upgradeInfo && deductionsBlock}
