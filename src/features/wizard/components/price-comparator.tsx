@@ -19,12 +19,19 @@ type Competitor = {
   badge: React.ReactNode
 }
 
-/** MercadoLibre — official logo (from brand assets) */
+/** MercadoLibre — círculo amarillo con handshake (app icon de Lucas) */
 function MLBadge() {
   return (
-    <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden bg-white">
+    <div
+      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden"
+      style={{
+        background: '#FFE600',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+      }}
+      title="MercadoLibre"
+    >
       <img
-        src="/ml-logo.webp"
+        src="/ml-app-icon.svg"
         alt="MercadoLibre"
         className="w-full h-full object-contain"
       />
@@ -32,18 +39,18 @@ function MLBadge() {
   )
 }
 
-/** Facebook Marketplace — official "f" mark on Facebook blue */
+/** Facebook Marketplace — círculo azul con "f" blanca (app icon de Lucas) */
 function FbBadge() {
   return (
     <div
-      className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden"
+      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden"
       style={{
         background: '#1877F2',
         boxShadow: '0 1px 4px rgba(24,119,242,0.4)',
       }}
       title="Facebook Marketplace"
     >
-      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="white">
+      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="white">
         <path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.753v8.202h3.312z" />
       </svg>
     </div>
@@ -54,7 +61,7 @@ function FbBadge() {
 function EPBadge() {
   return (
     <div
-      className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-1 ring-white/15"
+      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden ring-1 ring-white/15"
       style={{
         boxShadow: '0 2px 8px rgba(255,255,255,0.12)',
       }}
