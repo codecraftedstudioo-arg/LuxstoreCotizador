@@ -10,6 +10,7 @@ import { useMarketPrices } from '@/lib/use-market-prices'
 import { getAlternatives, shouldShowAlternatives, type Alternative } from '@/lib/alternatives'
 import { getIphoneImage, modelNameToId } from '@/lib/iphone-images'
 import { PriceComparator } from '../components/price-comparator'
+import { LockedOfferBanner } from '../components/locked-offer-banner'
 
 /**
  * Final step: Show price or blocked message
@@ -324,8 +325,9 @@ export function StepResult() {
       )}
 
 
-      {/* Comparador de precios — venta y canje */}
-      <div className="mb-4 -mx-3">
+      {/* Oferta bloqueada — countdown 24h + Comparador */}
+      <div className="mb-4 -mx-3 space-y-2">
+        <LockedOfferBanner />
         <PriceComparator ourPrice={priceResult.finalPrice} />
       </div>
 
