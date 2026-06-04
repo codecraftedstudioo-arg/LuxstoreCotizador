@@ -342,9 +342,9 @@ export function IntroScreen() {
             className="md:hidden w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-[5px] hover:bg-white/10 transition-all cursor-pointer group"
             aria-label="Menú"
           >
-            <span className={`block h-[2px] rounded-full bg-[#6B8AED] transition-all duration-300 ${menuOpen ? 'w-5 rotate-45 translate-y-[7px]' : 'w-5 group-hover:w-4'}`} />
-            <span className={`block h-[2px] rounded-full bg-[#6B8AED] transition-all duration-300 ${menuOpen ? 'w-0 opacity-0' : 'w-3.5'}`} />
-            <span className={`block h-[2px] rounded-full bg-[#6B8AED] transition-all duration-300 ${menuOpen ? 'w-5 -rotate-45 -translate-y-[7px]' : 'w-5 group-hover:w-4'}`} />
+            <span className={`block h-[2px] rounded-full bg-white transition-all duration-300 ${menuOpen ? 'w-5 rotate-45 translate-y-[7px]' : 'w-5 group-hover:w-4'}`} />
+            <span className={`block h-[2px] rounded-full bg-white transition-all duration-300 ${menuOpen ? 'w-0 opacity-0' : 'w-3.5'}`} />
+            <span className={`block h-[2px] rounded-full bg-white transition-all duration-300 ${menuOpen ? 'w-5 -rotate-45 -translate-y-[7px]' : 'w-5 group-hover:w-4'}`} />
           </button>
 
           {/* CTA button - Desktop */}
