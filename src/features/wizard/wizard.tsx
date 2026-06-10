@@ -4,6 +4,7 @@ import { ProgressBar } from '@/components/ui'
 import { useWizard } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
+import { usePricingReady } from '@/lib/pricing-source'
 import {
   Step1Basics,
   Step2Condition,
@@ -252,6 +253,9 @@ export function WizardPage() {
   const navigate = useNavigate()
   const { state, prevStep, canjeMode } = useWizard()
   useI18n() // Keep provider active
+  // Espera a que los precios estén listos (panel o fallback estático) antes
+  // de cotizar, así nunca se usa data a medio cargar.
+  const pricingReady = usePricingReady()
   const { currentStep } = state
   const contentRef = useRef<HTMLDivElement>(null)
   // Scroll to top when step changes
@@ -277,6 +281,16 @@ export function WizardPage() {
   const showProgress = (currentStep > 1 || (currentStep === 1 && canjeMode)) && currentStep <= TOTAL_STEPS
   const displayStep = canjeMode ? currentStep : currentStep - 1
   const displayTotal = canjeMode ? TOTAL_STEPS : TOTAL_STEPS - 1
+
+  // Gate: no mostramos los pasos hasta tener los precios cargados.
+  if (!pricingReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex flex-col items-center justify-center gap-4">
+        <div className="w-10 h-10 rounded-full border-2 border-white/15 border-t-green-400 animate-spin" />
+        <p className="text-white/50 text-sm">Cargando precios…</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">

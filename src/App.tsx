@@ -5,10 +5,14 @@ import { IntroScreen } from '@/features/wizard/components/intro-screen'
 import { WizardPage } from '@/features/wizard/wizard'
 import { fetchExchangeRate } from '@/lib/exchange-rate'
 import { fetchMarketPrices } from '@/lib/market-api'
+import { initPricingConfig } from '@/lib/pricing-source'
 
 // Prefetch data while user is on the landing page
 fetchExchangeRate()
 fetchMarketPrices().catch(() => { /* hook se encarga de reintentar */ })
+// Precios/penalizaciones del panel (o fallback estático). Arranca temprano
+// para estar listo cuando el usuario llegue al wizard.
+initPricingConfig()
 
 function App() {
   return (
