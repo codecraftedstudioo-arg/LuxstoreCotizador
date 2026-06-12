@@ -295,6 +295,19 @@ export function IntroScreen() {
   const { reset } = useWizard()
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const startCotizar = () => {
+    reset()
+    navigate('/cotizar')
+  }
+
+  const heroStats: { value: ReactNode; label: string }[] = [
+    { value: '+8.000', label: 'Clientes' },
+    { value: <>4.9<span className="text-amber-400 animate-star-twinkle">★</span></>, label: 'Google Reviews' },
+    { value: '24hs', label: 'Pago inmediato' },
+    { value: '+20', label: 'Años de experiencia' },
+  ]
+
+  const mapsUrl = 'https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp'
 
   return (
     <div className="min-h-screen bg-black">
@@ -431,85 +444,109 @@ export function IntroScreen() {
 
       {/* Hero Section */}
       <section className="relative bg-black overflow-hidden">
-        {/* Mobile background image */}
-        <div className="md:hidden absolute inset-0">
-          <img
-            src="/hero-desktop.webp"
-            alt=""
-            className="w-full h-full object-cover object-[center_20%] opacity-85"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60" />
+        {/* Hero — Mobile (banner style: full-bleed photo, content anchored bottom) */}
+        <div className="md:hidden">
+          <div className="relative">
+            <img
+              src="/hero-desktop.webp"
+              alt="Atención en Electronic Point"
+              className="w-full aspect-[3/4] object-cover object-center"
+            />
+            {/* Gradient suave: oscuro solo abajo (texto/CTA), deja ver el iPhone */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_top,#000_0%,rgba(0,0,0,0.78)_14%,rgba(0,0,0,0.25)_38%,transparent_60%)]" />
+            {/* Content anchored bottom */}
+            <div className="absolute inset-x-0 bottom-0 px-6 pb-9">
+              <span className="inline-flex items-center gap-2 text-[11px] text-green-400 font-semibold tracking-[0.2em] uppercase mb-3 animate-fadeSlideIn">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
+                Plan Canje
+              </span>
+              <h1 className="text-[2rem] leading-[1.1] font-bold text-white mb-3 animate-fadeSlideIn" style={{ animationDelay: '0.1s' }}>
+                Cambiá tu iPhone<br />
+                al mejor precio
+              </h1>
+              <p className="text-white/70 text-[15px] leading-relaxed mb-6 max-w-sm animate-fadeSlideIn" style={{ animationDelay: '0.2s' }}>
+                Cotizá en 1 minuto, elegí tu nuevo iPhone y pagás solo la diferencia.
+              </p>
+              <button
+                onClick={startCotizar}
+                className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-[15px] font-semibold text-white bg-green-500 hover:bg-green-600 active:scale-95 transition-all duration-300 shadow-xl shadow-green-500/30 animate-fadeSlideIn"
+                style={{ animationDelay: '0.3s' }}
+              >
+                Cotizar ahora
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          {/* Stats + location on black */}
+          <div className="px-6 pt-9 pb-10">
+            <div className="grid grid-cols-2 gap-6">
+              {heroStats.map((stat, i) => (
+                <div key={i}>
+                  <div className="text-2xl font-bold text-white">{stat.value}</div>
+                  <div className="text-white/40 text-sm">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-7 flex items-center gap-2 text-white/50 hover:text-white/70 text-sm transition-colors"
+            >
+              <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+              <span>Estamos en Palermo, Buenos Aires</span>
+            </a>
+          </div>
         </div>
 
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:min-h-[75vh]">
+        {/* Hero — Desktop (sin cambios respecto al aprobado) */}
+        <div className="hidden md:block max-w-7xl mx-auto">
+          <div className="flex flex-row items-center min-h-[75vh]">
             {/* Left - Text */}
-            <div className="relative z-10 px-6 md:px-12 lg:px-20 pt-12 pb-12 md:py-20 md:w-1/2">
-              <h1 className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
-                Cambia tu
+            <div className="relative z-10 px-12 lg:px-20 py-20 w-1/2">
+              <span className="inline-flex items-center gap-1.5 text-xs text-green-400 font-semibold tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full border border-green-500/30 bg-green-500/10 animate-fadeSlideIn">
+                Plan Canje
+              </span>
+              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fadeSlideIn">
+                Cambiá tu
                 <span className="block">iPhone</span>
                 <span className="block">al mejor</span>
                 <span className="block">precio</span>
               </h1>
 
               <p
-                className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed animate-fadeSlideIn"
+                className="text-xl text-white/80 mb-8 leading-relaxed animate-fadeSlideIn"
                 style={{ animationDelay: '0.1s' }}
               >
                 <Typewriter text="Cotizá en 1 minuto, elegí tu nuevo iPhone y pagás solo la diferencia." delay={800} speed={30} />
               </p>
 
-              <div
-                className="mb-10 animate-fadeSlideIn"
-                style={{ animationDelay: '0.2s' }}
-              >
+              <div className="mb-10 animate-fadeSlideIn" style={{ animationDelay: '0.2s' }}>
                 <button
-                  onClick={() => {
-                    reset()
-                    navigate('/cotizar')
-                  }}
+                  onClick={startCotizar}
                   className="btn-shimmer px-10 py-5 rounded-full text-lg font-bold text-white bg-green-500
                              hover:bg-green-600 hover:scale-105 transition-all duration-300 shadow-2xl shadow-green-500/30 hover:shadow-green-500/50"
                 >
-                  Cotizar mi iPhone
+                  Cotizar ahora
                 </button>
-
               </div>
 
-              <div
-                className="grid grid-cols-2 gap-6 animate-fadeSlideIn"
-                style={{ animationDelay: '0.3s' }}
-              >
-                {[
-                  { value: '+8.000', label: 'Clientes' },
-                  { value: <>4.9<span className="text-amber-400 animate-star-twinkle">★</span></>, label: 'Google Reviews' },
-                  { value: '24hs', label: 'Pago inmediato' },
-                  { value: '+20', label: 'Años de experiencia' },
-                ].map((stat, i) => (
+              <div className="grid grid-cols-2 gap-6 animate-fadeSlideIn" style={{ animationDelay: '0.3s' }}>
+                {heroStats.map((stat, i) => (
                   <div key={i}>
                     <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
                     <div className="text-white/40 text-sm">{stat.label}</div>
                   </div>
                 ))}
               </div>
-
-              {/* Location - Mobile only */}
-              <a
-                href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="md:hidden mt-6 flex items-center gap-2 text-white/50 hover:text-white/70 text-sm animate-fadeSlideIn transition-colors"
-                style={{ animationDelay: '0.4s' }}
-              >
-                <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                <span>Estamos en Palermo, Buenos Aires</span>
-              </a>
             </div>
 
-            {/* Right - Image (desktop only) */}
-            <div className="hidden md:block relative md:w-1/2 md:min-h-[75vh]">
+            {/* Right - Image */}
+            <div className="relative w-1/2 min-h-[75vh]">
               <img
                 src="/hero-desktop.webp"
                 alt="iPhones"

@@ -5,13 +5,14 @@ import App from './App'
 describe('App', () => {
   it('renders the intro screen', () => {
     render(<App />)
-    expect(screen.getByText(/Cambia tu/)).toBeInTheDocument()
-    expect(screen.getByText('Cotizar mi iPhone')).toBeInTheDocument()
+    // El hero se renderiza dos veces (variante mobile + desktop), por eso getAllByText
+    expect(screen.getAllByText(/Cambiá tu/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Cotizar ahora').length).toBeGreaterThan(0)
   })
 
   it('shows wizard step 1 after clicking Cotizar ahora', () => {
     render(<App />)
-    const startButton = screen.getByText('Cotizar mi iPhone')
+    const startButton = screen.getAllByText('Cotizar ahora')[0]
     fireEvent.click(startButton)
     expect(screen.getByText('¿Qué querés hacer?')).toBeInTheDocument()
   })
