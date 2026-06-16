@@ -9,8 +9,10 @@
  * - Rate limiting via localStorage (max 3 sends per 5 minutes)
  */
 
-const WEBHOOK_URL = import.meta.env.VITE_CRM_WEBHOOK_URL ||
-  'https://services.leadconnectorhq.com/hooks/hog2BhQzuZRWe1h85X5K/webhook-trigger/4c7ad3ff-eed4-4ddf-b04a-0167de7053f1'
+// URL del webhook GHL. Se configura por env var (VITE_CRM_WEBHOOK_URL) en Vercel;
+// no se hardcodea en el repo. Si falta en un build de prod, el lead no se envía
+// (ver guard en sendLeadToCrm).
+const WEBHOOK_URL = import.meta.env.VITE_CRM_WEBHOOK_URL
 
 const RATE_LIMIT_KEY = 'crm-webhook-sends'
 const RATE_LIMIT_MAX = 3
@@ -130,6 +132,11 @@ export async function sendLeadToCrm(lead: CrmLead): Promise<boolean> {
   if (import.meta.env.DEV) {
     console.log('[DEV] CRM webhook (NO enviado):', payload)
     return true
+  }
+
+  if (!WEBHOOK_URL) {
+    console.error('[CRM] Falta VITE_CRM_WEBHOOK_URL — lead no enviado')
+    return false
   }
 
   try {

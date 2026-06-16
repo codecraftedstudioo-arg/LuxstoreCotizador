@@ -66,6 +66,7 @@ describe('sendLeadToCrm — anti-spam', () => {
     vi.restoreAllMocks()
     // Simular producción en tests para que se dispare el fetch real
     vi.stubEnv('DEV', false)
+    vi.stubEnv('VITE_CRM_WEBHOOK_URL', 'https://test.example/hook')
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }))
   })
 
