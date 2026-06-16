@@ -12,6 +12,15 @@ import { setEngineConfig, buildConfigFromPanel } from './pricing-engine'
 const PANEL_API_URL = import.meta.env.VITE_PANEL_API_URL || ''
 
 let readyPromise: Promise<void> | null = null
+// Decisión #1: si el panel es la fuente (post-cutover) y falla, NO cotizamos con
+// la pricing.json vieja (precios desviados) → marcamos "no disponible" y la UI
+// corta en vez de mostrar un número viejo.
+let panelFailed = false
+
+/** True si el panel era la fuente configurada pero no se pudo cargar. */
+export function isPanelPricingFailed(): boolean {
+  return panelFailed
+}
 
 /** Inicializa la config (idempotente: solo corre una vez). */
 export function initPricingConfig(): Promise<void> {
@@ -39,8 +48,10 @@ export function initPricingConfig(): Promise<void> {
 
       setEngineConfig(buildConfigFromPanel(data))
     } catch (err) {
-      // Fallback: el motor ya tiene la config estática → no se rompe nada.
-      console.warn('[pricing] usando fallback estático (pricing.json):', err)
+      // El panel era la fuente y falló: NO usamos la pricing.json vieja para
+      // cotizar (precios desviados). Marcamos no-disponible → la UI corta. (Decisión #1.)
+      panelFailed = true
+      console.warn('[pricing] panel caído — cotización no disponible:', err)
     }
   })()
 
