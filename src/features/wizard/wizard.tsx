@@ -4,6 +4,7 @@ import { ProgressBar } from '@/components/ui'
 import { useWizard } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
+import { usePricingReady, isPanelPricingFailed } from '@/lib/pricing-source'
 import {
   Step1Basics,
   Step2Condition,
@@ -252,6 +253,9 @@ export function WizardPage() {
   const navigate = useNavigate()
   const { state, prevStep, canjeMode } = useWizard()
   useI18n() // Keep provider active
+  // Espera a que los precios estén listos (panel o fallback estático) antes
+  // de cotizar, así nunca se usa data a medio cargar.
+  const pricingReady = usePricingReady()
   const { currentStep } = state
   const contentRef = useRef<HTMLDivElement>(null)
   // Scroll to top when step changes
@@ -277,6 +281,37 @@ export function WizardPage() {
   const showProgress = (currentStep > 1 || (currentStep === 1 && canjeMode)) && currentStep <= TOTAL_STEPS
   const displayStep = canjeMode ? currentStep : currentStep - 1
   const displayTotal = canjeMode ? TOTAL_STEPS : TOTAL_STEPS - 1
+
+  // Gate: no mostramos los pasos hasta tener los precios cargados.
+  if (!pricingReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex flex-col items-center justify-center gap-4">
+        <div className="w-10 h-10 rounded-full border-2 border-white/15 border-t-green-400 animate-spin" />
+        <p className="text-white/50 text-sm">Cargando precios…</p>
+      </div>
+    )
+  }
+
+  // Decisión #1: el panel era la fuente y se cayó → NO cotizamos con precios
+  // viejos; mostramos "no disponible" con CTA a WhatsApp en vez de un número.
+  if (isPanelPricingFailed()) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <p className="text-white text-lg font-semibold">Cotización no disponible por el momento</p>
+        <p className="text-white/60 text-sm max-w-sm">
+          Estamos teniendo un problema para cargar los precios actualizados. Escribinos y te cotizamos al toque.
+        </p>
+        <a
+          href="https://wa.me/5491160050246?text=Hola%2C%20quiero%20cotizar%20mi%20iPhone."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-green-400"
+        >
+          Escribinos por WhatsApp
+        </a>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">
