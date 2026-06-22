@@ -9,11 +9,10 @@
  * - Rate limiting via localStorage (max 3 sends per 5 minutes)
  */
 
-// URL del webhook GHL. Se configura por env var (VITE_CRM_WEBHOOK_URL) en Vercel;
-// no se hardcodea en el repo. Si falta en un build de prod, el lead no se envía
-// (ver guard en sendLeadToCrm).
-const WEBHOOK_URL = import.meta.env.VITE_CRM_WEBHOOK_URL
-
+// El webhook GHL se configura por env var (VITE_CRM_WEBHOOK_URL) en Vercel; no se
+// hardcodea en el repo. Se lee dentro de sendLeadToCrm (call-time) para que los
+// tests puedan stubbearla con vi.stubEnv; en el build de prod Vite la inlinea
+// igual, así que el comportamiento es idéntico. Si falta, el lead no se envía.
 const RATE_LIMIT_KEY = 'crm-webhook-sends'
 const RATE_LIMIT_MAX = 3
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000
@@ -134,7 +133,8 @@ export async function sendLeadToCrm(lead: CrmLead): Promise<boolean> {
     return true
   }
 
-  if (!WEBHOOK_URL) {
+  const webhookUrl = import.meta.env.VITE_CRM_WEBHOOK_URL
+  if (!webhookUrl) {
     console.error('[CRM] Falta VITE_CRM_WEBHOOK_URL — lead no enviado')
     return false
   }
@@ -142,7 +142,7 @@ export async function sendLeadToCrm(lead: CrmLead): Promise<boolean> {
   try {
     // application/json es requerido por GHL para parsear los datos correctamente.
     // El webhook de GHL soporta CORS desde frontend.
-    await fetch(WEBHOOK_URL, {
+    await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

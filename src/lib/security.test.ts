@@ -120,6 +120,7 @@ describe('Seguridad — CRM webhook payload', () => {
     localStorage.clear()
     vi.restoreAllMocks()
     vi.stubEnv('DEV', false)
+    vi.stubEnv('VITE_CRM_WEBHOOK_URL', 'https://test.example/hook')
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }))
   })
 
