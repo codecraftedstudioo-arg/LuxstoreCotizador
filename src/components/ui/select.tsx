@@ -45,7 +45,7 @@ export function Select({
   return (
     <div ref={ref} className="relative">
       {/* Label */}
-      {label && <label className="block text-sm text-white font-medium mb-1.5">{label}</label>}
+      {label && <label className="block text-sm text-fg font-medium mb-1.5">{label}</label>}
 
       {/* Trigger button */}
       <button
@@ -57,20 +57,20 @@ export function Select({
           flex items-center justify-between
           border transition-all duration-200
           ${disabled
-            ? 'bg-gray-800/50 border-gray-700 text-gray-500 cursor-not-allowed'
+            ? 'bg-bg-subtle dark:bg-gray-800/50 border-line text-fg-subtle cursor-not-allowed'
             : isOpen
-              ? 'bg-gray-800 border-white text-white'
-              : 'bg-gray-800/80 border-gray-600 text-white hover:border-gray-400'
+              ? 'bg-surface dark:bg-gray-800 border-accent text-fg'
+              : 'bg-surface dark:bg-gray-800/80 border-line dark:border-gray-600 text-fg hover:border-line-strong'
           }
         `}
       >
-        <span className={selectedOption ? 'text-white' : 'text-gray-500'}>
+        <span className={selectedOption ? 'text-fg' : 'text-fg-subtle'}>
           {selectedOption?.label || placeholder}
         </span>
 
         {/* Chevron */}
         <svg
-          className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 text-fg-subtle transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -81,7 +81,7 @@ export function Select({
 
       {/* Dropdown options */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 py-2 bg-gray-800 border border-gray-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 py-2 bg-surface dark:bg-gray-800 border border-line dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
           {options.map((option) => (
             <button
               key={option.value}
@@ -93,8 +93,8 @@ export function Select({
               className={`
                 w-full px-4 py-2.5 text-left transition-colors
                 ${option.value === value
-                  ? 'bg-white/20 text-white font-medium'
-                  : 'text-white hover:bg-gray-700'
+                  ? 'bg-accent/15 text-fg font-medium'
+                  : 'text-fg hover:bg-fg/5 dark:hover:bg-gray-700'
                 }
               `}
             >

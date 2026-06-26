@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '@/components/ui'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { useWizard } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
@@ -35,16 +36,16 @@ function IPhoneFrame({ children, contentRef, showRate }: { children: React.React
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1)'
         }}
       >
-        {/* Inner black bezel */}
+        {/* Inner black bezel (hardware, siempre oscuro) */}
         <div className="bg-[#111] rounded-[46px] sm:rounded-[50px] p-[8px] sm:p-[10px]">
-          {/* Screen */}
+          {/* Screen — UI de la app: blanca en claro / negra en oscuro */}
           <div
-            className="relative bg-[#000] rounded-[38px] sm:rounded-[42px] overflow-hidden flex flex-col h-[640px] sm:h-[700px]"
+            className="relative bg-bg rounded-[38px] sm:rounded-[42px] overflow-hidden flex flex-col h-[640px] sm:h-[700px]"
           >
             {/* Status bar area with Dynamic Island */}
             <div className="flex-shrink-0 relative h-12 sm:h-14">
               {/* Time - left (hora real para capturas) */}
-              <div className="absolute left-5 top-3 text-white text-[11px] sm:text-xs font-semibold">
+              <div className="absolute left-5 top-3 text-fg text-[11px] sm:text-xs font-semibold">
                 {new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
               </div>
 
@@ -63,20 +64,20 @@ function IPhoneFrame({ children, contentRef, showRate }: { children: React.React
 
               {/* Status icons - right */}
               <div className="absolute right-5 top-3 flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-fg" viewBox="0 0 20 20" fill="currentColor">
                   <rect x="1" y="14" width="3" height="5" rx="0.5" />
                   <rect x="6" y="10" width="3" height="9" rx="0.5" />
                   <rect x="11" y="6" width="3" height="13" rx="0.5" />
                   <rect x="16" y="2" width="3" height="17" rx="0.5" />
                 </svg>
-                <div className="w-5 h-2.5 rounded-sm border border-white flex items-center p-[1px]">
-                  <div className="w-3/4 h-full bg-white rounded-[1px]" />
+                <div className="w-5 h-2.5 rounded-sm border border-fg flex items-center p-[1px]">
+                  <div className="w-3/4 h-full bg-fg rounded-[1px]" />
                 </div>
               </div>
             </div>
 
             {/* App header */}
-            <div className="flex-shrink-0 px-3 py-2 flex items-center gap-2 border-b border-white/10">
+            <div className="flex-shrink-0 px-3 py-2 flex items-center gap-2 border-b border-line">
               {/* App icon estilo iOS */}
               <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-lg flex-shrink-0">
                 <img
@@ -86,14 +87,14 @@ function IPhoneFrame({ children, contentRef, showRate }: { children: React.React
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-white text-xs font-semibold">Electronic Point</p>
-                <p className="text-white/40 text-[10px]">Cotizador iPhone</p>
+                <p className="text-fg text-xs font-semibold">Electronic Point</p>
+                <p className="text-fg-subtle text-[10px]">Cotizador iPhone</p>
               </div>
               {showRate && rate !== null && (
-                <div className="flex-shrink-0 rounded-lg bg-white/[0.04] border border-white/[0.08] px-2.5 py-1.5 text-right">
-                  <p className="text-[8px] uppercase tracking-wider text-white/30 leading-none">Dólar blue</p>
-                  <p className="text-[11px] font-semibold text-green-400 tracking-tight mt-0.5">${rate.toLocaleString('es-AR')}</p>
-                  <p className="text-[9px] text-white/40 mt-0.5 leading-none">
+                <div className="flex-shrink-0 rounded-lg bg-fg/[0.04] border border-fg/[0.08] px-2.5 py-1.5 text-right">
+                  <p className="text-[8px] uppercase tracking-wider text-fg-subtle leading-none">Dólar blue</p>
+                  <p className="text-[11px] font-semibold text-green-600 dark:text-green-400 tracking-tight mt-0.5">${rate.toLocaleString('es-AR')}</p>
+                  <p className="text-[9px] text-fg-subtle mt-0.5 leading-none">
                     {new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
                     {' · '}
                     {new Date().toLocaleDateString('es-AR')}
@@ -109,7 +110,7 @@ function IPhoneFrame({ children, contentRef, showRate }: { children: React.React
 
             {/* Home indicator */}
             <div className="flex-shrink-0 flex justify-center py-2">
-              <div className="w-28 sm:w-32 h-[5px] bg-white/30 rounded-full" />
+              <div className="w-28 sm:w-32 h-[5px] bg-fg/30 rounded-full" />
             </div>
           </div>
         </div>
@@ -167,38 +168,38 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
       <div className="hidden lg:flex flex-col gap-4 text-right pr-8">
         <div className="space-y-1">
           <div className="flex items-center justify-end gap-2">
-            <span className="text-white/70 text-sm font-medium">Cotización instantánea</span>
+            <span className="text-fg-muted text-sm font-medium">Cotización instantánea</span>
             <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
           </div>
-          <p className="text-white/40 text-xs">Resultado en 1 minuto</p>
+          <p className="text-fg-subtle text-xs">Resultado en 1 minuto</p>
         </div>
 
         <div className="space-y-1">
           <div className="flex items-center justify-end gap-2">
-            <span className="text-white/70 text-sm font-medium">Mejor precio</span>
+            <span className="text-fg-muted text-sm font-medium">Mejor precio</span>
             <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
-          <p className="text-white/40 text-xs">Garantizado del mercado</p>
+          <p className="text-fg-subtle text-xs">Garantizado del mercado</p>
         </div>
 
         <div className="space-y-1">
           <div className="flex items-center justify-end gap-2">
-            <span className="text-white/70 text-sm font-medium">Pago inmediato</span>
+            <span className="text-fg-muted text-sm font-medium">Pago inmediato</span>
             <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
           </div>
-          <p className="text-white/40 text-xs">Efectivo o transferencia</p>
+          <p className="text-fg-subtle text-xs">Efectivo o transferencia</p>
         </div>
       </div>
     )
@@ -209,37 +210,37 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
-            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <span className="text-white/70 text-sm font-medium">100% Seguro</span>
+          <span className="text-fg-muted text-sm font-medium">100% Seguro</span>
         </div>
-        <p className="text-white/40 text-xs pl-10">Local físico en CABA</p>
+        <p className="text-fg-subtle text-xs pl-10">Local físico en CABA</p>
       </div>
 
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
-            <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </div>
-          <span className="text-white/70 text-sm font-medium">Soporte WhatsApp</span>
+          <span className="text-fg-muted text-sm font-medium">Soporte WhatsApp</span>
         </div>
-        <p className="text-white/40 text-xs pl-10">Respondemos en minutos</p>
+        <p className="text-fg-subtle text-xs pl-10">Respondemos en minutos</p>
       </div>
 
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
-            <svg className="w-4 h-4 text-rose-400" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-rose-600 dark:text-rose-400" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </div>
-          <span className="text-white/70 text-sm font-medium">+{clientCount} clientes</span>
+          <span className="text-fg-muted text-sm font-medium">+{clientCount} clientes</span>
         </div>
-        <p className="text-white/40 text-xs pl-10">Confían en nosotros</p>
+        <p className="text-fg-subtle text-xs pl-10">Confían en nosotros</p>
       </div>
     </div>
   )
@@ -285,9 +286,9 @@ export function WizardPage() {
   // Gate: no mostramos los pasos hasta tener los precios cargados.
   if (!pricingReady) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex flex-col items-center justify-center gap-4">
-        <div className="w-10 h-10 rounded-full border-2 border-white/15 border-t-green-400 animate-spin" />
-        <p className="text-white/50 text-sm">Cargando precios…</p>
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4">
+        <div className="w-10 h-10 rounded-full border-2 border-line-strong border-t-accent animate-spin" />
+        <p className="text-fg-subtle text-sm">Cargando precios…</p>
       </div>
     )
   }
@@ -296,9 +297,9 @@ export function WizardPage() {
   // viejos; mostramos "no disponible" con CTA a WhatsApp en vez de un número.
   if (isPanelPricingFailed()) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex flex-col items-center justify-center gap-4 px-6 text-center">
-        <p className="text-white text-lg font-semibold">Cotización no disponible por el momento</p>
-        <p className="text-white/60 text-sm max-w-sm">
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <p className="text-fg text-lg font-semibold">Cotización no disponible por el momento</p>
+        <p className="text-fg-muted text-sm max-w-sm">
           Estamos teniendo un problema para cargar los precios actualizados. Escribinos y te cotizamos al toque.
         </p>
         <a
@@ -314,7 +315,7 @@ export function WizardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 relative overflow-hidden">
+    <div className="min-h-screen bg-bg dark:bg-gradient-to-br dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 relative overflow-hidden">
       {/* Subtle gradient orbs */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
@@ -332,9 +333,9 @@ export function WizardPage() {
       {/* Main content */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Navbar - same as intro */}
-        <nav className="sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-white/10">
+        <nav className="sticky top-0 z-50 bg-bg/95 backdrop-blur-xl border-b border-line">
           <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            {/* Logo - click to go back to home */}
+            {/* Logo - click to go back to home. invert: negro sobre claro / blanco sobre oscuro */}
             <button
               onClick={() => navigate('/')}
               className="block overflow-visible hover:opacity-80 transition-opacity"
@@ -342,15 +343,15 @@ export function WizardPage() {
               <img
                 src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
                 alt="Electronic Point"
-                className="h-[96px] w-[240px] lg:h-[110px] lg:w-[275px] max-w-none -ml-[55px] md:-ml-[75px]"
+                className="h-[96px] w-[240px] lg:h-[110px] lg:w-[275px] max-w-none -ml-[55px] md:-ml-[75px] invert dark:invert-0"
               />
             </button>
 
-            {/* Back to home + Step indicator */}
+            {/* Back to home + Step indicator + Theme toggle */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/')}
-                className="flex items-center gap-1 text-white/60 hover:text-white text-sm transition-colors"
+                className="flex items-center gap-1 text-fg-muted hover:text-fg text-sm transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -358,17 +359,18 @@ export function WizardPage() {
                 Inicio
               </button>
               {showProgress && (
-                <span className="text-white/40 text-sm font-medium">
+                <span className="text-fg-subtle text-sm font-medium">
                   Paso {displayStep}/{displayTotal}
                 </span>
               )}
+              <ThemeToggle />
             </div>
           </div>
         </nav>
 
         {/* Exchange rate banner */}
-        <div className="bg-white/5 border-b border-white/10">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-center text-sm text-white/60">
+        <div className="bg-bg-subtle border-b border-line">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-center text-sm text-fg-muted">
             <span>Cotizamos en ARS y USD</span>
           </div>
         </div>
@@ -396,11 +398,11 @@ export function WizardPage() {
 
                 {/* Navigation inside iPhone */}
                 {showProgress && (
-                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between px-1">
+                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between px-1">
                     {currentStep > 1 ? (
                       <button
                         onClick={prevStep}
-                        className="flex items-center gap-1 text-sm transition-colors text-white/60 hover:text-white"
+                        className="flex items-center gap-1 text-sm transition-colors text-fg-muted hover:text-fg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -410,7 +412,7 @@ export function WizardPage() {
                     ) : (
                       <div className="w-14" />
                     )}
-                    <span className="text-white/30 text-xs">
+                    <span className="text-fg-subtle text-xs">
                       {displayStep} de {displayTotal}
                     </span>
                     <div className="w-14" /> {/* Spacer for alignment */}
@@ -420,13 +422,13 @@ export function WizardPage() {
 
               {/* Trust badges below phone - mobile only */}
               <div className="lg:hidden mt-4 flex justify-center gap-4">
-                <div className="flex items-center gap-1.5 text-white/50 text-xs">
+                <div className="flex items-center gap-1.5 text-fg-muted text-xs">
                   <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Pago inmediato
                 </div>
-                <div className="flex items-center gap-1.5 text-white/50 text-xs">
+                <div className="flex items-center gap-1.5 text-fg-muted text-xs">
                   <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
@@ -442,8 +444,8 @@ export function WizardPage() {
 
         {/* Footer */}
         <footer className="py-4 text-center space-y-1">
-          <p className="text-white/30 text-xs">© 2026 Electronic Point · <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer" className="hover:text-white/50 transition-colors underline">Costa Rica 5509, CABA</a></p>
-          <p className="text-white/15 text-[10px]">Built by <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="hover:text-white/30 transition-colors">NK</a></p>
+          <p className="text-fg-subtle text-xs">© 2026 Electronic Point · <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer" className="hover:text-fg-muted transition-colors underline">Costa Rica 5509, CABA</a></p>
+          <p className="text-fg-subtle/60 text-[10px]">Built by <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="hover:text-fg-muted transition-colors">NK</a></p>
         </footer>
       </div>
     </div>

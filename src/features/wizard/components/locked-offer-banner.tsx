@@ -57,10 +57,10 @@ export function LockedOfferBanner() {
           OFERTA BLOQUEADA
         </p>
         <p className="leading-none">
-          <span className="text-white font-bold text-base tabular-nums">
+          <span className="text-fg font-bold text-base tabular-nums">
             {formatRemaining(remaining)}
           </span>
-          <span className="text-white/55 text-xs ml-1.5">restantes</span>
+          <span className="text-fg-muted text-xs ml-1.5">restantes</span>
         </p>
       </div>
     </div>

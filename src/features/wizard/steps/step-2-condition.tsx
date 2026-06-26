@@ -79,7 +79,7 @@ export function Step2Condition() {
       <div className="space-y-6">
         {/* Screen Condition */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? 'Pantalla' : 'Screen'}
           </p>
           <div className="grid grid-cols-3 gap-2">
@@ -109,7 +109,7 @@ export function Step2Condition() {
 
         {/* Back Condition */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? 'Tapa trasera (vidrio)' : 'Back glass'}
           </p>
           <div className="grid grid-cols-2 gap-2">
@@ -132,7 +132,7 @@ export function Step2Condition() {
 
         {/* Frame Condition */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? 'Marco / Chasis' : 'Frame / Chassis'}
           </p>
           <div className="grid grid-cols-2 gap-2">
@@ -155,7 +155,7 @@ export function Step2Condition() {
 
         {/* Liquid Damage */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? '¿Daño por líquido?' : 'Liquid damage?'}
           </p>
           <div className="flex gap-3">

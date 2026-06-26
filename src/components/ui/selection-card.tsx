@@ -40,8 +40,8 @@ export function SelectionCard({
         ${sizeClasses[size]}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         ${selected
-          ? 'border-green-500 bg-green-500/10 shadow-lg shadow-green-500/20'
-          : 'border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10'
+          ? 'border-accent bg-accent/10 shadow-lg shadow-accent/20'
+          : 'border-line bg-surface dark:bg-white/5 hover:border-line-strong hover:bg-bg-subtle dark:hover:bg-white/10'
         }
       `}
     >
@@ -49,22 +49,22 @@ export function SelectionCard({
         {icon && (
           <div className={`
             flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center
-            ${selected ? 'bg-green-500/20 text-green-400' : 'bg-white/10 text-white/60'}
+            ${selected ? 'bg-accent/20 text-accent' : 'bg-fg/5 text-fg-subtle'}
           `}>
             {icon}
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className={`font-medium truncate ${selected ? 'text-white' : 'text-white/80'}`}>
+          <p className={`font-medium truncate ${selected ? 'text-fg' : 'text-fg-muted'}`}>
             {label}
           </p>
           {description && (
-            <p className="text-sm text-white/50 truncate">{description}</p>
+            <p className="text-sm text-fg-subtle truncate">{description}</p>
           )}
         </div>
         {selected && (
           <div className="flex-shrink-0">
-            <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
           </div>
@@ -93,11 +93,11 @@ export function StoragePill({ value, selected, onClick, disabled }: StoragePillP
       onClick={onClick}
       disabled={disabled}
       className={`
-        px-4 py-2.5 rounded-full font-medium text-sm transition-all duration-200
+        px-4 py-2.5 rounded-full font-medium text-sm transition-all duration-200 border
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         ${selected
-          ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
-          : 'bg-white/10 text-white/70 hover:bg-white/20'
+          ? 'border-transparent bg-accent text-accent-contrast shadow-lg shadow-accent/30'
+          : 'border-line dark:border-transparent bg-fg/5 text-fg-muted hover:bg-fg/10 hover:border-line-strong dark:hover:border-transparent'
         }
       `}
     >
@@ -119,15 +119,15 @@ interface ConditionCardProps {
  */
 export function ConditionCard({ selected, onClick, icon, label, variant = 'good' }: ConditionCardProps) {
   const variantStyles = {
-    good: selected ? 'border-green-500 bg-green-500/10' : 'border-white/10 bg-white/5 hover:border-green-500/50',
-    warning: selected ? 'border-yellow-500 bg-yellow-500/10' : 'border-white/10 bg-white/5 hover:border-yellow-500/50',
-    bad: selected ? 'border-red-500 bg-red-500/10' : 'border-white/10 bg-white/5 hover:border-red-500/50',
+    good: selected ? 'border-green-500 bg-green-500/10' : 'border-line bg-surface dark:bg-white/5 hover:border-green-500/50',
+    warning: selected ? 'border-yellow-500 bg-yellow-500/10' : 'border-line bg-surface dark:bg-white/5 hover:border-yellow-500/50',
+    bad: selected ? 'border-red-500 bg-red-500/10' : 'border-line bg-surface dark:bg-white/5 hover:border-red-500/50',
   }
 
   const iconColor = {
-    good: selected ? 'text-green-400' : 'text-white/50',
-    warning: selected ? 'text-yellow-400' : 'text-white/50',
-    bad: selected ? 'text-red-400' : 'text-white/50',
+    good: selected ? 'text-green-600 dark:text-green-400' : 'text-fg-subtle',
+    warning: selected ? 'text-yellow-600 dark:text-yellow-400' : 'text-fg-subtle',
+    bad: selected ? 'text-red-600 dark:text-red-400' : 'text-fg-subtle',
   }
 
   return (
@@ -142,7 +142,7 @@ export function ConditionCard({ selected, onClick, icon, label, variant = 'good'
       <div className={`w-8 h-8 ${iconColor[variant]}`}>
         {icon}
       </div>
-      <span className={`text-sm font-medium text-center ${selected ? 'text-white' : 'text-white/70'}`}>
+      <span className={`text-sm font-medium text-center ${selected ? 'text-fg' : 'text-fg-muted'}`}>
         {label}
       </span>
     </button>
@@ -164,16 +164,16 @@ interface ToggleCardProps {
 export function ToggleCard({ selected, onClick, icon, label, isPositive = true, neutral = false }: ToggleCardProps) {
   // Neutral uses gray for both options
   const selectedColor = neutral
-    ? 'border-white/40 bg-white/10'
+    ? 'border-fg/40 bg-fg/10'
     : isPositive
       ? 'border-green-500 bg-green-500/10'
       : 'border-red-500 bg-red-500/10'
 
   const iconSelected = neutral
-    ? 'text-white'
+    ? 'text-fg'
     : isPositive
-      ? 'text-green-400'
-      : 'text-red-400'
+      ? 'text-green-600 dark:text-green-400'
+      : 'text-red-600 dark:text-red-400'
 
   return (
     <button
@@ -181,13 +181,13 @@ export function ToggleCard({ selected, onClick, icon, label, isPositive = true, 
       onClick={onClick}
       className={`
         flex-1 flex flex-col items-center gap-3 p-5 rounded-xl border-2 transition-all duration-200
-        ${selected ? selectedColor : 'border-white/10 bg-white/5 hover:border-white/30'}
+        ${selected ? selectedColor : 'border-line bg-surface dark:bg-white/5 hover:border-line-strong'}
       `}
     >
-      <div className={`w-10 h-10 ${selected ? iconSelected : 'text-white/50'}`}>
+      <div className={`w-10 h-10 ${selected ? iconSelected : 'text-fg-subtle'}`}>
         {icon}
       </div>
-      <span className={`text-sm sm:text-base font-medium text-center leading-tight ${selected ? 'text-white' : 'text-white/70'}`}>
+      <span className={`text-sm sm:text-base font-medium text-center leading-tight ${selected ? 'text-fg' : 'text-fg-muted'}`}>
         {label}
       </span>
     </button>

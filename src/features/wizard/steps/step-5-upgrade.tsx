@@ -70,15 +70,15 @@ export function Step5Upgrade() {
           title={lang === 'es' ? '¿Qué querés hacer?' : 'What do you want to do?'}
         />
         <div className="space-y-3">
-          {/* Plan Canje — primary, destacado */}
+          {/* Plan Canje — primary, destacado. Azul market sólido en claro / verde en oscuro */}
           <button
             type="button"
             onClick={handleWantsUpgrade}
-            className="relative w-full p-4 h-20 rounded-xl border-2 border-green-500 bg-gradient-to-br from-green-500/20 to-green-500/5 hover:border-green-400 hover:from-green-500/30 hover:to-green-500/10 transition-all text-left group shadow-[0_0_25px_-8px_rgba(34,197,94,0.5)]"
+            className="relative w-full p-4 min-h-20 rounded-xl text-left group transition-all bg-accent hover:bg-accent-hover shadow-lg shadow-accent/30 dark:bg-green-500/15 dark:hover:bg-green-500/25 dark:border-2 dark:border-green-500 dark:shadow-[0_0_25px_-8px_rgba(34,197,94,0.5)]"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-500/30 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <div className="w-10 h-10 rounded-lg bg-white/20 dark:bg-green-500/30 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-white dark:text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M21 12a9 9 0 0 0-15-6.7L3 8" />
                   <path d="M3 3v5h5" />
                   <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
@@ -86,33 +86,33 @@ export function Step5Upgrade() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-white group-hover:text-green-400 transition-colors">
+                <p className="font-semibold text-white">
                   {lang === 'es' ? 'Plan Canje' : 'Trade-in Plan'}
                 </p>
-                <p className="text-xs text-white/50 mt-0.5">
+                <p className="text-xs text-white/80 dark:text-white/60 mt-0.5">
                   {lang === 'es' ? 'Usá tu iPhone como parte de pago' : 'Use your iPhone as part payment'}
                 </p>
               </div>
             </div>
           </button>
 
-          {/* Solo vender — estándar */}
+          {/* Solo vender — secundario (outline) */}
           <button
             type="button"
             onClick={handleJustSell}
-            className="w-full p-4 h-20 rounded-xl border-2 border-white/10 bg-white/5 hover:border-green-500/50 hover:bg-green-500/5 transition-all text-left group"
+            className="w-full p-4 min-h-20 rounded-xl border-2 border-line bg-surface dark:bg-white/5 hover:border-accent/50 hover:bg-accent/5 transition-all text-left group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <div className="w-10 h-10 rounded-lg bg-accent/10 dark:bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-accent dark:text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-white group-hover:text-green-300 transition-colors">
+                <p className="font-semibold text-fg group-hover:text-accent dark:group-hover:text-green-300 transition-colors">
                   {lang === 'es' ? 'Solo quiero vender' : 'I just want to sell'}
                 </p>
-                <p className="text-xs text-white/40 mt-0.5">
+                <p className="text-xs text-fg-subtle mt-0.5">
                   {lang === 'es' ? 'Ver mi cotización directamente' : 'See my quote directly'}
                 </p>
               </div>
@@ -124,7 +124,7 @@ export function Step5Upgrade() {
             href={MARKET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 mt-1 py-2.5 w-full rounded-xl border border-white/10 bg-white/5 hover:bg-white/8 text-white/60 hover:text-white/80 text-xs transition-all"
+            className="flex items-center justify-center gap-2 mt-1 py-2.5 w-full rounded-xl border border-line bg-surface dark:bg-white/5 hover:bg-bg-subtle dark:hover:bg-white/8 text-fg-muted hover:text-fg text-xs transition-all"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -142,7 +142,7 @@ export function Step5Upgrade() {
           <button
             type="button"
             onClick={() => { setCanjeMode(false); setWantsUpgrade(false); clearUpgrade() }}
-            className="flex items-center gap-1 text-sm text-white/40 hover:text-white/60 transition-colors"
+            className="flex items-center gap-1 text-sm text-fg-subtle hover:text-fg-muted transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -162,7 +162,7 @@ export function Step5Upgrade() {
               <div className="h-4 w-16 rounded skeleton-shimmer" />
               <div className="h-[52px] w-full rounded-xl skeleton-shimmer" />
               {showLoader && (
-                <p className="text-xs text-white/40 text-center pt-1">
+                <p className="text-xs text-fg-subtle text-center pt-1">
                   {lang === 'es' ? 'Cargando modelos…' : 'Loading models…'}
                 </p>
               )}
@@ -180,7 +180,7 @@ export function Step5Upgrade() {
           {/* Storage Pills */}
           {state.upgradeModel && upgradeStorageOptions.length > 0 && (
             <div className="space-y-2 animate-fadeSlideIn">
-              <p className="text-sm text-white/50 font-medium">{t('upgradeStorage')}</p>
+              <p className="text-sm text-fg-muted font-medium">{t('upgradeStorage')}</p>
               <div className="flex flex-wrap gap-2">
                 {upgradeStorageOptions.map((storage) => (
                   <StoragePill
@@ -197,7 +197,7 @@ export function Step5Upgrade() {
           {/* Color Selection */}
           {state.upgradeStorage && upgradeColorOptions.length > 0 && (
             <div className="space-y-2 animate-fadeSlideIn">
-              <p className="text-sm text-white/50 font-medium">{t('upgradeColor')}</p>
+              <p className="text-sm text-fg-muted font-medium">{t('upgradeColor')}</p>
               <div className="flex flex-wrap gap-2">
                 {upgradeColorOptions.map(({ color, price }) => {
                   const displayName = getColorName(color, lang)
@@ -211,12 +211,12 @@ export function Step5Upgrade() {
                       }}
                       className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all text-sm ${
                         state.upgradeColor === color
-                          ? 'border-white bg-white/10 text-white'
-                          : 'border-white/10 bg-white/5 text-white/60 hover:border-white/30'
+                          ? 'border-accent bg-accent/10 text-fg'
+                          : 'border-line bg-surface dark:bg-white/5 text-fg-muted hover:border-line-strong'
                       }`}
                     >
                       <span
-                        className="w-4 h-4 rounded-full border border-white/20 flex-shrink-0"
+                        className="w-4 h-4 rounded-full border border-line-strong flex-shrink-0"
                         style={{ backgroundColor: colorMap[color] || '#888' }}
                       />
                       {displayName}
@@ -229,11 +229,11 @@ export function Step5Upgrade() {
 
           {/* Price summary */}
           {state.upgradePrice !== null && (
-            <div className="p-3 bg-white/5 rounded-xl border border-white/10 animate-fadeSlideIn text-center">
-              <p className="text-sm text-white/70">
+            <div className="p-3 bg-bg-subtle dark:bg-white/5 rounded-xl border border-line animate-fadeSlideIn text-center">
+              <p className="text-sm text-fg-muted">
                 {state.upgradeModel} {formatStorage(state.upgradeStorage!)} · {getColorName(state.upgradeColor!, lang)}
               </p>
-              <p className="text-lg font-bold text-white mt-1">{formatPrice(state.upgradePrice)}</p>
+              <p className="text-lg font-bold text-fg mt-1">{formatPrice(state.upgradePrice)}</p>
             </div>
           )}
 
@@ -251,7 +251,7 @@ export function Step5Upgrade() {
             href={MARKET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 text-xs text-white/30 hover:text-white/50 transition-colors"
+            className="flex items-center justify-center gap-1.5 text-xs text-fg-subtle hover:text-fg-muted transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

@@ -57,14 +57,14 @@ function FunctionalityItem({ icon, label, issueLabel, hasIssue, onToggle }: Func
         w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer
         ${hasIssue
           ? 'border-red-500/50 bg-red-500/10'
-          : 'border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10'
+          : 'border-line bg-surface dark:bg-white/5 hover:border-line-strong hover:bg-bg-subtle dark:hover:bg-white/10'
         }
       `}
     >
-      <div className={`w-8 h-8 ${hasIssue ? 'text-red-400' : 'text-white/50'}`}>
+      <div className={`w-8 h-8 ${hasIssue ? 'text-red-500 dark:text-red-400' : 'text-fg-subtle'}`}>
         {icon}
       </div>
-      <span className={`flex-1 text-sm text-left ${hasIssue ? 'text-white' : 'text-white/70'}`}>
+      <span className={`flex-1 text-sm text-left ${hasIssue ? 'text-fg' : 'text-fg-muted'}`}>
         {hasIssue ? issueLabel : label}
       </span>
       <div className="flex items-center gap-1">
@@ -133,8 +133,8 @@ export function Step4Functionality() {
       <div className={`
         mt-4 p-3 rounded-xl text-sm
         ${hasAnyIssue
-          ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-200'
-          : 'bg-green-500/10 border border-green-500/30 text-green-200'
+          ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-700 dark:text-yellow-200'
+          : 'bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-200'
         }
       `}>
         {hasAnyIssue

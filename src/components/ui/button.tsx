@@ -29,10 +29,11 @@ export function Button({
   `
 
   const variants = {
-    // Brand: blanco y negro
-    primary: 'bg-white text-black hover:bg-gray-100 focus:ring-white shadow-lg hover:shadow-white/25 disabled:bg-gray-400',
-    secondary: 'bg-white/20 text-white hover:bg-white/30 focus:ring-white/50 backdrop-blur-sm disabled:bg-white/10',
-    outline: 'border-2 border-white/30 text-white hover:border-white hover:bg-white/10 focus:ring-white backdrop-blur-sm',
+    // CTA principal: usa el acento del tema (azul Apple en claro / verde en oscuro).
+    // Disabled = gris legible (no acento pálido con texto blanco ilegible).
+    primary: 'bg-accent text-accent-contrast hover:bg-accent-hover focus:ring-accent shadow-lg disabled:bg-fg/15 disabled:text-fg-muted disabled:shadow-none',
+    secondary: 'bg-fg/10 text-fg hover:bg-fg/15 focus:ring-fg/40 backdrop-blur-sm disabled:opacity-50',
+    outline: 'border-2 border-line-strong text-fg hover:border-fg hover:bg-fg/5 focus:ring-accent backdrop-blur-sm disabled:opacity-50',
     whatsapp: 'bg-green-500 text-white hover:bg-green-400 focus:ring-green-500 shadow-lg hover:shadow-green-500/25 disabled:bg-green-300',
   }
 
@@ -49,7 +50,7 @@ export function Button({
         ${variants[variant]}
         ${sizes[size]}
         ${fullWidth ? 'w-full' : ''}
-        ${disabled ? 'cursor-not-allowed opacity-60 transform-none' : 'cursor-pointer'}
+        ${disabled ? 'cursor-not-allowed transform-none' : 'cursor-pointer'}
         ${className}
       `}
       disabled={disabled}

@@ -39,7 +39,7 @@ export function Step1Basics() {
         {/* Storage Pills */}
         {state.model && storageOptions.length > 0 && (
           <div className="space-y-2 animate-fadeSlideIn">
-            <p className="text-sm text-white/50 font-medium">
+            <p className="text-sm text-fg-muted font-medium">
               {lang === 'es' ? 'Capacidad' : 'Storage'}
             </p>
             <div className="flex flex-wrap gap-2">

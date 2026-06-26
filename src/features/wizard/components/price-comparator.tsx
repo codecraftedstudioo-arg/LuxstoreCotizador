@@ -61,9 +61,9 @@ function FbBadge() {
 function EPBadge() {
   return (
     <div
-      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden ring-1 ring-white/15"
+      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden ring-1 ring-line dark:ring-white/15"
       style={{
-        boxShadow: '0 2px 8px rgba(255,255,255,0.12)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
       }}
     >
       <img src="/ep-logo.jpg" alt="Electronic Point" className="w-full h-full object-cover" />
@@ -93,9 +93,9 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
   // No fallback de dolar: si todavia no cargo el tipo de cambio real, no mostrar
   if (!rate) return null
   return (
-    <div className="rounded-xl overflow-hidden border border-white/10 bg-white/[0.02] text-left">
-      <div className="px-3 py-2 border-b border-white/10">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
+    <div className="rounded-xl overflow-hidden border border-line bg-bg-subtle dark:bg-white/[0.02] text-left">
+      <div className="px-3 py-2 border-b border-line">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
           Compará con otros
         </p>
       </div>
@@ -111,16 +111,16 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
               <EPBadge />
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline justify-between gap-2">
-                  <p className="text-white text-[13px] font-semibold leading-tight truncate">Electronic Point</p>
-                  <p className="text-white font-bold text-[14px] leading-tight tabular-nums whitespace-nowrap">
+                  <p className="text-fg text-[13px] font-semibold leading-tight truncate">Electronic Point</p>
+                  <p className="text-fg font-bold text-[14px] leading-tight tabular-nums whitespace-nowrap">
                     {toARS(ourPrice, rate)}
                   </p>
                 </div>
                 <div className="flex items-baseline justify-between gap-2 mt-0.5">
-                  <p className="text-[10px] text-white/65 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <p className="text-[10px] text-fg-muted leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     Inmediato · 0% comisión
                   </p>
-                  <p className="text-[10px] text-green-400 leading-tight font-bold tabular-nums whitespace-nowrap">
+                  <p className="text-[10px] text-green-600 dark:text-green-400 leading-tight font-bold tabular-nums whitespace-nowrap">
                     +${maxSavingsARS.toLocaleString('es-AR')}
                   </p>
                 </div>
@@ -135,21 +135,21 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
         const ourPriceARS = Math.round((ourPrice * rate) / 1000) * 1000
         const diffARS = ourPriceARS - compPriceARS
         return (
-          <div key={comp.name} className="px-3 py-3 border-b last:border-b-0 border-white/10">
+          <div key={comp.name} className="px-3 py-3 border-b last:border-b-0 border-line">
             <div className="flex items-center gap-2">
               {comp.badge}
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline justify-between gap-2">
-                  <p className="text-white/85 text-[13px] font-medium leading-tight break-words">{comp.name}</p>
-                  <p className="text-white/80 font-semibold text-[14px] leading-tight tabular-nums whitespace-nowrap">
+                  <p className="text-fg-muted text-[13px] font-medium leading-tight break-words">{comp.name}</p>
+                  <p className="text-fg-muted font-semibold text-[14px] leading-tight tabular-nums whitespace-nowrap">
                     {`$${compPriceARS.toLocaleString('es-AR')}`}
                   </p>
                 </div>
                 <div className="flex items-baseline justify-between gap-2 mt-0.5">
-                  <p className="text-[10px] text-white/55 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                  <p className="text-[10px] text-fg-subtle leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     {comp.payTime} · {comp.cons.join(' · ')}
                   </p>
-                  <p className="text-[10px] text-red-400 leading-tight font-semibold tabular-nums whitespace-nowrap">
+                  <p className="text-[10px] text-red-500 dark:text-red-400 leading-tight font-semibold tabular-nums whitespace-nowrap">
                     −${diffARS.toLocaleString('es-AR')}
                   </p>
                 </div>
@@ -160,8 +160,8 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
       })}
 
       {/* Disclaimer */}
-      <div className="px-3 py-2 bg-white/[0.015]">
-        <p className="text-[10px] text-white/35 leading-tight">
+      <div className="px-3 py-2 bg-fg/[0.02]">
+        <p className="text-[10px] text-fg-subtle leading-tight">
           * Precios estimados después de comisiones y demoras
         </p>
       </div>

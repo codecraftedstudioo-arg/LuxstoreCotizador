@@ -16,13 +16,13 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mb-2 text-sm text-white/70">
+      <div className="flex justify-between mb-2 text-sm text-fg-muted">
         <span>{t('stepOf', { current: String(currentStep), total: String(totalSteps) })}</span>
         <span>{t('completed', { percent: String(Math.round(progress)) })}</span>
       </div>
-      <div className="h-2 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
+      <div className="h-2 bg-fg/15 rounded-full overflow-hidden backdrop-blur-sm">
         <div
-          className="h-full bg-green-500 transition-all duration-500 ease-out"
+          className="h-full bg-accent transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>

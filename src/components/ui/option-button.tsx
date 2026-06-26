@@ -27,15 +27,15 @@ export function OptionButton({
       className={`
         w-full p-4 rounded-xl border-2 text-left transition-all duration-200
         ${selected
-          ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
-          : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
+          ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
+          : 'border-line bg-surface hover:border-line-strong hover:bg-bg-subtle'
         }
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
     >
-      <div className="font-medium text-gray-900">{children}</div>
+      <div className="font-medium text-fg">{children}</div>
       {description && (
-        <div className="mt-1 text-sm text-gray-500">{description}</div>
+        <div className="mt-1 text-sm text-fg-subtle">{description}</div>
       )}
     </button>
   )

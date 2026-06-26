@@ -125,7 +125,7 @@ export function Step6Contact() {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <label htmlFor="contact-name" className="block text-sm text-white/50 font-medium">
+          <label htmlFor="contact-name" className="block text-sm text-fg-muted font-medium">
             {lang === 'es' ? 'Nombre' : 'Name'}
           </label>
           <input
@@ -134,8 +134,8 @@ export function Step6Contact() {
             value={name}
             onChange={handleNameChange}
             placeholder={lang === 'es' ? 'Tu nombre' : 'Your name'}
-            className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder:text-white/30 focus:outline-none transition-colors ${
-              nameTouched && nameTooShort ? 'border-red-500/60' : 'border-white/10 focus:border-green-500'
+            className={`w-full px-4 py-3 rounded-xl bg-surface dark:bg-white/5 border text-fg placeholder:text-fg-subtle focus:outline-none transition-colors ${
+              nameTouched && nameTooShort ? 'border-red-500/60' : 'border-line focus:border-accent'
             }`}
             autoComplete="name"
           />
@@ -145,14 +145,14 @@ export function Step6Contact() {
             </p>
           )}
           {nameTouched && nameTooShort && !nameOverflow && (
-            <p className="text-xs text-red-400">
+            <p className="text-xs text-red-500 dark:text-red-400">
               {lang === 'es' ? 'Ingresá tu nombre completo' : 'Enter your full name'}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="contact-phone" className="block text-sm text-white/50 font-medium">
+          <label htmlFor="contact-phone" className="block text-sm text-fg-muted font-medium">
             {lang === 'es' ? 'WhatsApp' : 'WhatsApp'}
           </label>
           <input
@@ -161,8 +161,8 @@ export function Step6Contact() {
             value={phone}
             onChange={handlePhoneChange}
             placeholder={lang === 'es' ? 'Ej: 11 1234 5678' : 'e.g. 11 1234 5678'}
-            className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder:text-white/30 focus:outline-none transition-colors ${
-              (phoneTouched || showInvalidPhone) && !phoneValid ? 'border-red-500/60' : 'border-white/10 focus:border-green-500'
+            className={`w-full px-4 py-3 rounded-xl bg-surface dark:bg-white/5 border text-fg placeholder:text-fg-subtle focus:outline-none transition-colors ${
+              (phoneTouched || showInvalidPhone) && !phoneValid ? 'border-red-500/60' : 'border-line focus:border-accent'
             }`}
             autoComplete="tel"
             inputMode="numeric"
@@ -173,7 +173,7 @@ export function Step6Contact() {
             </p>
           )}
           {showInvalidPhone && !phoneOverflow && (
-            <p className="text-xs text-red-400">
+            <p className="text-xs text-red-500 dark:text-red-400">
               {lang === 'es' ? 'Ingresá un número válido' : 'Enter a valid number'}
             </p>
           )}
@@ -192,7 +192,7 @@ export function Step6Contact() {
           />
         </div>
 
-        <p className="text-xs text-white/40">
+        <p className="text-xs text-fg-subtle">
           {lang === 'es'
             ? 'Te enviamos la cotización y te contactamos por WhatsApp.'
             : 'We send you the quote and contact you via WhatsApp.'}

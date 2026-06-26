@@ -66,10 +66,10 @@ export function Step3Details() {
       <div className="space-y-6">
         {/* Battery Health */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? 'Salud de batería' : 'Battery health'}
           </p>
-          <p className="text-xs text-white/40">
+          <p className="text-xs text-fg-subtle">
             {lang === 'es'
               ? 'Ajustes → Batería → Estado de la batería'
               : 'Settings → Battery → Battery Health'}
@@ -94,7 +94,7 @@ export function Step3Details() {
 
         {/* Original Screen */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? '¿Pantalla original de Apple?' : 'Original Apple screen?'}
           </p>
           <div className="flex gap-3">
@@ -117,7 +117,7 @@ export function Step3Details() {
 
         {/* Original Battery */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? '¿Batería original de Apple?' : 'Original Apple battery?'}
           </p>
           <div className="flex gap-3">
@@ -140,7 +140,7 @@ export function Step3Details() {
 
         {/* Original Box */}
         <div className="space-y-3">
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-fg-muted font-medium">
             {lang === 'es' ? '¿Tenés la caja original?' : 'Do you have the original box?'}
           </p>
           <div className="flex gap-3">
