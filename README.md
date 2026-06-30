@@ -1,67 +1,54 @@
-# Point iPhone Price Calculator
+# Electronic Point · Cotizador
 
-A pricing calculator for iPhone sales with integrated WhatsApp message builder.
+> Calculadora de precios de iPhone: el cliente arma su cotización paso a paso y la recibís como lead.
 
-## Setup
+Wizard donde el cliente elige modelo, estado y características de su iPhone y obtiene un precio al instante (venta o Plan Canje), con sus datos enviados al CRM.
 
-### Prerequisites
+## ✨ Características
+- 🧮 Cotización paso a paso (wizard guiado)
+- 💵 Precios en vivo + tipo de cambio actualizado
+- 🔄 Plan Canje integrado con el market
+- 📱 Captura de leads al CRM
+- 🌗 Modo claro / oscuro
+- ⚡ Diseño responsive (mobile + desktop)
 
-- Node.js 18+ (recommended: 22.x)
-- npm 9+
+## 🛠️ Stack
+- **React 19** + **TypeScript**
+- **Vite 7** (build y dev server)
+- **Tailwind CSS 4**
+- **React Router 7**
+- **Vitest** + **ESLint**
 
-### Installation
+## 🚀 Puesta en marcha
+Requisitos: **Node.js 20+** y **npm**.
 
 ```bash
-# Clone the repository
-git clone https://github.com/Nicokevo/Point-iPhone-Price-Calculator.git
-cd Point-iPhone-Price-Calculator
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+npm install            # 1. instalar dependencias
+cp .env.example .env   # 2. configurar variables (completar valores)
+npm run dev            # 3. levantar dev server → http://localhost:5173
 ```
 
-## Available Scripts
+## 🔑 Variables de entorno
+| Variable | Para qué sirve |
+|---|---|
+| `VITE_EXCHANGE_RATE_URL` | Tipo de cambio del dólar (Google Apps Script) |
+| `VITE_MARKET_PRICES_URL` | Precios del market (Google Apps Script) — fallback |
+| `VITE_PANEL_API_URL` | API del Panel Admin. Si está definida, las cotizaciones salen del panel |
+| `VITE_CRM_WEBHOOK_URL` | Webhook donde se envían los leads |
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run test` | Run tests once |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run lint` | Run ESLint |
-| `npm run preview` | Preview production build |
+> Los valores reales nunca se commitean: viven en tu `.env` local y en Vercel.
 
-## Updating Pricing
+## 📜 Scripts
+| Script | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción |
+| `npm run preview` | Previsualiza el build |
+| `npm run test` | Tests unitarios |
+| `npm run lint` | Linter (ESLint) |
 
-Pricing data should be managed through environment variables or a dedicated configuration file.
+## ☁️ Deploy
+Desplegado en **Vercel**. Las variables de entorno se configuran en el dashboard de Vercel (Settings → Environment Variables).
 
-**To update prices safely:**
-
-1. Create or update the pricing configuration in the designated config file
-2. Run the test suite to ensure calculations are correct: `npm run test`
-3. Build the project to verify no errors: `npm run build`
-4. Commit changes with a descriptive message
-
-## Security
-
-> **WARNING: No secrets in repository**
->
-> - Never commit `.env` files with real credentials
-> - Never commit API keys, tokens, or passwords
-> - Use `.env.example` as a template for required variables
-> - See [SECURITY.md](./SECURITY.md) for vulnerability reporting
-
-## Tech Stack
-
-- React 19
-- TypeScript
-- Vite
-- Tailwind CSS
-- Vitest (testing)
-
-## License
-
-Private repository - All rights reserved.
+---
+© Electronic Point — Repositorio privado.
