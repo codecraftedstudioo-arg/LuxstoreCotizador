@@ -4,6 +4,7 @@ import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
 import { calculatePrice } from '@/lib/pricing-engine'
 import { isValidArgPhone, sendLeadToCrm } from '@/lib/crm-webhook'
+import { buildCrmConditionFields } from '@/lib/crm-lead'
 
 /**
  * Step 6: Contact info (mandatory before showing result).
@@ -110,6 +111,9 @@ export function Step6Contact() {
       almacenamiento_canje: state.upgradeStorage ?? undefined,
       color_canje: state.upgradeColor ?? undefined,
       precio_canje: state.upgradePrice ?? undefined,
+      // Estado del equipo (batería, pantalla, fallas, etc.) para que quede en
+      // la ficha del CRM, no solo en el mensaje de WhatsApp.
+      ...buildCrmConditionFields(state),
       honeypot,
     })
 

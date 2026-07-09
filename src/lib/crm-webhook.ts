@@ -17,7 +17,9 @@ const RATE_LIMIT_KEY = 'crm-webhook-sends'
 const RATE_LIMIT_MAX = 3
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000
 
-export interface CrmLead {
+import type { CrmConditionFields } from './crm-lead'
+
+export interface CrmLead extends CrmConditionFields {
   nombre: string
   telefono: string
   modelo_actual: string
