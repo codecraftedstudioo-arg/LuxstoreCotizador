@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '@/components/ui'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useWizard } from './hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
+import { useTheme } from '@/lib/use-theme'
 import { useExchangeRate } from '@/lib/use-exchange-rate'
 import { usePricingReady, isPanelPricingFailed } from '@/lib/pricing-source'
 import {
@@ -79,16 +79,16 @@ function IPhoneFrame({ children, contentRef, showRate }: { children: React.React
             {/* App header */}
             <div className="flex-shrink-0 px-3 py-2 flex items-center gap-2 border-b border-line">
               {/* App icon estilo iOS */}
-              <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-lg flex-shrink-0">
+              <div className="w-9 h-9 rounded-[10px] overflow-hidden shadow-lg flex-shrink-0 bg-black">
                 <img
-                  src="/ep-logo.jpg"
-                  alt="Electronic Point"
+                  src="/luxstore-icon.png"
+                  alt="Luxstore"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-fg text-xs font-semibold">Electronic Point</p>
-                <p className="text-fg-subtle text-[10px]">Cotizador iPhone</p>
+                <p className="text-fg text-xs font-semibold">Luxstore</p>
+                <p className="text-fg-subtle text-[10px]">Cotizador</p>
               </div>
               {showRate && rate !== null && (
                 <div className="flex-shrink-0 rounded-lg bg-fg/[0.04] border border-fg/[0.08] px-2.5 py-1.5 text-right">
@@ -251,9 +251,9 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
  * Form inside iPhone mockup
  */
 export function WizardPage() {
-  const navigate = useNavigate()
-  const { state, prevStep, canjeMode } = useWizard()
+  const { state, prevStep, canjeMode, reset } = useWizard()
   useI18n() // Keep provider active
+  const { isDark } = useTheme()
   // Espera a que los precios estén listos (panel o fallback estático) antes
   // de cotizar, así nunca se usa data a medio cargar.
   const pricingReady = usePricingReady()
@@ -332,32 +332,23 @@ export function WizardPage() {
 
       {/* Main content */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Navbar - same as intro */}
+        {/* Navbar */}
         <nav className="sticky top-0 z-50 bg-bg/95 backdrop-blur-xl border-b border-line">
           <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            {/* Logo - click to go back to home. invert: negro sobre claro / blanco sobre oscuro */}
+            {/* Logo - reinicia el cotizador */}
             <button
-              onClick={() => navigate('/')}
-              className="block overflow-visible hover:opacity-80 transition-opacity"
+              onClick={reset}
+              className="block hover:opacity-80 transition-opacity"
             >
               <img
-                src="https://dcdn-us.mitiendanube.com/stores/006/472/680/themes/common/logo-800890675-1753195492-b4e6a1266078127b839bb90c0ba04ffb1753195492-480-0.webp"
-                alt="Electronic Point"
-                className="h-[96px] w-[240px] lg:h-[110px] lg:w-[275px] max-w-none -ml-[55px] md:-ml-[75px] invert dark:invert-0"
+                src={isDark ? '/luxstore-logo.png' : '/luxstore-logo-light.png'}
+                alt="Luxstore"
+                className="h-9 md:h-10 w-auto object-contain rounded-md"
               />
             </button>
 
-            {/* Back to home + Step indicator + Theme toggle */}
+            {/* Step indicator + Theme toggle */}
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => navigate('/')}
-                className="flex items-center gap-1 text-fg-muted hover:text-fg text-sm transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Inicio
-              </button>
               {showProgress && (
                 <span className="text-fg-subtle text-sm font-medium">
                   Paso {displayStep}/{displayTotal}
@@ -444,8 +435,8 @@ export function WizardPage() {
 
         {/* Footer */}
         <footer className="py-4 text-center space-y-1">
-          <p className="text-fg-subtle text-xs">© 2026 Electronic Point · <a href="https://www.google.com/maps/place/Electronic+Point/@-34.5831916,-58.4362603,17z/data=!4m15!1m8!3m7!1s0x95bcb58e100e0d55:0x61485b3b064191d0!2sCosta+Rica+5509,+C1414BTC+Cdad.+Aut%C3%B3noma+de+Buenos+Aires!3b1!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11xll028h9!3m5!1s0x95bcb58e056e77b9:0xc09faa9841bbd4c8!8m2!3d-34.5831916!4d-58.43368!16s%2Fg%2F11b6nn56rp" target="_blank" rel="noopener noreferrer" className="hover:text-fg-muted transition-colors underline">Costa Rica 5509, CABA</a></p>
-          <p className="text-fg-subtle/60 text-[10px]">Built by <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="hover:text-fg-muted transition-colors">NK</a></p>
+          <p className="text-fg-subtle text-xs">© 2026 Luxstore</p>
+          <p className="text-fg-subtle/60 text-[10px]">Built by <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="hover:text-fg-muted transition-colors">CodeCraftStudio</a></p>
         </footer>
       </div>
     </div>

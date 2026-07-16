@@ -1,14 +1,13 @@
-# Electronic Point · Cotizador
+# Luxstore Cotizador
 
-> Calculadora de precios de iPhone: el cliente arma su cotización paso a paso y la recibís como lead.
+> Calculadora de precios de iPhone: el cliente arma su cotización paso a paso.
 
-Wizard donde el cliente elige modelo, estado y características de su iPhone y obtiene un precio al instante (venta o Plan Canje), con sus datos enviados al CRM.
+Wizard donde el cliente elige modelo, estado y características de su iPhone y obtiene un precio al instante (venta o Plan Canje).
 
 ## ✨ Características
 - 🧮 Cotización paso a paso (wizard guiado)
 - 💵 Precios en vivo + tipo de cambio actualizado
 - 🔄 Plan Canje integrado con el market
-- 📱 Captura de leads al CRM
 - 🌗 Modo claro / oscuro
 - ⚡ Diseño responsive (mobile + desktop)
 
@@ -32,9 +31,12 @@ npm run dev            # 3. levantar dev server → http://localhost:5173
 | Variable | Para qué sirve |
 |---|---|
 | `VITE_EXCHANGE_RATE_URL` | Tipo de cambio del dólar (Google Apps Script) |
-| `VITE_MARKET_PRICES_URL` | Precios del market (Google Apps Script) — fallback |
-| `VITE_PANEL_API_URL` | API del Panel Admin. Si está definida, las cotizaciones salen del panel |
-| `VITE_CRM_WEBHOOK_URL` | Webhook donde se envían los leads |
+| `VITE_MARKET_PRICES_URL` | Precios del market / Plan Canje (Google Apps Script) |
+| `ADMIN_PASSWORD` | Contraseña de `/admin` |
+| `ADMIN_SESSION_SECRET` | Secreto de sesión del panel |
+| `BLOB_READ_WRITE_TOKEN` | Persistencia de precios en Vercel (opcional) |
+
+Los precios de compra del cotizador se administran en **`/admin`** (API local `/api/v1`).
 
 > Los valores reales nunca se commitean: viven en tu `.env` local y en Vercel.
 
@@ -51,4 +53,4 @@ npm run dev            # 3. levantar dev server → http://localhost:5173
 Desplegado en **Vercel**. Las variables de entorno se configuran en el dashboard de Vercel (Settings → Environment Variables).
 
 ---
-© Electronic Point — Repositorio privado.
+© Luxstore — Repositorio privado.

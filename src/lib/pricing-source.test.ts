@@ -1,15 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 /**
- * Fallback del cotizador (decisión #1):
- *  - Si el panel es la fuente (post-cutover) y falla → NO se cotiza con la
- *    pricing.json vieja (precios desviados); se marca panel-no-disponible y la
- *    UI muestra "Cotización no disponible" en vez de un número.
- *  - Sin panel configurado (rollback del cutover) → la estática es fuente
- *    legítima, NO se marca falla.
+ * El cotizador solo usa el panel embebido (/api/v1/cotizador-prices).
+ * Si falla → panel-no-disponible (no cae a pricing.json).
  */
-
-const PANEL = 'https://panel.example/api/v1'
 
 function mockFetch(calls: string[]) {
   return vi.fn(async (input: RequestInfo | URL) => {
@@ -18,7 +12,7 @@ function mockFetch(calls: string[]) {
   })
 }
 
-describe('initPricingConfig — sin fallback a pricing.json viejo (decisión #1)', () => {
+describe('initPricingConfig — panel embebido', () => {
   beforeEach(() => {
     vi.resetModules()
   })
@@ -27,8 +21,7 @@ describe('initPricingConfig — sin fallback a pricing.json viejo (decisión #1)
     vi.unstubAllGlobals()
   })
 
-  it('panel configurado y caído → marca panel-no-disponible', async () => {
-    vi.stubEnv('VITE_PANEL_API_URL', PANEL)
+  it('si /api/v1/cotizador-prices falla → marca panel-no-disponible', async () => {
     const calls: string[] = []
     vi.stubGlobal('fetch', mockFetch(calls))
 
@@ -36,16 +29,6 @@ describe('initPricingConfig — sin fallback a pricing.json viejo (decisión #1)
     await mod.initPricingConfig()
 
     expect(mod.isPanelPricingFailed()).toBe(true)
-    expect(calls.some((u) => u.includes('cotizador-prices'))).toBe(true)
-  })
-
-  it('sin panel (rollback) → NO marca falla (la estática es fuente legítima)', async () => {
-    vi.stubEnv('VITE_PANEL_API_URL', '')
-    vi.stubGlobal('fetch', mockFetch([]))
-
-    const mod = await import('./pricing-source')
-    await mod.initPricingConfig()
-
-    expect(mod.isPanelPricingFailed()).toBe(false)
+    expect(calls.some((u) => u.includes('/api/v1/cotizador-prices'))).toBe(true)
   })
 })

@@ -1,20 +1,11 @@
 /**
  * Exchange Rate Service
  *
- * Fuente del USD/ARS:
- *  - Si VITE_PANEL_API_URL está definido → Panel Admin (/exchange-rate).
- *  - Si no → fallback al Apps Script viejo (VITE_EXCHANGE_RATE_URL).
- * Ambos devuelven { rate }. El cambio de fuente es por env (cutover reversible).
- * El valor es solo informativo; los precios están fijos en USD.
+ * Fuente del USD/ARS: VITE_EXCHANGE_RATE_URL (Google Apps Script u another endpoint).
+ * Devuelve { rate }. El valor es solo informativo; los precios están fijos en USD.
  */
 
-const PANEL_API_URL = import.meta.env.VITE_PANEL_API_URL || ''
-const APPS_SCRIPT_URL = import.meta.env.VITE_EXCHANGE_RATE_URL || ''
-
-// Fuente activa: el panel tiene prioridad si está configurado.
-const SOURCE_URL = PANEL_API_URL
-  ? `${PANEL_API_URL.replace(/\/$/, '')}/exchange-rate`
-  : APPS_SCRIPT_URL
+const SOURCE_URL = import.meta.env.VITE_EXCHANGE_RATE_URL || ''
 
 // Cache: 5 minutes
 const CACHE_DURATION_MS = 5 * 60 * 1000

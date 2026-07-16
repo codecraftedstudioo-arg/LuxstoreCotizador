@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { buildWhatsAppLink, buildInquiryLink, buildMessage } from './whatsapp-builder'
-import { sendLeadToCrm } from './crm-webhook'
 import type { WizardState, PriceResult } from '@/features/wizard/types'
 
 // Payloads de XSS comunes para intentar romper el sistema
@@ -112,59 +111,6 @@ describe('Seguridad — inquiry link', () => {
       expect(queryPart).not.toContain('<')
       expect(queryPart).not.toContain('>')
     })
-  })
-})
-
-describe('Seguridad — CRM webhook payload', () => {
-  beforeEach(() => {
-    localStorage.clear()
-    vi.restoreAllMocks()
-    vi.stubEnv('DEV', false)
-    vi.stubEnv('VITE_CRM_WEBHOOK_URL', 'https://test.example/hook')
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 200 }))
-  })
-
-  it('el JSON enviado al CRM no permite inyección de JS', async () => {
-    await sendLeadToCrm({
-      nombre: '<script>alert(1)</script>',
-      telefono: '5491160050246',
-      modelo_actual: 'iPhone 15',
-      almacenamiento_actual: '128',
-      cotizacion_estimada: 300,
-    })
-    const call = (globalThis.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
-    const body = call[1].body
-    // El body es un string JSON, no ejecutable. El contenido puede estar pero como texto.
-    expect(typeof body).toBe('string')
-    const parsed = JSON.parse(body)
-    expect(parsed.nombre).toBe('<script>alert(1)</script>')
-    // Pero como JSON, no se ejecuta en ningún lado seguro
-  })
-
-  it('rechaza teléfono con caracteres no numéricos aunque sean "peligrosos"', async () => {
-    const result = await sendLeadToCrm({
-      nombre: 'Juan',
-      telefono: '<script>1160050246</script>',
-      modelo_actual: 'iPhone 15',
-      almacenamiento_actual: '128',
-      cotizacion_estimada: 300,
-    })
-    // Falla la validación de teléfono argentino
-    expect(result).toBe(false)
-    expect(globalThis.fetch).not.toHaveBeenCalled()
-  })
-
-  it('honeypot con chars raros igual se detecta y bloquea', async () => {
-    const result = await sendLeadToCrm({
-      nombre: 'Juan',
-      telefono: '5491160050246',
-      modelo_actual: 'iPhone 15',
-      almacenamiento_actual: '128',
-      cotizacion_estimada: 300,
-      honeypot: '<script>bot</script>',
-    })
-    expect(result).toBe(false)
-    expect(globalThis.fetch).not.toHaveBeenCalled()
   })
 })
 

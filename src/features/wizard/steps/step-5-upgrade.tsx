@@ -7,7 +7,6 @@ import { formatPrice, formatStorage } from '@/lib/pricing-engine'
 import { colorMap, getColorName } from '@/config/colors'
 import type { Model } from '@/types/market'
 
-const MARKET_URL = 'https://electronicpoint-iphonemarket.com.ar/'
 export function Step5Upgrade() {
   const { state, setUpgradeModel, setUpgradeStorage, setUpgradeColor, setUpgradePrice, clearUpgrade, nextStep, setCanjeMode } = useWizard()
   const { t, lang } = useI18n()
@@ -70,7 +69,30 @@ export function Step5Upgrade() {
           title={lang === 'es' ? '¿Qué querés hacer?' : 'What do you want to do?'}
         />
         <div className="space-y-3">
-          {/* Plan Canje — primary, destacado. Azul market sólido en claro / verde en oscuro */}
+          {/* Solo vender */}
+          <button
+            type="button"
+            onClick={handleJustSell}
+            className="w-full p-4 min-h-20 rounded-xl border-2 border-line bg-surface dark:bg-white/5 hover:border-accent/50 hover:bg-accent/5 transition-all text-left group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-accent/10 dark:bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-accent dark:text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-fg group-hover:text-accent dark:group-hover:text-green-300 transition-colors">
+                  {lang === 'es' ? 'Solo quiero vender' : 'I just want to sell'}
+                </p>
+                <p className="text-xs text-fg-subtle mt-0.5">
+                  {lang === 'es' ? 'Ver mi cotización directamente' : 'See my quote directly'}
+                </p>
+              </div>
+            </div>
+          </button>
+
+          {/* Plan Canje */}
           <button
             type="button"
             onClick={handleWantsUpgrade}
@@ -95,42 +117,6 @@ export function Step5Upgrade() {
               </div>
             </div>
           </button>
-
-          {/* Solo vender — secundario (outline) */}
-          <button
-            type="button"
-            onClick={handleJustSell}
-            className="w-full p-4 min-h-20 rounded-xl border-2 border-line bg-surface dark:bg-white/5 hover:border-accent/50 hover:bg-accent/5 transition-all text-left group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-accent/10 dark:bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-accent dark:text-green-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-fg group-hover:text-accent dark:group-hover:text-green-300 transition-colors">
-                  {lang === 'es' ? 'Solo quiero vender' : 'I just want to sell'}
-                </p>
-                <p className="text-xs text-fg-subtle mt-0.5">
-                  {lang === 'es' ? 'Ver mi cotización directamente' : 'See my quote directly'}
-                </p>
-              </div>
-            </div>
-          </button>
-
-          {/* Market link button */}
-          <a
-            href={MARKET_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 mt-1 py-2.5 w-full rounded-xl border border-line bg-surface dark:bg-white/5 hover:bg-bg-subtle dark:hover:bg-white/8 text-fg-muted hover:text-fg text-xs transition-all"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            {t('upgradeViewAll')}
-          </a>
         </div>
         </>
       )}
@@ -245,19 +231,6 @@ export function Step5Upgrade() {
               </Button>
             </div>
           )}
-
-          {/* Market link */}
-          <a
-            href={MARKET_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 text-xs text-fg-subtle hover:text-fg-muted transition-colors"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            {t('upgradeViewAll')}
-          </a>
         </div>
       )}
     </Card>

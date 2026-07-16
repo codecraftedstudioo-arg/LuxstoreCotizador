@@ -42,7 +42,15 @@ export function buildConfigFromStatic(data: PricingConfig): EngineConfig {
 
 // Shape que devuelve /api/v1/cotizador-prices
 type PanelApiData = {
-  models: { id: number; name: string; prices: { storage: string; priceUsd: number }[] }[]
+  models: {
+    id: number
+    name: string
+    brand?: string
+    year?: number
+    sortOrder?: number
+    active?: boolean
+    prices: { storage: string; priceUsd: number }[]
+  }[]
   penalties: {
     key: string
     type: 'percentage' | 'fixed_usd'
@@ -53,9 +61,15 @@ type PanelApiData = {
 
 /** Construye la config del motor desde la respuesta del Panel Admin. */
 export function buildConfigFromPanel(data: PanelApiData): EngineConfig {
+  // Todos los modelos sirven para mapear overrides por id → nombre
   const idToName = new Map(data.models.map((m) => [String(m.id), m.name]))
 
-  const prices = data.models.flatMap((m) =>
+  // Solo activos, ordenados — define el orden del cotizador
+  const activeModels = [...data.models]
+    .filter((m) => m.active !== false)
+    .sort((a, b) => (a.sortOrder ?? a.id) - (b.sortOrder ?? b.id) || a.id - b.id)
+
+  const prices = activeModels.flatMap((m) =>
     m.prices.map((p) => ({ model: m.name, storage: p.storage, price: p.priceUsd }))
   )
 
@@ -214,10 +228,17 @@ export function calculatePrice(state: WizardState): PriceResult | null {
   }
 }
 
-/** Modelos disponibles. */
+/** Modelos disponibles (activos, en orden de precios del panel). */
 export function getAvailableModels(): string[] {
-  const models = new Set(activeConfig.prices.map((p) => p.model))
-  return Array.from(models)
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const p of activeConfig.prices) {
+    if (!seen.has(p.model)) {
+      seen.add(p.model)
+      out.push(p.model)
+    }
+  }
+  return out
 }
 
 /** Capacidades disponibles para un modelo. */

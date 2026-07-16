@@ -340,11 +340,6 @@ export function StepResult() {
         target="_blank"
         rel="noopener noreferrer"
         className="block"
-        onClick={(e) => {
-          e.preventDefault()
-          window.fbq?.('track', 'Contact')
-          setTimeout(() => window.open(whatsappLink, '_blank', 'noopener,noreferrer'), 300)
-        }}
       >
         <button className="w-full px-4 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2">
           <WhatsAppIcon />
@@ -365,7 +360,6 @@ export function StepResult() {
         href={buildInquiryLink(state, priceResult, { name: contactName || undefined, phone: contactPhone || undefined }, lang, rate ?? 0, upgradeInfo)}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={() => { window.fbq?.('track', 'Contact') }}
         className="mt-3 block w-full text-center px-4 py-3 text-sm font-semibold text-fg-muted hover:text-fg border border-line hover:border-line-strong rounded-xl transition-all"
       >
         {lang === 'es' ? '¿Tenés dudas? Consultanos' : 'Questions? Ask us'}

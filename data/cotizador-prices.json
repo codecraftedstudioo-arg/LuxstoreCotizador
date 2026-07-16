@@ -1,0 +1,492 @@
+{
+  "models": [
+    {
+      "id": 1,
+      "name": "iPhone 13",
+      "brand": "Apple",
+      "sortOrder": 1,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 200
+        },
+        {
+          "storage": "256",
+          "priceUsd": 230
+        },
+        {
+          "storage": "512",
+          "priceUsd": 240
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "iPhone 13 mini",
+      "brand": "Apple",
+      "sortOrder": 2,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 150
+        },
+        {
+          "storage": "256",
+          "priceUsd": 170
+        },
+        {
+          "storage": "512",
+          "priceUsd": 180
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "iPhone 13 Pro",
+      "brand": "Apple",
+      "sortOrder": 3,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 200
+        },
+        {
+          "storage": "256",
+          "priceUsd": 220
+        },
+        {
+          "storage": "512",
+          "priceUsd": 270
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 320
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "iPhone 13 Pro Max",
+      "brand": "Apple",
+      "sortOrder": 4,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 250
+        },
+        {
+          "storage": "256",
+          "priceUsd": 300
+        },
+        {
+          "storage": "512",
+          "priceUsd": 350
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 400
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "iPhone 14",
+      "brand": "Apple",
+      "sortOrder": 5,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 220
+        },
+        {
+          "storage": "256",
+          "priceUsd": 250
+        },
+        {
+          "storage": "512",
+          "priceUsd": 290
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "iPhone 14 Plus",
+      "brand": "Apple",
+      "sortOrder": 6,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 250
+        },
+        {
+          "storage": "256",
+          "priceUsd": 300
+        },
+        {
+          "storage": "512",
+          "priceUsd": 350
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "iPhone 14 Pro",
+      "brand": "Apple",
+      "sortOrder": 7,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 270
+        },
+        {
+          "storage": "256",
+          "priceUsd": 300
+        },
+        {
+          "storage": "512",
+          "priceUsd": 350
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 400
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "iPhone 14 Pro Max",
+      "brand": "Apple",
+      "sortOrder": 8,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 300
+        },
+        {
+          "storage": "256",
+          "priceUsd": 350
+        },
+        {
+          "storage": "512",
+          "priceUsd": 400
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 450
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "iPhone 15",
+      "brand": "Apple",
+      "sortOrder": 9,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 350
+        },
+        {
+          "storage": "256",
+          "priceUsd": 400
+        },
+        {
+          "storage": "512",
+          "priceUsd": 450
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "iPhone 15 Plus",
+      "brand": "Apple",
+      "sortOrder": 10,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 370
+        },
+        {
+          "storage": "256",
+          "priceUsd": 420
+        },
+        {
+          "storage": "512",
+          "priceUsd": 450
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "iPhone 15 Pro",
+      "brand": "Apple",
+      "sortOrder": 11,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 420
+        },
+        {
+          "storage": "256",
+          "priceUsd": 450
+        },
+        {
+          "storage": "512",
+          "priceUsd": 500
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 550
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "iPhone 15 Pro Max",
+      "brand": "Apple",
+      "sortOrder": 12,
+      "active": true,
+      "prices": [
+        {
+          "storage": "256",
+          "priceUsd": 500
+        },
+        {
+          "storage": "512",
+          "priceUsd": 550
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 600
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "iPhone 16e",
+      "brand": "Apple",
+      "sortOrder": 13,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 300
+        },
+        {
+          "storage": "256",
+          "priceUsd": 350
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "iPhone 16",
+      "brand": "Apple",
+      "sortOrder": 14,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 400
+        },
+        {
+          "storage": "256",
+          "priceUsd": 450
+        },
+        {
+          "storage": "512",
+          "priceUsd": 500
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "iPhone 16 Plus",
+      "brand": "Apple",
+      "sortOrder": 15,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 450
+        },
+        {
+          "storage": "256",
+          "priceUsd": 500
+        },
+        {
+          "storage": "512",
+          "priceUsd": 550
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "iPhone 16 Pro",
+      "brand": "Apple",
+      "sortOrder": 16,
+      "active": true,
+      "prices": [
+        {
+          "storage": "128",
+          "priceUsd": 600
+        },
+        {
+          "storage": "256",
+          "priceUsd": 650
+        },
+        {
+          "storage": "512",
+          "priceUsd": 700
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 830
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "iPhone 16 Pro Max",
+      "brand": "Apple",
+      "sortOrder": 17,
+      "active": true,
+      "prices": [
+        {
+          "storage": "256",
+          "priceUsd": 700
+        },
+        {
+          "storage": "512",
+          "priceUsd": 750
+        },
+        {
+          "storage": "1024",
+          "priceUsd": 800
+        }
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "key": "screenCracked",
+      "label": "Pantalla rajada",
+      "category": "screen",
+      "type": "percentage",
+      "value": 0.5,
+      "overrides": {}
+    },
+    {
+      "key": "screenScratches",
+      "label": "Pantalla con rayones",
+      "category": "screen",
+      "type": "percentage",
+      "value": 0.05,
+      "overrides": {}
+    },
+    {
+      "key": "backCracked",
+      "label": "Tapa trasera rajada",
+      "category": "back",
+      "type": "percentage",
+      "value": 0.2,
+      "overrides": {}
+    },
+    {
+      "key": "frameDamaged",
+      "label": "Marco / chasis dañado",
+      "category": "frame",
+      "type": "percentage",
+      "value": 0.08,
+      "overrides": {}
+    },
+    {
+      "key": "liquidDamage",
+      "label": "Daño por líquido",
+      "category": "functionality",
+      "type": "percentage",
+      "value": 0.2,
+      "overrides": {}
+    },
+    {
+      "key": "batteryBelow85",
+      "label": "Batería bajo 85%",
+      "category": "battery",
+      "type": "percentage",
+      "value": 0.15,
+      "overrides": {}
+    },
+    {
+      "key": "batteryNotOriginal",
+      "label": "Batería no original",
+      "category": "battery",
+      "type": "percentage",
+      "value": 0.15,
+      "overrides": {}
+    },
+    {
+      "key": "screenNotOriginal",
+      "label": "Pantalla no original",
+      "category": "screen",
+      "type": "percentage",
+      "value": 0.25,
+      "overrides": {}
+    },
+    {
+      "key": "faceIdNotWorking",
+      "label": "Face ID no funciona",
+      "category": "functionality",
+      "type": "percentage",
+      "value": 0.3,
+      "overrides": {}
+    },
+    {
+      "key": "cameraNotWorking",
+      "label": "Cámara no funciona",
+      "category": "functionality",
+      "type": "percentage",
+      "value": 0.3,
+      "overrides": {}
+    },
+    {
+      "key": "audioNotWorking",
+      "label": "Audio no funciona",
+      "category": "functionality",
+      "type": "percentage",
+      "value": 0.15,
+      "overrides": {}
+    },
+    {
+      "key": "chargingNotWorking",
+      "label": "Carga no funciona",
+      "category": "functionality",
+      "type": "percentage",
+      "value": 0.3,
+      "overrides": {}
+    },
+    {
+      "key": "noOriginalBox",
+      "label": "Sin caja original",
+      "category": "accessories",
+      "type": "fixed_usd",
+      "value": 20,
+      "overrides": {}
+    }
+  ],
+  "config": {
+    "currency": "USD",
+    "batteryThreshold": 85,
+    "lastUpdated": "2026-07-14"
+  }
+}

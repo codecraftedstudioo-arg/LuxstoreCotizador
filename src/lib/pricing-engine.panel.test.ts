@@ -4,6 +4,7 @@ import {
   setEngineConfig,
   buildConfigFromStatic,
   buildConfigFromPanel,
+  getAvailableModels,
 } from './pricing-engine'
 import pricingData from '@/config/pricing.json'
 import type { WizardState, PricingConfig } from '@/features/wizard/types'
@@ -92,5 +93,35 @@ describe('Panel config — features nuevas', () => {
     // iPhone 15 Pro 128 perfecto = 420 (valor del pricing.json estático)
     const r = calculatePrice(st({ model: 'iPhone 15 Pro', storage: '128' }))
     expect(r!.finalPrice).toBe(420)
+  })
+
+  it('excluye modelos inactivos del cotizador y conserva overrides por id', () => {
+    const cfg = buildConfigFromPanel({
+      ...PANEL_DATA,
+      models: [
+        { id: 1, name: 'iPhone TEST', active: true, sortOrder: 2, prices: [{ storage: '128', priceUsd: 1000 }] },
+        { id: 2, name: 'iPhone OTHER', active: false, sortOrder: 1, prices: [{ storage: '128', priceUsd: 1000 }] },
+        { id: 3, name: 'iPhone NEW', active: true, sortOrder: 1, prices: [{ storage: '128', priceUsd: 800 }] },
+      ],
+    })
+    expect(cfg.prices.map((p) => p.model)).toEqual(['iPhone NEW', 'iPhone TEST'])
+    expect(cfg.penalties.screenCracked.overrides['iPhone TEST']).toEqual({
+      type: 'percentage',
+      value: 0.4,
+    })
+  })
+
+  it('getAvailableModels respeta el orden del panel (sortOrder)', () => {
+    setEngineConfig(
+      buildConfigFromPanel({
+        models: [
+          { id: 10, name: 'Z Last', active: true, sortOrder: 30, prices: [{ storage: '128', priceUsd: 1 }] },
+          { id: 11, name: 'A First', active: true, sortOrder: 10, prices: [{ storage: '128', priceUsd: 1 }] },
+          { id: 12, name: 'Hidden', active: false, sortOrder: 5, prices: [{ storage: '128', priceUsd: 1 }] },
+        ],
+        penalties: [],
+      }),
+    )
+    expect(getAvailableModels()).toEqual(['A First', 'Z Last'])
   })
 })

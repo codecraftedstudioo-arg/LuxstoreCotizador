@@ -4,20 +4,9 @@ export type Language = 'es' | 'en'
 
 const translations = {
   es: {
-    // Intro screen
-    introTitle: 'Vendé tu iPhone',
-    introSubtitle: 'Cotizá en segundos y cobrá al instante. El mejor precio del mercado.',
-    introCta: 'Cotizar ahora',
-    badgeInstant: 'Pago inmediato',
-    badgeSecure: 'Transacción segura',
-    badgeLocation: 'Costa Rica 5509, CABA',
-    introFooter: '@electronicpoint.ar',
-
-    // Header & general
+    // General
     title: '¿Cuánto vale tu iPhone?',
     subtitle: 'Cotizá en menos de 1 minuto · Pago inmediato',
-    visitSite: 'Visitá nuestro sitio',
-    howToGet: 'Cómo llegar',
     quoteAnother: 'Cotizar otro iPhone',
     continue: 'Continuar',
     back: 'Volver',
@@ -111,7 +100,6 @@ const translations = {
     upgradeStorage: 'Capacidad',
     upgradeColor: 'Color',
     upgradePrice: 'Precio',
-    upgradeViewAll: 'Ver modelos y precios',
     upgradeOptional: '(opcional)',
     upgradeNewPhone: 'iPhone que querés',
     upgradeYourQuote: 'Tu cotización',
@@ -120,20 +108,9 @@ const translations = {
     upgradeLoading: 'Cargando precios...',
   },
   en: {
-    // Intro screen
-    introTitle: 'Sell your iPhone',
-    introSubtitle: 'Get a quote in seconds and get paid instantly. Best market price.',
-    introCta: 'Get quote',
-    badgeInstant: 'Instant payment',
-    badgeSecure: 'Secure transaction',
-    badgeLocation: 'Costa Rica 5509, CABA',
-    introFooter: '@electronicpoint.ar',
-
-    // Header & general
+    // General
     title: 'How much is your iPhone worth?',
     subtitle: 'Get a quote in less than 1 minute · Instant payment',
-    visitSite: 'Visit our site',
-    howToGet: 'Get directions',
     quoteAnother: 'Quote another iPhone',
     continue: 'Continue',
     back: 'Back',
@@ -227,7 +204,6 @@ const translations = {
     upgradeStorage: 'Storage',
     upgradeColor: 'Color',
     upgradePrice: 'Price',
-    upgradeViewAll: 'View models and prices',
     upgradeOptional: '(optional)',
     upgradeNewPhone: 'iPhone you want',
     upgradeYourQuote: 'Your quote',

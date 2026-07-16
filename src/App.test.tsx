@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 // El wizard se bloquea en "Cargando precios…" hasta que la config (panel o fallback)
 // resuelve, y App dispara fetchExchangeRate/fetchMarketPrices/initPricingConfig al
@@ -21,16 +21,8 @@ vi.mock('@/lib/market-api', () => ({
 const { default: App } = await import('./App')
 
 describe('App', () => {
-  it('renders the intro screen', () => {
+  it('inicia directamente en el cotizador', () => {
     render(<App />)
-    // El hero se renderiza dos veces (variante mobile + desktop), por eso getAllByText
-    expect(screen.getAllByText(/Cambiá tu/).length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Cotizar ahora').length).toBeGreaterThan(0)
-  })
-
-  it('muestra la pantalla de elección del wizard al clickear "Cotizar ahora"', async () => {
-    render(<App />)
-    fireEvent.click(screen.getAllByText('Cotizar ahora')[0])
-    expect(await screen.findByText('¿Qué querés hacer?')).toBeInTheDocument()
+    expect(screen.getByText('¿Qué querés hacer?')).toBeInTheDocument()
   })
 })

@@ -2,18 +2,15 @@ import { useState, useRef } from 'react'
 import { Card, CardHeader, Button } from '@/components/ui'
 import { useWizard } from '../hooks/use-wizard'
 import { useI18n } from '@/lib/i18n'
-import { calculatePrice } from '@/lib/pricing-engine'
-import { isValidArgPhone, sendLeadToCrm } from '@/lib/crm-webhook'
-import { buildCrmConditionFields } from '@/lib/crm-lead'
+import { isValidArgPhone } from '@/lib/phone'
 
 /**
  * Step 6: Contact info (mandatory before showing result).
- * Sends lead to CRM and then advances to the result.
+ * Valida los datos y avanza al resultado.
  */
 export function Step6Contact() {
   const { state, setContactName, setContactPhone, nextStep } = useWizard()
   const { lang } = useI18n()
-  const [honeypot, setHoneypot] = useState('')
   const [nameTouched, setNameTouched] = useState(false)
   const [phoneTouched, setPhoneTouched] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -62,7 +59,6 @@ export function Step6Contact() {
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Guarda solo los 10 dígitos locales (área + número, sin prefijo país).
-    // El prefijo +54 9 se agrega al enviar al CRM.
     const allDigits = e.target.value.replace(/\D/g, '')
     if (allDigits.length > 10) {
       setPhoneOverflow(true)
@@ -74,48 +70,12 @@ export function Step6Contact() {
     setContactPhone(allDigits.slice(0, 10))
   }
 
-  const handleContinue = async () => {
+  const handleContinue = () => {
     setNameTouched(true)
     setPhoneTouched(true)
     if (!canContinue || submittingRef.current) return
     submittingRef.current = true
     setSubmitting(true)
-
-    const priceResult = calculatePrice(state)
-
-    // Antes de enviar, prefijo con 549 (Argentina + WhatsApp)
-    const fullPhone = `549${phone.trim()}`
-
-    // Track lead capture en Facebook Pixel con advanced matching.
-    // El SDK hashea los datos con SHA-256 antes de enviarlos a Meta.
-    // https://developers.facebook.com/docs/meta-pixel/advanced/advanced-matching/
-    if (typeof window !== 'undefined') {
-      const trimmedName = name.trim()
-      const [firstName, ...rest] = trimmedName.split(/\s+/)
-      const lastName = rest.join(' ')
-      const matchData: Record<string, string> = { ph: fullPhone, country: 'ar' }
-      if (firstName) matchData.fn = firstName.toLowerCase()
-      if (lastName) matchData.ln = lastName.toLowerCase()
-      window.fbq?.('init', '1012925768171559', matchData)
-      window.fbq?.('track', 'Lead')
-      window.fbq?.('track', 'SubmitApplication')
-    }
-
-    await sendLeadToCrm({
-      nombre: name.trim(),
-      telefono: fullPhone,
-      modelo_actual: state.model ?? '',
-      almacenamiento_actual: state.storage ?? '',
-      cotizacion_estimada: priceResult?.finalPrice ?? 0,
-      modelo_canje: state.upgradeModel ?? undefined,
-      almacenamiento_canje: state.upgradeStorage ?? undefined,
-      color_canje: state.upgradeColor ?? undefined,
-      precio_canje: state.upgradePrice ?? undefined,
-      // Estado del equipo (batería, pantalla, fallas, etc.) para que quede en
-      // la ficha del CRM, no solo en el mensaje de WhatsApp.
-      ...buildCrmConditionFields(state),
-      honeypot,
-    })
 
     setSubmitting(false)
     nextStep()
@@ -181,19 +141,6 @@ export function Step6Contact() {
               {lang === 'es' ? 'Ingresá un número válido' : 'Enter a valid number'}
             </p>
           )}
-        </div>
-
-        {/* Honeypot - invisible field for bots */}
-        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}>
-          <label htmlFor="website">Website</label>
-          <input
-            id="website"
-            type="text"
-            tabIndex={-1}
-            value={honeypot}
-            onChange={(e) => setHoneypot(e.target.value)}
-            autoComplete="off"
-          />
         </div>
 
         <p className="text-xs text-fg-subtle">

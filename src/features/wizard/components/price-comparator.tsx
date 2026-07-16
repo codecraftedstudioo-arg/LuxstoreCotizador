@@ -1,7 +1,7 @@
 import { useExchangeRate } from '@/lib/use-exchange-rate'
 
 interface PriceComparatorProps {
-  /** Our final price (USD) for Electronic Point */
+  /** Our final price (USD) for Luxstore */
   ourPrice: number
 }
 
@@ -57,16 +57,16 @@ function FbBadge() {
   )
 }
 
-/** Electronic Point — real logo */
+/** Luxstore — real logo */
 function EPBadge() {
   return (
     <div
-      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden ring-1 ring-line dark:ring-white/15"
+      className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0 overflow-hidden bg-black ring-1 ring-line dark:ring-white/15"
       style={{
         boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
       }}
     >
-      <img src="/ep-logo.jpg" alt="Electronic Point" className="w-full h-full object-cover" />
+      <img src="/luxstore-icon.png" alt="Luxstore" className="w-full h-full object-cover" />
     </div>
   )
 }
@@ -100,7 +100,7 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
         </p>
       </div>
 
-      {/* Electronic Point — preseleccionada */}
+      {/* Luxstore — preseleccionada */}
       {(() => {
         const ourPriceARS = Math.round((ourPrice * rate) / 1000) * 1000
         const worstCompetitorARS = Math.min(...COMPETITORS.map((c) => Math.round((ourPrice * c.priceFactor * rate) / 1000) * 1000))
@@ -111,7 +111,7 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
               <EPBadge />
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline justify-between gap-2">
-                  <p className="text-fg text-[13px] font-semibold leading-tight truncate">Electronic Point</p>
+                  <p className="text-fg text-[13px] font-semibold leading-tight truncate">Luxstore</p>
                   <p className="text-fg font-bold text-[14px] leading-tight tabular-nums whitespace-nowrap">
                     {toARS(ourPrice, rate)}
                   </p>

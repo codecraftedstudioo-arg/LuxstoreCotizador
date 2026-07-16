@@ -1,15 +1,13 @@
 import type { MarketPricing, Model, Variant } from '@/types/market'
 
 const APPS_SCRIPT_URL = import.meta.env.VITE_MARKET_PRICES_URL || ''
-// Si está definido, los productos salen del Panel Admin (cutover reversible).
-const PANEL_API_URL = import.meta.env.VITE_PANEL_API_URL || ''
 const CACHE_DURATION_MS = 5 * 60 * 1000
 
 let cachedData: MarketPricing | null = null
 let cacheTimestamp = 0
 let inflight: Promise<MarketPricing> | null = null
 
-// --- Panel Admin: items planos → models agrupados (espejo del market) ---
+// --- Transform helpers (tests): items planos → models agrupados ---
 
 type PanelMarketItem = {
   model: string
@@ -67,17 +65,6 @@ export function transformPanelToMarket(items: PanelMarketItem[]): MarketPricing 
   }
 }
 
-async function fetchFromPanel(): Promise<MarketPricing> {
-  const url = `${PANEL_API_URL.replace(/\/$/, '')}/market-items`
-  const response = await fetch(url, { cache: 'no-store' })
-  if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  const data = await response.json()
-  if (!data || !Array.isArray(data.items) || data.items.length === 0) {
-    throw new Error('Datos del panel inválidos')
-  }
-  return transformPanelToMarket(data.items as PanelMarketItem[])
-}
-
 async function fetchFromAppsScript(): Promise<MarketPricing> {
   if (!APPS_SCRIPT_URL) {
     throw new Error('VITE_MARKET_PRICES_URL not configured')
@@ -100,24 +87,13 @@ export async function fetchMarketPrices(): Promise<MarketPricing> {
 
   if (inflight) return inflight
 
-  if (!PANEL_API_URL && !APPS_SCRIPT_URL) {
-    throw new Error('Sin fuente de precios configurada')
+  if (!APPS_SCRIPT_URL) {
+    throw new Error('Sin fuente de precios de market configurada')
   }
 
   inflight = (async () => {
     try {
-      let data: MarketPricing
-      if (PANEL_API_URL) {
-        // Panel = fuente. Si se cae, NO caemos al Apps Script viejo (precios
-        // desviados): propaga el error → el hook reintenta y usa su última copia
-        // buena (localStorage) o el skeleton. Nunca precios viejos.
-        // (Decisión fallback #1: docs/DUDAS-Y-DECISIONES.md del panel.)
-        data = await fetchFromPanel()
-      } else {
-        // Sin panel configurado (rollback del cutover) → Apps Script.
-        data = await fetchFromAppsScript()
-      }
-
+      const data = await fetchFromAppsScript()
       cachedData = data
       cacheTimestamp = Date.now()
       return data
