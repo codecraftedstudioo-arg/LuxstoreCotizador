@@ -23,10 +23,8 @@
      de la pantalla blanca del celular (pedido de Nico) */
   --line: rgba(0, 0, 0, 0.16);
   --line-strong: rgba(0, 0, 0, 0.26);
-  /* Acento / CTA. En modo CLARO usamos el AZUL Apple (estilo apple.com) — en
-     claro Apple usa azul para los call-to-action en vez del verde. En modo
-     oscuro el acento sigue siendo el verde de marca (ver .dark). */
-  --accent: #0071e3;        /* Apple blue */
+  /* Acento / CTA: azul Apple (mismo en claro y oscuro). */
+  --accent: #0071e3;        /* Apple blue / celeste */
   --accent-hover: #0077ed;
   --accent-contrast: #ffffff;
 }
@@ -42,9 +40,10 @@
   --fg-subtle: rgba(255, 255, 255, 0.42);
   --line: rgba(255, 255, 255, 0.1);
   --line-strong: rgba(255, 255, 255, 0.18);
-  --accent: #22c55e;        /* verde de marca (CTA en modo oscuro) */
-  --accent-hover: #16a34a;
-  --accent-contrast: #07140c;
+  /* Mismo celeste que light — ya no usamos verde de marca */
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-contrast: #ffffff;
 }
 
 /* Exponer los tokens como utilidades Tailwind (bg-bg, text-fg, border-line, …).
@@ -175,12 +174,162 @@ html, body {
   animation: confettiHide 3.5s forwards;
 }
 
-@keyframes pulseSubtle {
+/* Ken Burns effect - zoom lento con fade in/out */
+@keyframes kenburns {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  5% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+.animate-kenburns {
+  animation: kenburns 24s infinite;
+}
+
+/* Shimmer effect - brillo que se mueve */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(15deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(15deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+/* Button shimmer - brillo que pasa por el botón */
+@keyframes btnShimmer {
+  0%, 80% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%) skewX(-15deg);
+  animation: btnShimmer 3s ease-in-out infinite;
+}
+
+/* Star twinkle - brillo de estrella */
+@keyframes starTwinkle {
+  0%, 70% {
+    text-shadow: none;
+    transform: scale(1);
+  }
+  80% {
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.8), 0 0 16px rgba(251, 191, 36, 0.4);
+    transform: scale(1.3);
+  }
+  100% {
+    text-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.animate-star-twinkle {
+  display: inline-block;
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+/* Infinite scroll animation for reviews */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 15s linear infinite;
+}
+
+/* Ken Burns slow - zoom suave para intro */
+@keyframes kenburnsSlow {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  100% {
+    transform: scale(1.1) translateX(-2%);
+  }
+}
+
+.animate-kenburns-slow {
+  animation: kenburnsSlow 4s ease-out forwards;
+}
+
+/* Floating animations for 3D iPhones */
+@keyframes float {
   0%, 100% {
-    box-shadow: 0 0 20px -4px rgba(34, 197, 94, 0.3);
+    transform: translateY(0px);
   }
   50% {
-    box-shadow: 0 0 28px -2px rgba(34, 197, 94, 0.55);
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes floatDelayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% {
+    box-shadow: 0 0 20px -4px rgba(0, 113, 227, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px -2px rgba(0, 113, 227, 0.55);
   }
 }
 
@@ -215,6 +364,16 @@ html, body {
     rgba(255,255,255,0.04) 100%
   );
   background-size: 200% 100%;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 7s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+  animation-delay: 2s;
 }
 
 /* Hide scrollbar but keep scroll functionality */

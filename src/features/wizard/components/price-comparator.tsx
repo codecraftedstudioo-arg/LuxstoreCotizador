@@ -106,7 +106,7 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
         const worstCompetitorARS = Math.min(...COMPETITORS.map((c) => Math.round((ourPrice * c.priceFactor * rate) / 1000) * 1000))
         const maxSavingsARS = ourPriceARS - worstCompetitorARS
         return (
-          <div className="relative px-3 py-3 border-b border-green-500/40 bg-green-500/[0.08] ring-1 ring-green-500/30 ring-inset">
+          <div className="relative px-3 py-3 border-b border-accent/40 bg-accent/[0.08] ring-1 ring-accent/30 ring-inset">
             <div className="flex items-center gap-2">
               <EPBadge />
               <div className="flex-1 min-w-0">
@@ -120,7 +120,7 @@ export function PriceComparator({ ourPrice }: PriceComparatorProps) {
                   <p className="text-[10px] text-fg-muted leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                     Inmediato · 0% comisión
                   </p>
-                  <p className="text-[10px] text-green-600 dark:text-green-400 leading-tight font-bold tabular-nums whitespace-nowrap">
+                  <p className="text-[10px] text-accent leading-tight font-bold tabular-nums whitespace-nowrap">
                     +${maxSavingsARS.toLocaleString('es-AR')}
                   </p>
                 </div>

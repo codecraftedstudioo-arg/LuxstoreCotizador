@@ -160,11 +160,11 @@ export function StepResult() {
           {/* Upgrade flow */}
           <div className="mb-4 space-y-3 text-center">
             {/* Your iPhone value */}
-            <div className="p-4 min-h-[5rem] flex flex-col justify-center bg-green-500/10 rounded-xl border border-green-500/20">
-              <p className="text-green-700/70 dark:text-green-300/60 text-xs">
+            <div className="p-4 min-h-[5rem] flex flex-col justify-center bg-accent/10 rounded-xl border border-accent/20">
+              <p className="text-accent/70 text-xs">
                 {lang === 'es' ? `Tu ${state.model} ${formatStorage(state.storage ?? '')} vale` : `Your ${state.model} ${formatStorage(state.storage ?? '')} is worth`}
               </p>
-              <p className="text-lg font-bold text-green-600 dark:text-green-400 mt-0.5">{formatPrice(priceResult.finalPrice)}</p>
+              <p className="text-lg font-bold text-accent mt-0.5">{formatPrice(priceResult.finalPrice)}</p>
             </div>
 
             {/* New iPhone price */}
@@ -218,12 +218,12 @@ export function StepResult() {
                 className="w-full text-left group"
                 aria-expanded={altsExpanded}
               >
-                <div className={`relative flex items-center justify-between gap-3 p-3.5 rounded-xl border bg-green-500/[0.08] hover:bg-green-500/[0.15] transition-all ${
-                  altsExpanded ? 'border-green-500/50' : 'border-green-500/40 shadow-[0_0_20px_-4px_rgba(34,197,94,0.3)] animate-pulse-subtle'
+                <div className={`relative flex items-center justify-between gap-3 p-3.5 rounded-xl border bg-accent/[0.08] hover:bg-accent/[0.15] transition-all ${
+                  altsExpanded ? 'border-accent/50' : 'border-accent/40 shadow-[0_0_20px_-4px_rgba(0,113,227,0.3)] animate-pulse-subtle'
                 }`}>
                   <div className="flex items-start gap-2.5 flex-1">
-                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
                     </div>
@@ -239,7 +239,7 @@ export function StepResult() {
                     </div>
                   </div>
                   <svg
-                    className={`w-5 h-5 text-green-600 dark:text-green-400 transition-transform flex-shrink-0 ${altsExpanded ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-accent transition-transform flex-shrink-0 ${altsExpanded ? 'rotate-180' : ''}`}
                     fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -260,7 +260,7 @@ export function StepResult() {
                     <button
                       key={`${alt.model}-${alt.storage}-${alt.color}`}
                       onClick={() => handleSelectAlternative(alt)}
-                      className="w-full p-3.5 sm:p-4 rounded-xl border border-line bg-surface dark:bg-white/5 hover:bg-green-500/10 hover:border-green-500/40 transition-all text-left group"
+                      className="w-full p-3.5 sm:p-4 rounded-xl border border-line bg-surface dark:bg-white/5 hover:bg-accent/10 hover:border-accent/40 transition-all text-left group"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-bg-subtle dark:bg-white/5 border border-line flex items-center justify-center flex-shrink-0 overflow-hidden">
@@ -291,7 +291,7 @@ export function StepResult() {
                           <p className="text-[10px] sm:text-xs text-fg-muted leading-tight">
                             {diffLabel}
                           </p>
-                          <p className="text-base sm:text-lg font-bold text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300 leading-tight mt-0.5">
+                          <p className="text-base sm:text-lg font-bold text-accent group-hover:text-accent leading-tight mt-0.5">
                             {formatPrice(Math.abs(alt.newDiff))}
                           </p>
                         </div>

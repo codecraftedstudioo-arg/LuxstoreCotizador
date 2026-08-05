@@ -29,7 +29,7 @@ const ChargingIcon = () => (
 )
 
 const CheckIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-green-500">
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-accent">
     <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
   </svg>
 )
@@ -134,7 +134,7 @@ export function Step4Functionality() {
         mt-4 p-3 rounded-xl text-sm
         ${hasAnyIssue
           ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-700 dark:text-yellow-200'
-          : 'bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-200'
+          : 'bg-accent/10 border border-accent/30 text-accent'
         }
       `}>
         {hasAnyIssue

@@ -72,7 +72,7 @@ type WizardAction =
   | { type: 'GO_TO_STEP'; payload: number }
   | { type: 'RESET' }
 
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 5
 
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -167,29 +167,23 @@ interface WizardContextValue {
 
 const WizardContext = createContext<WizardContextValue | null>(null)
 
-const STORAGE_KEY = 'wizard-state-v2' // New version key to avoid conflicts
+const STORAGE_KEY = 'wizard-state-v3' // sin paso de elección Plan Canje / vender
 
 function loadState(): WizardState {
   try {
-    // Fresh start when coming from market or external link
+    // Fresh start when coming from external link
     const params = new URLSearchParams(window.location.search)
     if (params.has('new') || params.has('canje')) {
       sessionStorage.removeItem(STORAGE_KEY)
       sessionStorage.removeItem('in-canje')
-      // Limpiar flags de sesión anterior (evita que quede un "volver al original" viejo)
       sessionStorage.removeItem('original-upgrade')
-      if (params.has('canje')) {
-        sessionStorage.setItem('auto-canje', '1')
-        sessionStorage.setItem('in-canje', '1')
-      }
-      // Clean the URL without reloading
+      sessionStorage.removeItem('auto-canje')
       window.history.replaceState({}, '', window.location.pathname)
       return initialState
     }
     const saved = sessionStorage.getItem(STORAGE_KEY)
     if (saved) {
       const parsed = JSON.parse(saved)
-      // Ensure all new fields exist with defaults
       return {
         ...initialState,
         ...parsed,
@@ -257,7 +251,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     canjeMode,
     setCanjeMode,
     nextStep: () => {
-      if (state.currentStep === 6 && celebrationRef.current) {
+      if (state.currentStep === 5 && celebrationRef.current) {
         celebrationRef.current.currentTime = 0
         celebrationRef.current.play().catch(() => {})
       }
@@ -272,20 +266,20 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     isStepComplete: (step: number) => {
       switch (step) {
         case 1:
-          return true // Upgrade is optional, always complete
-        case 2:
           return state.model !== null && state.storage !== null
-        case 3:
+        case 2:
           return (
             state.screenCondition !== null &&
             state.backCondition !== null &&
             state.frameCondition !== null &&
             state.hasLiquidDamage !== null
           )
-        case 4:
+        case 3:
           return state.batteryHealth !== null && state.hasOriginalBox !== null
-        case 5:
+        case 4:
           return true // Checkboxes always complete
+        case 5:
+          return true
         default:
           return false
       }

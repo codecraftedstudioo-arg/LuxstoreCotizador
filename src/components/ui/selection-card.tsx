@@ -119,13 +119,13 @@ interface ConditionCardProps {
  */
 export function ConditionCard({ selected, onClick, icon, label, variant = 'good' }: ConditionCardProps) {
   const variantStyles = {
-    good: selected ? 'border-green-500 bg-green-500/10' : 'border-line bg-surface dark:bg-white/5 hover:border-green-500/50',
+    good: selected ? 'border-accent bg-accent/10' : 'border-line bg-surface dark:bg-white/5 hover:border-accent/50',
     warning: selected ? 'border-yellow-500 bg-yellow-500/10' : 'border-line bg-surface dark:bg-white/5 hover:border-yellow-500/50',
     bad: selected ? 'border-red-500 bg-red-500/10' : 'border-line bg-surface dark:bg-white/5 hover:border-red-500/50',
   }
 
   const iconColor = {
-    good: selected ? 'text-green-600 dark:text-green-400' : 'text-fg-subtle',
+    good: selected ? 'text-accent' : 'text-fg-subtle',
     warning: selected ? 'text-yellow-600 dark:text-yellow-400' : 'text-fg-subtle',
     bad: selected ? 'text-red-600 dark:text-red-400' : 'text-fg-subtle',
   }
@@ -166,13 +166,13 @@ export function ToggleCard({ selected, onClick, icon, label, isPositive = true, 
   const selectedColor = neutral
     ? 'border-fg/40 bg-fg/10'
     : isPositive
-      ? 'border-green-500 bg-green-500/10'
+      ? 'border-accent bg-accent/10'
       : 'border-red-500 bg-red-500/10'
 
   const iconSelected = neutral
     ? 'text-fg'
     : isPositive
-      ? 'text-green-600 dark:text-green-400'
+      ? 'text-accent'
       : 'text-red-600 dark:text-red-400'
 
   return (

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '@/components/ui'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useWizard } from './hooks/use-wizard'
@@ -11,12 +12,11 @@ import {
   Step2Condition,
   Step3Details,
   Step4Functionality,
-  Step5Upgrade,
   Step6Contact,
   StepResult,
 } from './steps'
 
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 5
 
 /**
  * iPhone 15 Pro Frame - Ultra realistic
@@ -93,7 +93,7 @@ function IPhoneFrame({ children, contentRef, showRate }: { children: React.React
               {showRate && rate !== null && (
                 <div className="flex-shrink-0 rounded-lg bg-fg/[0.04] border border-fg/[0.08] px-2.5 py-1.5 text-right">
                   <p className="text-[8px] uppercase tracking-wider text-fg-subtle leading-none">Dólar blue</p>
-                  <p className="text-[11px] font-semibold text-green-600 dark:text-green-400 tracking-tight mt-0.5">${rate.toLocaleString('es-AR')}</p>
+                  <p className="text-[11px] font-semibold text-accent tracking-tight mt-0.5">${rate.toLocaleString('es-AR')}</p>
                   <p className="text-[9px] text-fg-subtle mt-0.5 leading-none">
                     {new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
                     {' · '}
@@ -169,8 +169,8 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
         <div className="space-y-1">
           <div className="flex items-center justify-end gap-2">
             <span className="text-fg-muted text-sm font-medium">Cotización instantánea</span>
-            <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+              <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
@@ -251,7 +251,8 @@ function SideInfo({ position }: { position: 'left' | 'right' }) {
  * Form inside iPhone mockup
  */
 export function WizardPage() {
-  const { state, prevStep, canjeMode, reset } = useWizard()
+  const navigate = useNavigate()
+  const { state, prevStep } = useWizard()
   useI18n() // Keep provider active
   const { isDark } = useTheme()
   // Espera a que los precios estén listos (panel o fallback estático) antes
@@ -268,20 +269,19 @@ export function WizardPage() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 1: return <Step5Upgrade />
-      case 2: return <Step1Basics />
-      case 3: return <Step2Condition />
-      case 4: return <Step3Details />
-      case 5: return <Step4Functionality />
-      case 6: return <Step6Contact />
-      case 7: return <StepResult />
-      default: return <Step5Upgrade />
+      case 1: return <Step1Basics />
+      case 2: return <Step2Condition />
+      case 3: return <Step3Details />
+      case 4: return <Step4Functionality />
+      case 5: return <Step6Contact />
+      case 6: return <StepResult />
+      default: return <Step1Basics />
     }
   }
 
-  const showProgress = (currentStep > 1 || (currentStep === 1 && canjeMode)) && currentStep <= TOTAL_STEPS
-  const displayStep = canjeMode ? currentStep : currentStep - 1
-  const displayTotal = canjeMode ? TOTAL_STEPS : TOTAL_STEPS - 1
+  const showProgress = currentStep >= 1 && currentStep <= TOTAL_STEPS
+  const displayStep = currentStep
+  const displayTotal = TOTAL_STEPS
 
   // Gate: no mostramos los pasos hasta tener los precios cargados.
   if (!pricingReady) {
@@ -306,7 +306,7 @@ export function WizardPage() {
           href="https://wa.me/5491160050246?text=Hola%2C%20quiero%20cotizar%20mi%20iPhone."
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-green-400"
+          className="mt-2 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-contrast transition-colors hover:bg-accent-hover"
         >
           Escribinos por WhatsApp
         </a>
@@ -335,9 +335,9 @@ export function WizardPage() {
         {/* Navbar */}
         <nav className="sticky top-0 z-50 bg-bg/95 backdrop-blur-xl border-b border-line">
           <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            {/* Logo - reinicia el cotizador */}
+            {/* Logo - click to go back to home */}
             <button
-              onClick={reset}
+              onClick={() => navigate('/')}
               className="block hover:opacity-80 transition-opacity"
             >
               <img
@@ -347,8 +347,17 @@ export function WizardPage() {
               />
             </button>
 
-            {/* Step indicator + Theme toggle */}
+            {/* Back to home + Step indicator + Theme toggle */}
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/')}
+                className="flex items-center gap-1 text-fg-muted hover:text-fg text-sm transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Inicio
+              </button>
               {showProgress && (
                 <span className="text-fg-subtle text-sm font-medium">
                   Paso {displayStep}/{displayTotal}
@@ -374,7 +383,7 @@ export function WizardPage() {
 
             {/* iPhone Frame */}
             <div className="flex-shrink-0">
-              <IPhoneFrame contentRef={contentRef} showRate={currentStep === 7}>
+              <IPhoneFrame contentRef={contentRef} showRate={currentStep === 6}>
                 {/* Progress bar */}
                 {showProgress && (
                   <div className="mb-2">
@@ -414,13 +423,13 @@ export function WizardPage() {
               {/* Trust badges below phone - mobile only */}
               <div className="lg:hidden mt-4 flex justify-center gap-4">
                 <div className="flex items-center gap-1.5 text-fg-muted text-xs">
-                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Pago inmediato
                 </div>
                 <div className="flex items-center gap-1.5 text-fg-muted text-xs">
-                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Mejor precio
@@ -436,7 +445,7 @@ export function WizardPage() {
         {/* Footer */}
         <footer className="py-4 text-center space-y-1">
           <p className="text-fg-subtle text-xs">© 2026 Luxstore</p>
-          <p className="text-fg-subtle/60 text-[10px]">Built by <a href="https://www.linkedin.com/in/nicolas-kevorkian/" target="_blank" rel="noopener noreferrer" className="hover:text-fg-muted transition-colors">CodeCraftStudio</a></p>
+          <p className="text-fg-subtle/60 text-[10px]">Built by CodeCraftStudio</p>
         </footer>
       </div>
     </div>

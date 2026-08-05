@@ -438,7 +438,7 @@ export function AdminApp() {
               <button
                 type="button"
                 onClick={openCreateModel}
-                className="rounded-xl bg-emerald-600 text-white px-3.5 py-2 text-sm font-semibold hover:bg-emerald-700"
+                className="rounded-xl bg-accent text-white px-3.5 py-2 text-sm font-semibold hover:bg-accent-hover"
               >
                 + Agregar modelo
               </button>
@@ -451,7 +451,7 @@ export function AdminApp() {
               </div>
               <div className="rounded-2xl border border-line bg-surface px-3 py-3">
                 <p className="text-[11px] text-fg-subtle uppercase tracking-wide">Activos</p>
-                <p className="text-xl font-semibold tabular-nums text-emerald-600">{modelStats.active}</p>
+                <p className="text-xl font-semibold tabular-nums text-accent">{modelStats.active}</p>
               </div>
               <div className="rounded-2xl border border-line bg-surface px-3 py-3">
                 <p className="text-[11px] text-fg-subtle uppercase tracking-wide">Sin precios</p>
@@ -556,7 +556,7 @@ export function AdminApp() {
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="font-semibold truncate">{m.name}</p>
                         {m.active ? (
-                          <span className="text-[11px] font-semibold uppercase tracking-wide rounded-full bg-emerald-500/15 text-emerald-700 px-2 py-0.5">
+                          <span className="text-[11px] font-semibold uppercase tracking-wide rounded-full bg-accent/15 text-accent px-2 py-0.5">
                             Activo
                           </span>
                         ) : (
@@ -592,7 +592,7 @@ export function AdminApp() {
                         aria-checked={m.active}
                         onClick={() => toggleModelActive(m.id)}
                         className={`relative h-7 w-12 rounded-full transition-colors ${
-                          m.active ? 'bg-emerald-500' : 'bg-line'
+                          m.active ? 'bg-accent' : 'bg-line'
                         }`}
                       >
                         <span

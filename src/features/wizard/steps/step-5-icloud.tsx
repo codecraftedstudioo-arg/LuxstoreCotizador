@@ -182,7 +182,7 @@ export function Step5ICloud() {
           <div className={`
             mt-4 p-3 rounded-xl text-sm animate-fadeSlideIn
             ${state.iCloudOff
-              ? 'bg-green-500/10 border border-green-500/30 text-green-200'
+              ? 'bg-accent/10 border border-accent/30 text-accent'
               : 'bg-amber-500/10 border border-amber-500/30 text-amber-200'
             }
           `}>
