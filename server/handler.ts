@@ -4,9 +4,9 @@ import {
   isAuthenticated,
   sessionCookie,
   clearSessionCookie,
-} from './auth.ts'
-import { loadStore, saveStore, toPublicPayload } from './store.ts'
-import type { CotizadorStore } from './types.ts'
+} from './auth'
+import { loadStore, saveStore, toPublicPayload } from './store'
+import type { CotizadorStore } from './types'
 
 function json(status: number, data: unknown, extraHeaders: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(data), {

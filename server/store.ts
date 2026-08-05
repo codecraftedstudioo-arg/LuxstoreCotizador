@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import type { CotizadorStore, PanelModel } from './types.ts'
+import type { CotizadorStore, PanelModel } from './types'
 
 /** Always resolve from project cwd (works under Vite middleware + Vercel). */
 const DATA_PATH = join(process.cwd(), 'data', 'cotizador-prices.json')

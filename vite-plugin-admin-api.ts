@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import { handleAdminApi } from './server/handler.ts'
+import { handleAdminApi } from './server/handler'
 
 /**
  * Dev middleware: exposes the same /api routes used in production (Vercel).

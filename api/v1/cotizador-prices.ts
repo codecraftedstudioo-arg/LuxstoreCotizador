@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { handleAdminApi } from '../../server/handler.ts'
+import { handleAdminApi } from '../../server/handler'
 
 async function toWebRequest(req: IncomingMessage, pathname: string): Promise<Request> {
   const host = req.headers.host || 'localhost'
