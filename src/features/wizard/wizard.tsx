@@ -303,7 +303,7 @@ export function WizardPage() {
           Estamos teniendo un problema para cargar los precios actualizados. Escribinos y te cotizamos al toque.
         </p>
         <a
-          href="https://wa.me/5491160050246?text=Hola%2C%20quiero%20cotizar%20mi%20iPhone."
+          href="https://wa.me/5491164925089?text=Hola%2C%20quiero%20cotizar%20mi%20iPhone."
           target="_blank"
           rel="noopener noreferrer"
           className="mt-2 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-contrast transition-colors hover:bg-accent-hover"

@@ -6,7 +6,7 @@ export type { UpgradeInfo }
 
 // Número de WhatsApp del negocio (sin +, sin espacios)
 // Formato Argentina: 54 + 9 + código área + número
-const BUSINESS_PHONE = '5491160050246'
+const BUSINESS_PHONE = '5491164925089'
 
 // Max URL length for wa.me links (safe limit)
 const MAX_MESSAGE_LENGTH = 1500

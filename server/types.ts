@@ -5,4 +5,4 @@ export type {
   PanelModel,
   CotizadorConfig,
   CotizadorStore,
-} from '../src/types/admin-store'
+} from '../src/types/admin-store.js'

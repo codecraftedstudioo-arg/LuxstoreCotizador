@@ -54,3 +54,4 @@ public/background.mp4
 *.mp4
 
 .vercel
+.env*

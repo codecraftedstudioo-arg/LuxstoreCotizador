@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import type { CotizadorStore, PanelModel } from './types'
+import { put, get } from '@vercel/blob'
+import type { CotizadorStore, PanelModel } from './types.js'
 
 /** Always resolve from project cwd (works under Vite middleware + Vercel). */
 const DATA_PATH = join(process.cwd(), 'data', 'cotizador-prices.json')
@@ -43,49 +44,51 @@ function isValidStore(data: unknown): data is CotizadorStore {
   return Array.isArray(d.models) && d.models.length > 0 && Array.isArray(d.penalties) && d.penalties.length > 0
 }
 
-function readLocalFile(): CotizadorStore {
-  if (!existsSync(DATA_PATH)) {
-    throw new Error(`Missing store file: ${DATA_PATH}`)
-  }
-  const raw = JSON.parse(readFileSync(DATA_PATH, 'utf8'))
-  if (!isValidStore(raw)) throw new Error('Invalid cotizador store')
+function readStoreFromPath(path: string): CotizadorStore | null {
+  if (!existsSync(path)) return null
+  const raw = JSON.parse(readFileSync(path, 'utf8'))
+  if (!isValidStore(raw)) return null
   return normalizeStore(raw)
+}
+
+function readLocalFile(): CotizadorStore {
+  // includeFiles copies data/ into /var/task on Vercel; cwd may also resolve there.
+  const store =
+    readStoreFromPath(DATA_PATH) ||
+    readStoreFromPath(join('/var/task', 'data', 'cotizador-prices.json'))
+  if (store) return store
+  throw new Error(`Missing store file: ${DATA_PATH}`)
 }
 
 async function readBlob(): Promise<CotizadorStore | null> {
   const token = blobToken()
   if (!token) return null
   try {
-    const res = await fetch(`https://blob.vercel-storage.com?prefix=${encodeURIComponent(BLOB_PATHNAME)}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    if (!res.ok) return null
-    const list = (await res.json()) as { blobs?: { pathname: string; url: string }[] }
-    const hit = list.blobs?.find((b) => b.pathname === BLOB_PATHNAME || b.pathname.endsWith(`/${BLOB_PATHNAME}`))
-    if (!hit?.url) return null
-    const fileRes = await fetch(hit.url, { cache: 'no-store' })
-    if (!fileRes.ok) return null
-    const data = await fileRes.json()
+    // useCache:false bypasses CDN and reads origin (public URLs are cached ~30d by default).
+    const result = await get(BLOB_PATHNAME, { access: 'public', token, useCache: false })
+    if (!result || result.statusCode !== 200 || !result.stream) return null
+    const text = await new Response(result.stream).text()
+    const data = JSON.parse(text)
     return isValidStore(data) ? normalizeStore(data) : null
   } catch {
     return null
   }
 }
 
-async function writeBlob(data: CotizadorStore): Promise<boolean> {
+async function writeBlob(data: CotizadorStore): Promise<void> {
   const token = blobToken()
-  if (!token) return false
-  const res = await fetch(`https://blob.vercel-storage.com/${BLOB_PATHNAME}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'x-vercel-blob-access': 'public',
-      'x-vercel-blob-allow-overwrite': 'true',
-    },
-    body: JSON.stringify(data),
+  if (!token) {
+    throw new Error('BLOB_READ_WRITE_TOKEN is not configured')
+  }
+  await put(BLOB_PATHNAME, JSON.stringify(data), {
+    access: 'public',
+    token,
+    contentType: 'application/json; charset=utf-8',
+    allowOverwrite: true,
+    addRandomSuffix: false,
+    // Keep cache short so admin saves show up immediately in the cotizador.
+    cacheControlMaxAge: 60,
   })
-  return res.ok
 }
 
 function writeLocalFile(data: CotizadorStore): void {
@@ -100,8 +103,12 @@ export async function loadStore(): Promise<CotizadorStore> {
   return readLocalFile()
 }
 
-/** Persist store: Blob when token present, always write local when filesystem allows. */
-export async function saveStore(data: CotizadorStore): Promise<void> {
+/**
+ * Persist store: Blob when token present, local file when filesystem allows.
+ * Returns the normalized payload that was written (do not re-read after save —
+ * public Blob URLs can be CDN-cached).
+ */
+export async function saveStore(data: CotizadorStore): Promise<CotizadorStore> {
   const normalized = normalizeStore(data)
   if (!isValidStore(normalized)) throw new Error('Invalid store payload')
   normalized.config = {
@@ -109,16 +116,25 @@ export async function saveStore(data: CotizadorStore): Promise<void> {
     lastUpdated: new Date().toISOString().slice(0, 10),
   }
 
-  const blobOk = await writeBlob(normalized)
+  const token = blobToken()
+  let blobOk = false
+  if (token) {
+    await writeBlob(normalized)
+    blobOk = true
+  }
+
   try {
     writeLocalFile(normalized)
   } catch (err) {
     // On Vercel the FS is read-only; Blob must succeed.
     if (!blobOk) throw err
   }
+
   if (!blobOk && process.env.VERCEL === '1') {
     throw new Error('BLOB_READ_WRITE_TOKEN is required to persist changes on Vercel')
   }
+
+  return normalized
 }
 
 /** Public GET payload (same contract the cotizador already consumes). */

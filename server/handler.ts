@@ -4,9 +4,9 @@ import {
   isAuthenticated,
   sessionCookie,
   clearSessionCookie,
-} from './auth'
-import { loadStore, saveStore, toPublicPayload } from './store'
-import type { CotizadorStore } from './types'
+} from './auth.js'
+import { loadStore, saveStore, toPublicPayload } from './store.js'
+import type { CotizadorStore } from './types.js'
 
 function json(status: number, data: unknown, extraHeaders: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(data), {
@@ -91,8 +91,7 @@ export async function handleAdminApi(req: Request): Promise<Response> {
   if (path === '/api/admin/cotizador-prices' && method === 'PUT') {
     try {
       const body = (await readBody(req)) as CotizadorStore
-      await saveStore(body)
-      const store = await loadStore()
+      const store = await saveStore(body)
       return json(200, store)
     } catch (err) {
       return json(400, { error: err instanceof Error ? err.message : 'Save failed' })
